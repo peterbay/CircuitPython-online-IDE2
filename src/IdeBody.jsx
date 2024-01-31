@@ -35,6 +35,7 @@ const findTabByName = (node, name) => {
 export default function IdeBody() {
     const { flexModel: model, schemas, config, set_config } = useContext(ideContext);
     const [fileLookUp, setFileLookUp] = useState({});
+    const [activeEditorInfo, setActiveEditorInfo] = useState(null);
 
     const findTabByFilePath = (node, name) => {
         if (node.getType() === "tab") {
@@ -89,6 +90,28 @@ export default function IdeBody() {
         }
     }
 
+    function getActiveEditorTab() {
+        let activeTab = null;
+        const tabset = model.getActiveTabset();
+        if (tabset && tabset.getChildren) {
+            const children = tabset.getChildren();
+            if (children) {
+                for (let child of children) {
+                    if (child.isVisible()) {
+                        const config = child.getConfig();
+                        activeTab = config;
+                    }
+                }
+            }
+        }
+        setActiveEditorInfo(activeTab);
+    }
+
+    async function onAction(action) {
+        await model.doAction(action);
+        getActiveEditorTab();
+    }
+
     const factory = (node) => {
         var component = node.getComponent();
         // main ones
@@ -107,7 +130,11 @@ export default function IdeBody() {
         } else if (component === "folder_view") {
             return (
                 <div className="tab_content" style={fullSize}>
-                    <IdeFolderView onFileClick={onFileClick} node={node} />
+                    <IdeFolderView
+                        onFileClick={onFileClick}
+                        node={node}
+                        activeEditorInfo={activeEditorInfo}
+                    />
                 </div>
             );
         } else if (component === "settings") {
@@ -155,5 +182,15 @@ export default function IdeBody() {
         }
     };
 
-    return <FlexLayout.Layout model={model} factory={factory} />;
+    return <FlexLayout.Layout
+        model={model}
+        factory={factory}
+        onAction={onAction}
+        onModelChange={() => {
+            getActiveEditorTab();
+        }}
+        onRenderTab={() => {
+            getActiveEditorTab();
+        }}
+    />;
 }

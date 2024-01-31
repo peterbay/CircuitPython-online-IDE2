@@ -117,7 +117,7 @@ function ApplyDrop({ children, onDropHandler }) {
 
 // Entry
 
-function ContentEntry({ entryHandle }) {
+function ContentEntry({ entryHandle, activeEditorInfo }) {
     const { currentFolderHandle, onFileClick, showFolderView, setIsLoading } = useContext(CurFolderContext);
     const { setEntryOnDrag, handleDrop } = useContext(DragContext);
     // handler
@@ -180,10 +180,12 @@ function ContentEntry({ entryHandle }) {
         console.log("ContentEntry onDropHandler called", event);
         handleDrop(entryHandle);
     }
+    const isSelected = (activeEditorInfo && activeEditorInfo.fullPath === entryHandle.fullPath);
+
     const entry = (
         <ApplyContextMenu items={items}>
             <ListItem disablePadding dense>
-                <ListItemButton onClick={onClickHandler}>
+                <ListItemButton onClick={onClickHandler} selected={isSelected}>
                     <ListItemIcon sx={{ minWidth: "30px" }}>{isFolder(entryHandle) ? <FolderIcon /> : <InsertDriveFileIcon />}</ListItemIcon>
                     <ListItemText draggable={true} onDragStart={onDragHandler} primary={entryHandle.name} />
                 </ListItemButton>
@@ -261,7 +263,7 @@ function AddEntry({ showFolderView, currentFolderHandle, setIsLoading }) {
 const CurFolderContext = createContext();
 const DragContext = createContext();
 
-export default function FolderView({ rootFolder, onFileClick }) {
+export default function FolderView({ rootFolder, onFileClick, activeEditorInfo }) {
     const [currentFolderHandle, setCurrentFolderHandle] = useState(rootFolder);
     const [entryOnDrag, setEntryOnDrag] = useState();
     const [path, setPath] = useState([rootFolder]);
@@ -368,7 +370,11 @@ export default function FolderView({ rootFolder, onFileClick }) {
                                     return !entry.name.startsWith(".");
                                 })
                                 .map((entry) => (
-                                    <ContentEntry entryHandle={entry} key={"file_system_content_key_" + entry.name} />
+                                    <ContentEntry
+                                        entryHandle={entry}
+                                        key={"file_system_content_key_" + entry.name}
+                                        activeEditorInfo={activeEditorInfo}
+                                    />
                                 ))}
                         </List>
                     </DragContext.Provider>
