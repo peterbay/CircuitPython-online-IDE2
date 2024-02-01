@@ -312,6 +312,7 @@ export default function FolderView({ rootFolder, onFileClick, activeEditorInfo }
                 const newFileHandle = await addNewFile(currentFolderHandle, newName);
                 await showFolderView(currentFolderHandle);
                 setIsLoading(false);
+                newFileHandle.fullPath = (currentFolderHandle.fullPath || "") + "/" + newFileHandle.name;
                 onFileClick(newFileHandle);
             },
         },
