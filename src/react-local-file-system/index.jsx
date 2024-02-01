@@ -207,16 +207,17 @@ function ContentEntry({ entryHandle, activeEditorInfo }) {
     }
 
     const entry = (
-        <ApplyContextMenu items={items}>
-            <ListItem disablePadding dense>
-                <ListItemButton onClick={onClickHandler} selected={isSelected}>
-                    <ListItemIcon sx={{ minWidth: "30px" }} style={style}>{icon}</ListItemIcon>
-                    <ListItemText draggable={isDraggable} onDragStart={onDragHandler} primary={entryName} />
-                </ListItemButton>
-            </ListItem>
-        </ApplyContextMenu>
+        <ListItem onContextMenu={(e)=> e.preventDefault()} disablePadding dense>
+            <ListItemButton onClick={onClickHandler} selected={isSelected}>
+                <ListItemIcon sx={{ minWidth: "30px" }} style={style}>{icon}</ListItemIcon>
+                <ListItemText draggable={isDraggable} onDragStart={onDragHandler} primary={entryName} />
+            </ListItemButton>
+        </ListItem>
     );
-    return isFolder(entryHandle) ? <ApplyDrop onDropHandler={onDropHandler}>{entry}</ApplyDrop> : entry;
+
+    const entryContextMenu = (!entryHandle.isParent) ? <ApplyContextMenu items={items}>{entry}</ApplyContextMenu> : entry;
+
+    return isFolder(entryHandle) ? <ApplyDrop onDropHandler={onDropHandler}>{entryContextMenu}</ApplyDrop> : entryContextMenu;
 }
 
 function PathEntry({ entryHandle }) {
