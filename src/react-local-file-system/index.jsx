@@ -1,6 +1,6 @@
 import { useState, createContext, useContext, useEffect } from "react";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
-import { Button } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -8,17 +8,20 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Divider from "@mui/material/Divider";
 import FolderIcon from "@mui/icons-material/FolderOutlined";
+import NewFolderIcon from "@mui/icons-material/CreateNewFolderOutlined";
 import ReturnIcon from "@mui/icons-material/KeyboardReturnOutlined";
+import RefreshIcon from "@mui/icons-material/RefreshOutlined";
 import FileIcon from "@mui/icons-material/DescriptionOutlined";
+import NewFileIcon from "@mui/icons-material/NoteAddOutlined";
 import BinaryFileIcon from "@mui/icons-material/InsertDriveFileOutlined";
-import SpeedDial from "@mui/material/SpeedDial";
-import SpeedDialIcon from "@mui/material/SpeedDialIcon";
-import SpeedDialAction from "@mui/material/SpeedDialAction";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import filesSettings from "./filesSettings.json";
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 
 // *****************************************
 // COMPONENTS
@@ -230,60 +233,9 @@ function PathEntry({ entryHandle }) {
     return (
         <ApplyDrop onDropHandler={onDropHandler}>
             <Button size="small" onClick={onClickHandler} sx={{ minWidth: 10, textTransform: "none" }}>
-                {entryHandle.name === "\\" ? "ROOT" : entryHandle.name}
+                {getPathEntryLabel(entryHandle.name)}
             </Button>
         </ApplyDrop>
-    );
-}
-
-function AddEntry({ showFolderView, currentFolderHandle, setIsLoading }) {
-    const actions = [
-        {
-            icon: <FileIcon />,
-            name: "new file",
-            handler: async (event) => {
-                console.log("AddEntry new file called", event);
-                const newName = await promptUniqueName(currentFolderHandle, "New file name:", "");
-                if (!newName) {
-                    return;
-                }
-                setIsLoading(true);
-                await addNewFile(currentFolderHandle, newName);
-                await showFolderView(currentFolderHandle);
-                setIsLoading(false);
-            },
-        },
-        {
-            icon: <FolderIcon />,
-            name: "new folder",
-            handler: async (event) => {
-                console.log("AddEntry new folder called", event);
-                const newName = await promptUniqueName(currentFolderHandle, "New folder name:", "");
-                if (!newName) {
-                    return;
-                }
-                setIsLoading(true);
-                await addNewFolder(currentFolderHandle, newName);
-                await showFolderView(currentFolderHandle);
-                setIsLoading(false);
-            },
-        },
-    ];
-    return (
-        <SpeedDial
-            ariaLabel="SpeedDial basic example"
-            sx={{ position: "absolute", bottom: 16, right: 16 }}
-            icon={<SpeedDialIcon />}
-        >
-            {actions.map((action) => (
-                <SpeedDialAction
-                    key={action.name}
-                    icon={action.icon}
-                    tooltipTitle={action.name}
-                    onClick={action.handler}
-                />
-            ))}
-        </SpeedDial>
     );
 }
 
@@ -327,6 +279,7 @@ export default function FolderView({ rootFolder, onFileClick, activeEditorInfo }
             return [...curPath, folderHandle];
         });
     }
+
     async function handleDrop(targetFolder) {
         if (await targetFolder.isSameEntry(entryOnDrag)) {
             return;
@@ -343,6 +296,54 @@ export default function FolderView({ rootFolder, onFileClick, activeEditorInfo }
         await showFolderView(currentFolderHandle);
         setIsLoading(false);
     }
+
+    const toolbarItems = [
+        {
+            name: "new_file",
+            title: "New file",
+            icon: NewFileIcon,
+            handler: async () => {
+                console.log("FolderView new file called", event);
+                const newName = await promptUniqueName(currentFolderHandle, "New file name:", "");
+                if (!newName) {
+                    return;
+                }
+                setIsLoading(true);
+                const newFileHandle = await addNewFile(currentFolderHandle, newName);
+                await showFolderView(currentFolderHandle);
+                setIsLoading(false);
+                onFileClick(newFileHandle);
+            },
+        },
+        {
+            name: "new_folder",
+            title: "New folder",
+            icon: NewFolderIcon,
+            handler: async (event) => {
+                console.log("FolderView new folder called", event);
+                const newName = await promptUniqueName(currentFolderHandle, "New folder name:", "");
+                if (!newName) {
+                    return;
+                }
+                setIsLoading(true);
+                await addNewFolder(currentFolderHandle, newName);
+                await showFolderView(currentFolderHandle);
+                setIsLoading(false);
+            },
+        },
+        {
+            name: "refresh",
+            title: "Refresh",
+            icon: RefreshIcon,
+            handler: async (event) => {
+                console.log("Toolbar refresh called", event);
+                setIsLoading(true);
+                await showFolderView(currentFolderHandle);
+                setIsLoading(false);
+            },
+        },
+    ];
+
     return (
         <div
             style={{
@@ -361,13 +362,37 @@ export default function FolderView({ rootFolder, onFileClick, activeEditorInfo }
             >
                 <CurFolderContext.Provider value={{ currentFolderHandle, onFileClick, showFolderView, setIsLoading }}>
                     <DragContext.Provider value={{ setEntryOnDrag, handleDrop }}>
-                        <Breadcrumbs aria-label="breadcrumb">
+                        <Breadcrumbs aria-label="breadcrumb" separator="﹥">
                             {path.map((entry) => (
                                 <PathEntry entryHandle={entry} key={"local_file_system_path_key_" + entry.name} />
                             ))}
                         </Breadcrumbs>
                     </DragContext.Provider>
                 </CurFolderContext.Provider>
+                <Divider />
+                <Toolbar variant="dense" disableGutters={true} sx={{ minHeight: "35px" }}>
+                    <Typography component="div" noWrap={true} sx={{ flexGrow: 1, pl: 1, fontSize: "14px" }}>
+                        {getPathEntryLabel(path[path.length - 1].name)}
+                    </Typography>
+                    {toolbarItems.map((item) => {
+                        return (
+                            <Tooltip
+                                key={"local_file_system_toolbar_item_key_" + item.name}
+                                id={item.name}
+                                title={item.title}
+                            >
+                                <IconButton
+                                    edge="start"
+                                    size="small"
+                                    style={{borderRadius: 0}}
+                                    onClick={item.handler}
+                                >
+                                    <item.icon />
+                                </IconButton>
+                            </Tooltip>
+                        );
+                    })}
+                </Toolbar>
                 <Divider />
             </div>
             <div
@@ -415,11 +440,6 @@ export default function FolderView({ rootFolder, onFileClick, activeEditorInfo }
                     </DragContext.Provider>
                 </CurFolderContext.Provider>
             </div>
-            <AddEntry
-                showFolderView={showFolderView}
-                currentFolderHandle={currentFolderHandle}
-                setIsLoading={setIsLoading}
-            />
             <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={isLoading}>
                 <CircularProgress color="inherit" />
             </Backdrop>
@@ -522,6 +542,10 @@ async function promptUniqueName(folderHandle, promptLabel, actualName) {
         return;
     }
     return newName;
+}
+
+export function getPathEntryLabel(entryName) {
+    return (entryName === "\\") ? "ROOT" : entryName;
 }
 
 // file level ====================================
