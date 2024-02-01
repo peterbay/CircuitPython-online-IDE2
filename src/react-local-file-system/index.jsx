@@ -27,32 +27,6 @@ import Tooltip from '@mui/material/Tooltip';
 // COMPONENTS
 // *****************************************
 
-//util
-function dateString() {
-    try {
-        Object.defineProperty(Date.prototype, "YYYYMMDDHHMMSS", {
-            // https://stackoverflow.com/a/19449076/7037749
-            value: function () {
-                function pad2(n) {
-                    // always returns a string
-                    return (n < 10 ? "0" : "") + n;
-                }
-
-                return (
-                    this.getFullYear() +
-                    pad2(this.getMonth() + 1) +
-                    pad2(this.getDate()) +
-                    pad2(this.getHours()) +
-                    pad2(this.getMinutes()) +
-                    pad2(this.getSeconds())
-                );
-            },
-        });
-    } catch {}
-    const now = new Date();
-    return now.YYYYMMDDHHMMSS();
-}
-
 // wrapper
 
 function ApplyContextMenu({ children, items }) {
@@ -152,7 +126,7 @@ function ContentEntry({ entryHandle, activeEditorInfo }) {
     // handler
     const items = [
         {
-            name: "rename",
+            name: "Rename",
             handler: async (event) => {
                 console.log("ContentEntry rename handler called", event);
                 const newName = await promptUniqueName(currentFolderHandle, "Rename from '" + entryHandle.name + "' to:", entryHandle.name);
@@ -166,17 +140,18 @@ function ContentEntry({ entryHandle, activeEditorInfo }) {
             },
         },
         {
-            name: "duplicate",
+            name: "Duplicate",
             handler: async (event) => {
                 console.log("ContentEntry duplicate handler called", event);
+                const cloneName = await getDuplicateName(currentFolderHandle, entryHandle);
                 setIsLoading(true);
-                await copyEntry(entryHandle, currentFolderHandle, entryHandle.name + "_copy_" + dateString());
+                await copyEntry(entryHandle, currentFolderHandle, cloneName);
                 await showFolderView(currentFolderHandle);
                 setIsLoading(false);
             },
         },
         {
-            name: "remove",
+            name: "Remove",
             handler: async (event) => {
                 console.log("ContentEntry remove handler called", event);
                 if (!confirm('Are you sure to remove "' + entryHandle.name + '"?\nThis is not revertible!')) {
@@ -548,6 +523,28 @@ async function promptUniqueName(folderHandle, promptLabel, actualName) {
 
 export function getPathEntryLabel(entryName) {
     return (entryName === "\\") ? "ROOT" : entryName;
+}
+
+export async function getDuplicateName(parentHandle, entry) {
+    let cloneIndex = 0;
+    let namePart = entry.name;
+    let extensionPart = null;
+
+    if (!isFolder(entry)) {
+        const fileNameParts = entry.name.match(/^(.*)(\.[^\.]+)$/);
+        if (fileNameParts) {
+            namePart = fileNameParts[1];
+            extensionPart = fileNameParts[2];
+        }
+    }
+
+    let cloneName = namePart + "_copy" + (extensionPart || "");
+    while (await checkEntryExists(parentHandle, cloneName)) {
+        cloneIndex++;
+        cloneName = namePart + "_copy_" + cloneIndex.toString() + (extensionPart || "");
+    }
+
+    return cloneName;
 }
 
 // file level ====================================
