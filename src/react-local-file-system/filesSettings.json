@@ -1,0 +1,34 @@
+{
+    "extension": {
+        "py": {
+            "isBinary": false,
+            "canRun": true,
+            "color": "darkblue"
+        },
+        "mpy": {
+            "isBinary": true,
+            "canRun": true,
+            "color": "#ffcc00"
+        },
+        "txt": {
+            "isBinary": false,
+            "canRun": false,
+            "color": "#888888"
+        },
+        "json": {
+            "isBinary": false,
+            "canRun": false,
+            "color": "green"
+        },
+        "toml": {
+            "isBinary": false,
+            "canRun": false,
+            "color": "green"
+        }
+    },
+    "default": {
+        "isBinary": false,
+        "canRun": false,
+        "color": "#888888"
+    }
+}

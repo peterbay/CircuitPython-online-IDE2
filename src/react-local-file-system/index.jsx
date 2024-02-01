@@ -7,9 +7,10 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Divider from "@mui/material/Divider";
-import FolderIcon from "@mui/icons-material/Folder";
+import FolderIcon from "@mui/icons-material/FolderOutlined";
 import ReturnIcon from "@mui/icons-material/KeyboardReturnOutlined";
-import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
+import FileIcon from "@mui/icons-material/DescriptionOutlined";
+import BinaryFileIcon from "@mui/icons-material/InsertDriveFileOutlined";
 import SpeedDial from "@mui/material/SpeedDial";
 import SpeedDialIcon from "@mui/material/SpeedDialIcon";
 import SpeedDialAction from "@mui/material/SpeedDialAction";
@@ -17,6 +18,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
+import filesSettings from "./filesSettings.json";
 
 // *****************************************
 // COMPONENTS
@@ -121,6 +123,29 @@ function ApplyDrop({ children, onDropHandler }) {
 function ContentEntry({ entryHandle, activeEditorInfo }) {
     const { currentFolderHandle, onFileClick, showFolderView, setIsLoading } = useContext(CurFolderContext);
     const { setEntryOnDrag, handleDrop } = useContext(DragContext);
+
+    const isSelected = (activeEditorInfo && activeEditorInfo.fullPath === entryHandle.fullPath);
+    const entryName = (entryHandle.isParent) ? ".." : entryHandle.name;
+    const isDraggable = !entryHandle.isParent;
+    const fileOptions = (entryHandle.extension && filesSettings.extension[entryHandle.extension]) || filesSettings.default;
+    const isReadOnly = fileOptions.isBinary;
+
+    let icon = <FileIcon />;
+    if (entryHandle.isParent) {
+        icon = <ReturnIcon />;
+
+    } else if (isFolder(entryHandle)) {
+        icon = <FolderIcon />;
+
+    } else if (fileOptions.isBinary) {
+        icon = <BinaryFileIcon />;
+
+    }
+
+    const style = {
+        color: fileOptions.color,
+    };
+
     // handler
     const items = [
         {
@@ -166,7 +191,7 @@ function ContentEntry({ entryHandle, activeEditorInfo }) {
         if (isFolder(entryHandle)) {
             showFolderView(entryHandle);
         } else {
-            onFileClick(entryHandle);
+            onFileClick(entryHandle, isReadOnly);
         }
     }
     function onDragHandler(event) {
@@ -177,16 +202,12 @@ function ContentEntry({ entryHandle, activeEditorInfo }) {
         console.log("ContentEntry onDropHandler called", event);
         handleDrop(entryHandle);
     }
-    const isSelected = (activeEditorInfo && activeEditorInfo.fullPath === entryHandle.fullPath);
-    const entryName = (entryHandle.isParent) ? ".." : entryHandle.name;
-    const isDraggable = !entryHandle.isParent;
-    const icon = (entryHandle.isParent) ? <ReturnIcon /> : (isFolder(entryHandle) ? <FolderIcon /> : <InsertDriveFileIcon />);
 
     const entry = (
         <ApplyContextMenu items={items}>
             <ListItem disablePadding dense>
                 <ListItemButton onClick={onClickHandler} selected={isSelected}>
-                    <ListItemIcon sx={{ minWidth: "30px" }}>{icon}</ListItemIcon>
+                    <ListItemIcon sx={{ minWidth: "30px" }} style={style}>{icon}</ListItemIcon>
                     <ListItemText draggable={isDraggable} onDragStart={onDragHandler} primary={entryName} />
                 </ListItemButton>
             </ListItem>
@@ -218,7 +239,7 @@ function PathEntry({ entryHandle }) {
 function AddEntry({ showFolderView, currentFolderHandle, setIsLoading }) {
     const actions = [
         {
-            icon: <InsertDriveFileIcon />,
+            icon: <FileIcon />,
             name: "new file",
             handler: async (event) => {
                 console.log("AddEntry new file called", event);
@@ -561,9 +582,13 @@ export async function getFolderContent(folderHandle, withParent = false) {
         layer.push(parentEntry);
     }
     for await (const entry of await folderHandle.values()) {
+        const matchExtension = entry.name.match(/\.([^\.]+)$/i);
+
         entry.parent = folderHandle;
         entry.isParent = false;
         entry.fullPath = (folderHandle.fullPath || "") + "/" + entry.name;
+        entry.extension = (matchExtension) ? matchExtension[1].toLowerCase() : null;
+
         layer.push(entry);
     }
     return layer;

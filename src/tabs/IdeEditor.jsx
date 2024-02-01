@@ -26,7 +26,7 @@ import { FILE_EDITED } from "../constants";
 // Flex layout
 import * as FlexLayout from "flexlayout-react";
 
-export default function IdeEditor({ fileHandle, node }) {
+export default function IdeEditor({ fileHandle, node, readOnly}) {
     const { sendCtrlC, sendCtrlD, sendCode } = useSerialCommands();
     const { config } = useContext(ideContext);
     const aceEditorRef = useRef(null);
@@ -218,6 +218,7 @@ export default function IdeEditor({ fileHandle, node }) {
                     showLineNumbers: true,
                     tabSize: 4,
                 }}
+                readOnly={readOnly || false}
             />
             <Tooltip
                 title="Save and Run"
