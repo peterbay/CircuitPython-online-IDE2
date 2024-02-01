@@ -8,6 +8,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Divider from "@mui/material/Divider";
 import FolderIcon from "@mui/icons-material/Folder";
+import ReturnIcon from "@mui/icons-material/KeyboardReturnOutlined";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import SpeedDial from "@mui/material/SpeedDial";
 import SpeedDialIcon from "@mui/material/SpeedDialIcon";
@@ -177,13 +178,16 @@ function ContentEntry({ entryHandle, activeEditorInfo }) {
         handleDrop(entryHandle);
     }
     const isSelected = (activeEditorInfo && activeEditorInfo.fullPath === entryHandle.fullPath);
+    const entryName = (entryHandle.isParent) ? ".." : entryHandle.name;
+    const isDraggable = !entryHandle.isParent;
+    const icon = (entryHandle.isParent) ? <ReturnIcon /> : (isFolder(entryHandle) ? <FolderIcon /> : <InsertDriveFileIcon />);
 
     const entry = (
         <ApplyContextMenu items={items}>
             <ListItem disablePadding dense>
                 <ListItemButton onClick={onClickHandler} selected={isSelected}>
-                    <ListItemIcon sx={{ minWidth: "30px" }}>{isFolder(entryHandle) ? <FolderIcon /> : <InsertDriveFileIcon />}</ListItemIcon>
-                    <ListItemText draggable={true} onDragStart={onDragHandler} primary={entryHandle.name} />
+                    <ListItemIcon sx={{ minWidth: "30px" }}>{icon}</ListItemIcon>
+                    <ListItemText draggable={isDraggable} onDragStart={onDragHandler} primary={entryName} />
                 </ListItemButton>
             </ListItem>
         </ApplyContextMenu>
@@ -286,7 +290,7 @@ export default function FolderView({ rootFolder, onFileClick, activeEditorInfo }
         // set context
         setCurrentFolderHandle(folderHandle);
         // set content
-        setContent(await getFolderContent(folderHandle));
+        setContent(await getFolderContent(folderHandle, true));
         // set path
         // if folderHandle in path, cut what ever behind it
         for (var i = 0; i < path.length; i++) {
@@ -356,6 +360,12 @@ export default function FolderView({ rootFolder, onFileClick, activeEditorInfo }
                         <List>
                             {content
                                 .sort((a, b) => {
+                                    if (a.isParent && !b.isParent) {
+                                        return -1;
+                                    }
+                                    if (!a.isParent && b.isParent) {
+                                        return 1;
+                                    }
                                     if (isFolder(a) && !isFolder(b)) {
                                         return -1;
                                     }
@@ -543,9 +553,16 @@ export async function isEntryHealthy(entryHandle) {
     }
 }
 
-export async function getFolderContent(folderHandle) {
+export async function getFolderContent(folderHandle, withParent = false) {
     const layer = [];
+    if (withParent && folderHandle.parent) {
+        const parentEntry = folderHandle.parent;
+        parentEntry.isParent = true;
+        layer.push(parentEntry);
+    }
     for await (const entry of await folderHandle.values()) {
+        entry.parent = folderHandle;
+        entry.isParent = false;
         entry.fullPath = (folderHandle.fullPath || "") + "/" + entry.name;
         layer.push(entry);
     }
