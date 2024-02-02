@@ -289,7 +289,7 @@ export default function FolderView({ rootFolder, onFileClick, activeEditorInfo }
                 await showFolderView(currentFolderHandle);
                 setIsLoading(false);
                 newFileHandle.fullPath = (currentFolderHandle.fullPath || "") + "/" + newFileHandle.name;
-                onFileClick(newFileHandle);
+                onFileClick(newFileHandle, false, true);
             },
         },
         {

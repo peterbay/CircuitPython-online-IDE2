@@ -53,7 +53,7 @@ export default function IdeBody() {
         return null;
     };
 
-    async function onFileClick(fileHandle, readOnly = false) {
+    async function onFileClick(fileHandle, isReadOnly = false, isNewFile = false) {
         const fileName = fileHandle.name;
         const fullPath = fileHandle.fullPath;
         const tabNode = findTabByFilePath(model.getRoot(), fullPath);
@@ -79,7 +79,8 @@ export default function IdeBody() {
                         config: {
                             fileKey: fileKey,
                             fullPath: fullPath,
-                            readOnly: readOnly,
+                            isReadOnly: isReadOnly,
+                            isNewFile: isNewFile,
                         }
                     },
 
@@ -120,7 +121,12 @@ export default function IdeBody() {
             const config = node.getConfig();
             return (
                 <div className="tab_content" style={fullSize}>
-                    <IdeEditor fileHandle={fileLookUp[config.fileKey]} node={node} readOnly={config.readOnly} />
+                    <IdeEditor
+                        fileHandle={fileLookUp[config.fileKey]}
+                        node={node}
+                        isReadOnly={config.isReadOnly}
+                        isNewFile={config.isNewFile}
+                    />
                 </div>
             );
         } else if (component === "serial_raw") {

@@ -8,30 +8,125 @@ import "ace-builds/src-min-noconflict/ext-language_tools";
 import "ace-builds/src-noconflict/mode-python";
 import "ace-builds/src-noconflict/mode-json";
 import "ace-builds/src-noconflict/mode-markdown";
+import "ace-builds/src-noconflict/mode-html";
+import "ace-builds/src-noconflict/mode-toml";
 import "ace-builds/src-noconflict/theme-tomorrow";
 // MUI
 import SaveIcon from "@mui/icons-material/Save";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import Divider from "@mui/material/Divider";
+
 // Layout
 import PopUp from "../layout/PopUp";
 // file utils
 import { getFileText, writeFileText } from "../react-local-file-system";
 // context
 import ideContext from "../ideContext";
-// commands
-import useSerialCommands from "../serial/useSerialCommands";
 // constant
 import { FILE_EDITED } from "../constants";
 // Flex layout
 import * as FlexLayout from "flexlayout-react";
 
-export default function IdeEditor({ fileHandle, node, readOnly}) {
-    const { sendCtrlC, sendCtrlD, sendCode } = useSerialCommands();
+function ToolbarEntry({ content, fixedWidth = null }) {
+    const sx = {
+        flexGrow: 1,
+        pl: 1,
+        fontSize: "14px",
+    };
+
+    if (fixedWidth) {
+        sx.width = fixedWidth;
+    }
+
+    return (
+        <Typography
+            component="div"
+            noWrap={true}
+            sx={sx}
+        >
+            {content}
+        </Typography>
+    );
+}
+
+export default function IdeEditor({ fileHandle, node, isReadOnly, isNewFile }) {
     const { config } = useContext(ideContext);
     const aceEditorRef = useRef(null);
-    const [text, setText] = useState("");
+
+    const [configNewLine, setConfigNewLine] = useState(false);
+    const [configWordWrap, setConfigWordWrap] = useState(false);
+    const [editorCursorInfo, setEditorCursorInfo] = useState(false);
+    const [editorNewLineCharacter, setEditorNewLineCharacter] = useState(false);
+    const [editorSelectedLength, setEditorSelectedLength] = useState(false);
     const [fileEdited, setFileEdited] = useState(false);
+    const [selectionInfo, setSelectionInfo] = useState(false);
+    const [tabInfo, setTabInfo] = useState(false);
+    const [text, setText] = useState("");
+
+    const editorModes = {
+        py: {
+            mode: "python",
+            label: "Python",
+        },
+        md: {
+            mode: "markdown",
+            label: "Markdown",
+        },
+        json: {
+            mode: "json",
+            label: "JSON",
+        },
+        html: {
+            mode: "html",
+            label: "HTML",
+        },
+        toml: {
+            mode: "toml",
+            label: "TOML",
+        },
+    };
+
+    const defaultEditorMode = {
+        mode: "text",
+        label: "Text",
+    };
+
+    const height = node.getRect().height;
+    const fileNameLower = fileHandle.name.toLowerCase();
+    const extensionMatch = fileNameLower.match(/\.([^.]+)$/);
+    const extension = extensionMatch ? extensionMatch[1] : "";
+    const editorMode = (editorModes[extension] || defaultEditorMode).mode;
+    const editorModeLabel = (editorModes[extension] || defaultEditorMode).label;
+    const stateInfo = isReadOnly ? "Read Only" : (fileEdited ? "Unsaved" : "Saved");
+
+    useEffect(()=>{
+        setConfigWordWrap(config.editor.wrap);
+        if (isNewFile) {
+            setConfigNewLine(config.editor.newline_mode);
+        } else {
+            setConfigNewLine("auto");
+        }
+    }, []);
+
+    useEffect(()=>{
+        const line = (editorCursorInfo.row || 0) + 1;
+        const column = (editorCursorInfo.column || 0) + 1;
+        const selectedLength = editorSelectedLength ?
+            "(" + editorSelectedLength.toString() + " selected)" : "";
+        setSelectionInfo(`Ln ${line}, Col ${column} ${selectedLength}`);
+    }, [editorCursorInfo, editorSelectedLength]);
+
+    useEffect(()=>{
+        const softTabs = (config.editor.use_soft_tabs === "spaces");
+        const softTabsLabel = softTabs ? "Spaces" : "Tabs";
+        const tabSize = config.editor.tab_size;
+        setTabInfo(`${softTabsLabel}: ${tabSize}`);
+    }, [config.editor.use_soft_tabs, config.editor.tab_size]);
+
     useEffect(() => {
         const name = (fileEdited ? FILE_EDITED : "") + fileHandle.name;
         node.getModel().doAction(FlexLayout.Actions.renameTab(node.getId(), name));
@@ -44,195 +139,120 @@ export default function IdeEditor({ fileHandle, node, readOnly}) {
             node.getModel().doAction(FlexLayout.Actions.updateNodeAttributes(node.getId(), { enableClose: true }));
         }
     }, [fileEdited, config.editor.block_closing_unsaved_tab]);
+
     useEffect(() => {
         async function loadText() {
-            const fileText = (await getFileText(fileHandle)).split("\r").join(""); // circuitPython turned to used \r but not very easy to handle
+            const fileText = (await getFileText(fileHandle));
             setText(fileText);
             setFileEdited(false);
         }
         loadText();
     }, [fileHandle]);
 
-    const height = node.getRect().height;
-    var mode = "text";
-    if (fileHandle.name.toLowerCase().endsWith(".py")) {
-        mode = "python";
-    }
-    if (fileHandle.name.toLowerCase().endsWith(".md")) {
-        mode = "markdown";
-    }
-    if (fileHandle.name.toLowerCase().endsWith(".json")) {
-        mode = "json";
-    }
     function saveFile(text) {
         writeFileText(fileHandle, text);
         setFileEdited(false);
     }
 
-    // send code from editor
-
-    function run_current_and_del() {
-        run_current_raw(true);
-    }
-
-    function run_current() {
-        run_current_raw(false);
-    }
-
-    function run_current_raw(del) {
-        var currline = aceEditorRef.current.editor.getCursorPosition().row;
-        var selected = aceEditorRef.current.editor.getSelectedText();
-        if (selected) {
-            // if any sellection
-            sendCode(selected);
-            if (del) {
-                aceEditorRef.current.editor.insert("");
-            }
-        } else {
-            var line_text = aceEditorRef.current.editor.session.getLine(currline);
-            sendCode(line_text);
-            if (del) {
-                aceEditorRef.current.editor.session.removeFullLines(currline, currline);
-                aceEditorRef.current.editor.gotoLine(
-                    currline,
-                    aceEditorRef.current.editor.session.getLine(currline).length,
-                    true
-                );
-                aceEditorRef.current.editor.insert("\n");
-            } else {
-                if (currline == aceEditorRef.current.editor.session.getLength() - 1) {
-                    aceEditorRef.current.editor.gotoLine(
-                        currline + 1,
-                        aceEditorRef.current.editor.session.getLine(currline).length,
-                        true
-                    );
-                    aceEditorRef.current.editor.insert("\n");
-                } else {
-                    aceEditorRef.current.editor.gotoLine(
-                        currline + 2,
-                        aceEditorRef.current.editor.session.getLine(currline + 1).length,
-                        true
-                    );
-                }
-            }
-        }
-    }
-
-    function run_cell() {
-        var current_line = aceEditorRef.current.editor.getCursorPosition().row;
-        var topline = current_line; // included
-        while (true) {
-            if (topline == 0) {
-                break;
-            }
-            if (aceEditorRef.current.editor.session.getLine(topline).startsWith("#%%")) {
-                break;
-            }
-            topline -= 1;
-        }
-        var bottonline = current_line; // not included
-        while (true) {
-            bottonline += 1;
-            if (bottonline == aceEditorRef.current.editor.session.getLength()) {
-                aceEditorRef.current.editor.gotoLine(aceEditorRef.current.editor.session.getLength(), 0, true);
-                break;
-            }
-            if (aceEditorRef.current.editor.session.getLine(bottonline).startsWith("#%%")) {
-                aceEditorRef.current.editor.gotoLine(bottonline + 1, 0, true);
-                break;
-            }
-        }
-        var cell = aceEditorRef.current.editor.getValue().split("\n").slice(topline, bottonline).join("\n");
-
-        console.log("DEBUG", "cell detected", cell);
-
-        sendCode(cell);
-    }
-
     if (aceEditorRef.current !== null) {
+        const commands = aceEditorRef.current.editor.commands;
         // add key bindings
-        aceEditorRef.current.editor.commands.addCommand({
+        commands.addCommand({
             name: "save",
             bindKey: { win: "Ctrl-S", mac: "Command-S" },
             exec: () => {
                 saveFile(text);
             },
         });
-        aceEditorRef.current.editor.commands.addCommand({
-            name: "ctrl-c",
-            bindKey: { win: "Ctrl-Shift-C", mac: "Ctrl-C" },
-            exec: sendCtrlC,
-        });
-        aceEditorRef.current.editor.commands.addCommand({
-            name: "ctrl-d",
-            bindKey: { win: "Ctrl-Shift-D", mac: "Ctrl-D" },
-            exec: sendCtrlD,
-        });
-        aceEditorRef.current.editor.commands.addCommand({
-            name: "run_current",
-            bindKey: { win: "Shift-Enter", mac: "Shift-Enter" },
-            exec: function (editor) {
-                console.log("run_current");
-                run_current(editor);
-            },
-        });
-        aceEditorRef.current.editor.commands.addCommand({
-            name: "run_current_and_del",
-            bindKey: { win: "Alt-Enter", mac: "Alt-Enter" },
-            exec: function (editor) {
-                console.log("run_current_and_del");
-                run_current_and_del(editor);
-            },
-        });
-        aceEditorRef.current.editor.commands.addCommand({
-            name: "run_cell",
-            bindKey: { win: "Ctrl-Enter", mac: "Cmd-Enter" },
-            exec: function (editor) {
-                console.log("run_cell");
-                run_cell(editor);
+        commands.addCommand({
+            name: "word_wrap",
+            bindKey: { win: "Alt-Z", mac: "Alt-Z" },
+            exec: () => {
+                setConfigWordWrap(!configWordWrap);
+                console.log("word_wrap", configWordWrap);
+                aceEditorRef.current.editor.session.setUseWrapMode(configWordWrap);
             },
         });
     }
 
     return (
         <PopUp title={fileHandle.name} parentStyle={{ height: height + "px" }}>
-            <AceEditor
-                ref={aceEditorRef}
-                mode={mode}
-                useSoftTabs={true}
-                wrapEnabled={true}
-                tabSize={4}
-                theme="tomorrow"
-                value={text}
-                height="100%"
-                width="100%"
-                onChange={(newValue) => {
-                    setText(newValue);
-                    setFileEdited(true);
-                }}
-                fontSize={config.editor.font + "pt"}
-                setOptions={{
-                    enableBasicAutocompletion: true,
-                    enableLiveAutocompletion: config.editor.live_autocompletion,
-                    enableSnippets: true,
-                    showLineNumbers: true,
-                    tabSize: 4,
-                }}
-                readOnly={readOnly || false}
-            />
-            <Tooltip
-                title="Save and Run"
-                sx={{ position: "absolute", bottom: 16, right: 16, zIndex: 1 }}
-                followCursor={true}
-            >
-                <IconButton
-                    onClick={() => {
-                        saveFile(text);
+            <Box sx={{ flexGrow: 1, height: "calc(" + height + "px - 38px)" }}>
+                <AceEditor
+                    ref={aceEditorRef}
+                    mode={editorMode}
+                    useSoftTabs={config.editor.use_soft_tabs}
+                    wrapEnabled={true}
+                    tabSize={config.editor.tab_size}
+                    theme="tomorrow"
+                    value={text}
+                    height="100%"
+                    width="100%"
+                    onChange={(newValue) => {
+                        setText(newValue);
+                        setFileEdited(true);
                     }}
+                    fontSize={config.editor.font + "pt"}
+                    setOptions={{
+                        cursorStyle: "shooth", // "ace"|"slim"|"smooth"|"wide"
+                        enableBasicAutocompletion: true,
+                        enableLiveAutocompletion: config.editor.live_autocompletion,
+                        enableSnippets: true,
+                        highlightActiveLine: config.editor.highlight_active_line,
+                        highlightSelectedWord: config.editor.highlight_selected_word,
+                        hScrollBarAlwaysVisible: true,
+                        newLineMode: configNewLine,
+                        showInvisibles: config.editor.show_invisibles,
+                        showLineNumbers: config.editor.show_line_numbers,
+                        tabSize: config.editor.tab_size,
+                        useSoftTabs: (config.editor.use_soft_tabs === "spaces"),
+                        vScrollBarAlwaysVisible: true,
+                        wrap: configWordWrap,
+                    }}
+                    readOnly={isReadOnly || false}
+                    onCursorChange={(selection) => {
+                        const session = aceEditorRef.current.editor.session;
+                        setEditorCursorInfo(selection.getCursor());
+
+                        const range = selection.getRange();
+                        const textRange = session.getTextRange(range);
+                        setEditorSelectedLength(textRange.length);
+
+                        const newLineCharacter = session.doc.getNewLineCharacter();
+                        setEditorNewLineCharacter(newLineCharacter === "\n" ? "LF" : "CRLF");
+                    }}
+                />
+            </Box>
+            <Box sx={{ flexGrow: 0, maxHeight: "35px" }}>
+                <Divider />
+                <Toolbar
+                    variant="dense"
+                    disableGutters={true}
+                    sx={{ minHeight: "35px", maxHeight: "35px" }}
                 >
-                    <SaveIcon />
-                </IconButton>
-            </Tooltip>
+                    <ToolbarEntry content={`Mode: ${editorModeLabel}`} />
+                    <ToolbarEntry content={`State: ${stateInfo}`} />
+                    <ToolbarEntry content={editorNewLineCharacter} />
+                    <ToolbarEntry content={tabInfo} />
+                    <ToolbarEntry content={selectionInfo} fixedWidth={"200px"} />
+                    <Tooltip
+                        key={"editor-save"}
+                        id="editor-save"
+                        title="Save and Run"
+                    >
+                        <IconButton
+                            edge="start"
+                            size="small"
+                            style={{borderRadius: 0}}
+                            onClick={() => {
+                                saveFile(text);
+                            }}
+                        >
+                            <SaveIcon />
+                        </IconButton>
+                    </Tooltip>
+                </Toolbar>
+            </Box>
         </PopUp>
     );
 }
