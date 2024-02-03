@@ -12,3 +12,4 @@ export const SOFT_REBOOT = "soft reboot";
 
 // Editor
 export const FILE_EDITED = "✨";
+export const FILE_READ_ONLY = "🔒";

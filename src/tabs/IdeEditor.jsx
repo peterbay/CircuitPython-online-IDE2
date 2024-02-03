@@ -27,7 +27,7 @@ import { getFileText, writeFileText } from "../react-local-file-system";
 // context
 import ideContext from "../ideContext";
 // constant
-import { FILE_EDITED } from "../constants";
+import { FILE_EDITED, FILE_READ_ONLY } from "../constants";
 // Flex layout
 import * as FlexLayout from "flexlayout-react";
 
@@ -128,17 +128,26 @@ export default function IdeEditor({ fileHandle, node, isReadOnly, isNewFile }) {
     }, [config.editor.use_soft_tabs, config.editor.tab_size]);
 
     useEffect(() => {
-        const name = (fileEdited ? FILE_EDITED : "") + fileHandle.name;
+        let namePrefix = "";
+        if (isReadOnly) {
+            namePrefix = `${FILE_READ_ONLY} `;
+        } else if (fileEdited) {
+            namePrefix = `${FILE_EDITED} `;
+        }  
+
+        const name = `${namePrefix}${fileHandle.name}`;
+
         node.getModel().doAction(FlexLayout.Actions.renameTab(node.getId(), name));
-        if (config.editor.block_closing_unsaved_tab) {
-            node.getModel().doAction(
-                FlexLayout.Actions.updateNodeAttributes(node.getId(), { enableClose: !fileEdited })
-            );
-        } else {
-            // just incase config change in the middle
-            node.getModel().doAction(FlexLayout.Actions.updateNodeAttributes(node.getId(), { enableClose: true }));
+
+        let enableClose = true;
+        if (config.editor.block_closing_unsaved_tab && fileEdited) {
+            enableClose = false;
         }
-    }, [fileEdited, config.editor.block_closing_unsaved_tab]);
+
+        const action = FlexLayout.Actions.updateNodeAttributes(node.getId(), { enableClose });
+        node.getModel().doAction(action);
+
+    }, [isReadOnly, fileEdited, config.editor.block_closing_unsaved_tab]);
 
     useEffect(() => {
         async function loadText() {
@@ -197,7 +206,7 @@ export default function IdeEditor({ fileHandle, node, isReadOnly, isNewFile }) {
                         cursorStyle: "shooth", // "ace"|"slim"|"smooth"|"wide"
                         enableBasicAutocompletion: true,
                         enableLiveAutocompletion: config.editor.live_autocompletion,
-                        enableSnippets: true,
+                        enableSnippets: false,
                         highlightActiveLine: config.editor.highlight_active_line,
                         highlightSelectedWord: config.editor.highlight_selected_word,
                         hScrollBarAlwaysVisible: true,
