@@ -6,24 +6,15 @@ import * as FlexLayout from "flexlayout-react";
 //context
 import ideContext from "./ideContext";
 
+import { getTabsByName } from "./tabs/Helpers";
+
 export default function IdeHead() {
     const { flexModel: model, openDirectory, connectToSerialPort } = useContext(ideContext);
 
-    function findTabByName (node, name) {
-        if (node.getType() === "tab" && node.getName() === name) {
-            return node;
-        }
-        if (node.getChildren) {
-            for (let child of node.getChildren()) {
-                const found = findTabByName(child, name);
-                if (found) return found;
-            }
-        }
-        return null;
-    }
-
     function openTab(name, component) {
-        const tabNode = findTabByName(model.getRoot(), name);
+        const tabNodes = getTabsByName(model, "root", name, "equal");
+        const tabNode = (tabNodes && tabNodes.length > 0) ? tabNodes[0] : null;
+
         if (tabNode instanceof FlexLayout.TabNode) {
             // Activate the found tab
             model.doAction(FlexLayout.Actions.selectTab(tabNode.getId()));

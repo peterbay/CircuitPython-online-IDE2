@@ -14,49 +14,22 @@ import ContactMe from "./infopages/ContactMe";
 import * as FlexLayout from "flexlayout-react";
 //context
 import ideContext from "./ideContext";
-// constant
-import { FILE_EDITED } from "./constants";
+// tab helpers
+import { getTabsByPath, getActiveEditorTabConfig } from "./tabs/Helpers";
 
 const fullSize = { height: "100%", width: "100%" };
-
-const findTabByName = (node, name) => {
-    if (node.getType() === "tab" && (node.getName() === name || node.getName() === FILE_EDITED + name)) {
-        return node;
-    }
-    if (node.getChildren) {
-        for (let child of node.getChildren()) {
-            const found = findTabByName(child, name);
-            if (found) return found;
-        }
-    }
-    return null;
-};
 
 export default function IdeBody() {
     const { flexModel: model, schemas, config, set_config } = useContext(ideContext);
     const [fileLookUp, setFileLookUp] = useState({});
     const [activeEditorInfo, setActiveEditorInfo] = useState(null);
 
-    const findTabByFilePath = (node, name) => {
-        if (node.getType() === "tab") {
-            const config = node.getConfig();
-            if (config && config.fullPath === name) {
-                return node;
-            }
-        }
-        if (node.getChildren) {
-            for (let child of node.getChildren()) {
-                const found = findTabByFilePath(child, name);
-                if (found) return found;
-            }
-        }
-        return null;
-    };
-
     async function onFileClick(fileHandle, isReadOnly = false, isNewFile = false) {
         const fileName = fileHandle.name;
         const fullPath = fileHandle.fullPath;
-        const tabNode = findTabByFilePath(model.getRoot(), fullPath);
+
+        const tabNodes = getTabsByPath(model, "root", fullPath, "equal");
+        const tabNode = (tabNodes && tabNodes.length > 0) ? tabNodes[0] : null;
 
         if (tabNode instanceof FlexLayout.TabNode) {
             // Activate the found tab
@@ -64,6 +37,7 @@ export default function IdeBody() {
         } else {
             // Open a new tab
             const fileKey = crypto.randomUUID();
+            const activeTabset = model.getActiveTabset();
             setFileLookUp((cur) => {
                 return {
                     ...cur,
@@ -83,8 +57,7 @@ export default function IdeBody() {
                             isNewFile: isNewFile,
                         }
                     },
-
-                    model.getActiveTabset() ? model.getActiveTabset().getId() : "initial_tabset",
+                    activeTabset ? activeTabset.getId() : "initial_tabset",
                     FlexLayout.DockLocation.CENTER,
                     -1
                 )
@@ -92,113 +65,78 @@ export default function IdeBody() {
         }
     }
 
-    function getActiveEditorTab() {
-        let activeTab = null;
-        const tabset = model.getActiveTabset();
-        if (tabset && tabset.getChildren) {
-            const children = tabset.getChildren();
-            if (children) {
-                for (let child of children) {
-                    if (child.isVisible()) {
-                        const config = child.getConfig();
-                        activeTab = config;
-                    }
-                }
-            }
-        }
-        setActiveEditorInfo(activeTab);
-    }
-
-    async function onAction(action) {
-        await model.doAction(action);
-        getActiveEditorTab();
-    }
-
     const factory = (node) => {
-        var component = node.getComponent();
+        const component = node.getComponent();
+        let tabContent = null;
+
         // main ones
         if (component === "editor") {
             const config = node.getConfig();
-            return (
-                <div className="tab_content" style={fullSize}>
-                    <IdeEditor
-                        fileHandle={fileLookUp[config.fileKey]}
-                        node={node}
-                        isReadOnly={config.isReadOnly}
-                        isNewFile={config.isNewFile}
-                    />
-                </div>
-            );
+            tabContent = <IdeEditor
+                fileHandle={fileLookUp[config.fileKey]}
+                node={node}
+                isReadOnly={config.isReadOnly}
+                isNewFile={config.isNewFile}
+            />;
+
         } else if (component === "serial_raw") {
-            return (
-                <div className="tab_content" style={fullSize}>
-                    <RawConsole />
-                </div>
-            );
+            tabContent = <RawConsole />;
+
         } else if (component === "folder_view") {
-            return (
-                <div className="tab_content" style={fullSize}>
-                    <IdeFolderView
-                        onFileClick={onFileClick}
-                        node={node}
-                        activeEditorInfo={activeEditorInfo}
-                    />
-                </div>
-            );
+            tabContent = <IdeFolderView
+                onFileClick={onFileClick}
+                node={node}
+                activeEditorInfo={activeEditorInfo}
+            />;
+
         } else if (component === "settings") {
-            return (
-                <div className="tab_content" style={fullSize}>
-                    <ConfigForms schemas={schemas} config={config} set_config={set_config} />
-                </div>
-            );
+            tabContent = <ConfigForms schemas={schemas} config={config} set_config={set_config} />;
+
         }
         // tools
         else if (component === "navigation") {
-            return (
-                <div className="tab_content" style={fullSize}>
-                    <Navigation />
-                </div>
-            );
+            tabContent = <Navigation />;
+
         } else if (component === "raw_plot") {
-            return (
-                <div className="tab_content" style={fullSize}>
-                    <RawPlotter node={node} />
-                </div>
-            );
+            tabContent = <RawPlotter node={node} />;
+
         }
         // info
         else if (component === "about") {
-            return (
-                <div className="tab_content" style={fullSize}>
-                    <About />
-                </div>
-            );
+            tabContent = <About />;
+
         } else if (component === "contact") {
-            return (
-                <div className="tab_content" style={fullSize}>
-                    <ContactMe />
-                </div>
-            );
+            tabContent = <ContactMe />;
+
         }
         // placeholder
         else if (component === "placeholder") {
-            return (
-                <div className="tab_content" style={fullSize}>
-                    <p>{node.getName()}</p>
-                </div>
-            );
+            tabContent = (<p>{node.getName()}</p>);
+
         }
+
+        return tabContent ? (
+            <div className="tab_content" style={fullSize}>
+                {tabContent}
+            </div>
+        ) : null;
     };
+
+    function updateActiveEditorInfo() {
+        const config = getActiveEditorTabConfig(model);
+        if (config) {
+            setActiveEditorInfo(config);
+        }
+    }
 
     return <FlexLayout.Layout
         model={model}
         factory={factory}
-        onAction={onAction}
-        onModelChange={() => {
-            getActiveEditorTab();
+        onAction={async (action) => {
+            await model.doAction(action);
+            updateActiveEditorInfo();
         }}
-        onRenderTab={() => {
-            getActiveEditorTab();
-        }}
+        onModelChange={updateActiveEditorInfo}
+        onRenderTab={updateActiveEditorInfo}
     />;
 }
