@@ -72,10 +72,6 @@ function Menu({ label, options }) {
                 aria-expanded={open ? "true" : undefined}
                 aria-haspopup="true"
                 onClick={handleToggle}
-                style={{
-                    textTransform: "none",
-                    color: grey[900],
-                }}
             >
                 {label}
             </Button>

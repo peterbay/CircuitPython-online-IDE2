@@ -7,8 +7,8 @@
             "title": "Global theme",
             "description": "Choose 'system' to follow OS theme settings",
             "type": "string",
-            "enum": ["system", "dark", "light"],
-            "default": "system"
+            "enum": [],
+            "default": ""
         }
     }
 }

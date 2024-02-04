@@ -3,32 +3,32 @@
         "py": {
             "isBinary": false,
             "canRun": true,
-            "color": "darkblue"
+            "class": "file-code"
         },
         "mpy": {
             "isBinary": true,
             "canRun": true,
-            "color": "#ffcc00"
+            "class": "file-binary"
         },
         "txt": {
             "isBinary": false,
             "canRun": false,
-            "color": "#888888"
+            "class": "file-text"
         },
         "json": {
             "isBinary": false,
             "canRun": false,
-            "color": "green"
+            "class": "file-data"
         },
         "toml": {
             "isBinary": false,
             "canRun": false,
-            "color": "green"
+            "class": "file-data"
         }
     },
     "default": {
         "isBinary": false,
         "canRun": false,
-        "color": "#888888"
+        "class": "file-default"
     }
 }

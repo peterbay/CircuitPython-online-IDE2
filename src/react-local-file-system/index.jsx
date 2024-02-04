@@ -119,9 +119,7 @@ function ContentEntry({ entryHandle, activeEditorInfo }) {
 
     }
 
-    const style = {
-        color: fileOptions.color,
-    };
+    const className = fileOptions.class || "";
 
     // handler
     const items = [
@@ -184,7 +182,7 @@ function ContentEntry({ entryHandle, activeEditorInfo }) {
     const entry = (
         <ListItem onContextMenu={(e)=> e.preventDefault()} disablePadding dense>
             <ListItemButton onClick={onClickHandler} selected={isSelected}>
-                <ListItemIcon sx={{ minWidth: "30px" }} style={style}>{icon}</ListItemIcon>
+                <ListItemIcon sx={{ minWidth: "30px" }} className={className}>{icon}</ListItemIcon>
                 <ListItemText draggable={isDraggable} onDragStart={onDragHandler} primary={entryName} />
             </ListItemButton>
         </ListItem>

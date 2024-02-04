@@ -10,7 +10,45 @@ import "ace-builds/src-noconflict/mode-json";
 import "ace-builds/src-noconflict/mode-markdown";
 import "ace-builds/src-noconflict/mode-html";
 import "ace-builds/src-noconflict/mode-toml";
+
+// light themes
+import "ace-builds/src-noconflict/theme-chrome";
+import "ace-builds/src-noconflict/theme-cloud9_day";
+import "ace-builds/src-noconflict/theme-clouds";
+import "ace-builds/src-noconflict/theme-crimson_editor";
+import "ace-builds/src-noconflict/theme-dreamweaver";
+import "ace-builds/src-noconflict/theme-eclipse";
+import "ace-builds/src-noconflict/theme-github";
+import "ace-builds/src-noconflict/theme-iplastic";
+import "ace-builds/src-noconflict/theme-kuroir";
+import "ace-builds/src-noconflict/theme-solarized_light";
+import "ace-builds/src-noconflict/theme-sqlserver";
+import "ace-builds/src-noconflict/theme-textmate";
 import "ace-builds/src-noconflict/theme-tomorrow";
+import "ace-builds/src-noconflict/theme-xcode";
+
+// dark themes
+import "ace-builds/src-noconflict/theme-ambiance";
+import "ace-builds/src-noconflict/theme-chaos";
+import "ace-builds/src-noconflict/theme-cloud9_night_low_color";
+import "ace-builds/src-noconflict/theme-cloud9_night";
+import "ace-builds/src-noconflict/theme-cobalt";
+import "ace-builds/src-noconflict/theme-dracula";
+import "ace-builds/src-noconflict/theme-github_dark";
+import "ace-builds/src-noconflict/theme-idle_fingers";
+import "ace-builds/src-noconflict/theme-kr_theme";
+import "ace-builds/src-noconflict/theme-merbivore_soft";
+import "ace-builds/src-noconflict/theme-merbivore";
+import "ace-builds/src-noconflict/theme-mono_industrial";
+import "ace-builds/src-noconflict/theme-monokai";
+import "ace-builds/src-noconflict/theme-nord_dark";
+import "ace-builds/src-noconflict/theme-solarized_dark";
+import "ace-builds/src-noconflict/theme-tomorrow_night_blue";
+import "ace-builds/src-noconflict/theme-tomorrow_night_bright";
+import "ace-builds/src-noconflict/theme-tomorrow_night_eighties";
+import "ace-builds/src-noconflict/theme-tomorrow_night";
+import "ace-builds/src-noconflict/theme-twilight";
+
 // MUI
 import SaveIcon from "@mui/icons-material/Save";
 import IconButton from "@mui/material/IconButton";
@@ -30,6 +68,8 @@ import ideContext from "../ideContext";
 import { FILE_EDITED, FILE_READ_ONLY } from "../constants";
 // Flex layout
 import * as FlexLayout from "flexlayout-react";
+
+import { getThemeNameByLabel } from "../layout/themes.js";
 
 function ToolbarEntry({ content, fixedWidth = null }) {
     const sx = {
@@ -66,6 +106,7 @@ export default function IdeEditor({ fileHandle, node, isReadOnly, isNewFile }) {
     const [selectionInfo, setSelectionInfo] = useState(false);
     const [tabInfo, setTabInfo] = useState(false);
     const [text, setText] = useState("");
+    const [theme, setTheme] = useState("");
 
     const editorModes = {
         py: {
@@ -110,7 +151,11 @@ export default function IdeEditor({ fileHandle, node, isReadOnly, isNewFile }) {
         } else {
             setConfigNewLine("auto");
         }
-    }, []);
+    }, [config.editor.wrap, config.editor.newline_mode]);
+
+    useEffect(()=>{
+        setTheme(getThemeNameByLabel(config.global.theme));
+    }, [config.global.theme]);
 
     useEffect(()=>{
         const line = (editorCursorInfo.row || 0) + 1;
@@ -193,7 +238,7 @@ export default function IdeEditor({ fileHandle, node, isReadOnly, isNewFile }) {
                     useSoftTabs={config.editor.use_soft_tabs}
                     wrapEnabled={true}
                     tabSize={config.editor.tab_size}
-                    theme="tomorrow"
+                    theme={theme}
                     value={text}
                     height="100%"
                     width="100%"
