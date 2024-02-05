@@ -124,9 +124,7 @@ export default function IdeBody() {
 
     function updateActiveEditorInfo() {
         const config = getActiveEditorTabConfig(model);
-        if (config) {
-            setActiveEditorInfo(config);
-        }
+        setActiveEditorInfo(config);
     }
 
     return <FlexLayout.Layout
