@@ -4,10 +4,10 @@ import { useState, useContext } from "react";
 // Tabs
 import IdeFolderView from "./tabs/IdeFolderView";
 import IdeEditor from "./tabs/IdeEditor";
-import RawConsole from "./tabs/RawConsole";
 import { ConfigForms } from "./react-user-config";
 import Navigation from "./tabs/Navigation";
 import RawPlotter from "./tabs/RawPlotter";
+import SerialConsole from "./tabs/SerialConsole";
 import About from "./infopages/About";
 import ContactMe from "./infopages/ContactMe";
 // Flex layout
@@ -79,9 +79,6 @@ export default function IdeBody() {
                 isNewFile={config.isNewFile}
             />;
 
-        } else if (component === "serial_raw") {
-            tabContent = <RawConsole />;
-
         } else if (component === "folder_view") {
             tabContent = <IdeFolderView
                 onFileClick={onFileClick}
@@ -99,6 +96,9 @@ export default function IdeBody() {
 
         } else if (component === "raw_plot") {
             tabContent = <RawPlotter node={node} />;
+
+        } else if (component === "serial_console") {
+            tabContent = <SerialConsole node={node} />;
 
         }
         // info

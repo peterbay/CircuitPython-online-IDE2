@@ -9,7 +9,7 @@ import ideContext from "./ideContext";
 import { getTabsByName } from "./tabs/Helpers";
 
 export default function IdeHead() {
-    const { flexModel: model, openDirectory, connectToSerialPort } = useContext(ideContext);
+    const { flexModel: model, openDirectory } = useContext(ideContext);
 
     function openTab(name, component) {
         const tabNodes = getTabsByName(model, "root", name, "equal");
@@ -38,25 +38,25 @@ export default function IdeHead() {
     const menuStructure = {
         title: "CircuitPython Online IDE",
         menu: [
-            {
-                label: "Connect",
-                options: [
-                    {
-                        text: "CircuitPy Drive",
-                        handler: () => {
-                            console.log("clicked on `CircuitPy Drive`");
-                            openDirectory();
-                        },
-                    },
-                    {
-                        text: "Serial Port",
-                        handler: () => {
-                            console.log("clicked on Serial");
-                            connectToSerialPort();
-                        },
-                    },
-                ],
-            },
+            // {
+            //     label: "Connect",
+            //     options: [
+            //         {
+            //             text: "CircuitPy Drive",
+            //             handler: () => {
+            //                 console.log("clicked on `CircuitPy Drive`");
+            //                 openDirectory();
+            //             },
+            //         },
+            //         {
+            //             text: "Serial Port",
+            //             handler: () => {
+            //                 console.log("clicked on Serial");
+            //                 // connectToSerialPort();
+            //             },
+            //         },
+            //     ],
+            // },
             {
                 label: "Tools",
                 options: [

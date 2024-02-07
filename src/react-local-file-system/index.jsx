@@ -425,6 +425,7 @@ export default function FolderView({ rootFolder, onFileClick, activeEditorInfo }
                     flexGrow: 0,
                 }}
             >
+                <Divider />
                 <Toolbar variant="dense" disableGutters={true} sx={{ minHeight: "35px" }}>
                     <Typography component="div" noWrap={true} sx={{ flexGrow: 1, pl: 1, fontSize: "14px" }}>
                         {foldersCount} folders

@@ -12,7 +12,6 @@ import ErrorIsNotChrome from "./infopages/ErrorIsNotChrome";
 import WarningIsMac from "./infopages/WarningIsMac";
 // Features
 import { useFileSystem } from "./react-local-file-system";
-import useSerial from "./serial/useSerial";
 import { useConfig } from "./react-user-config";
 import schemas from "./schemas";
 // context
@@ -59,7 +58,6 @@ if (globalSchema) {
 function App() {
     // get folder handler and status with useFileSystem hook
     const { openDirectory, directoryReady, statusText, rootDirHandle } = useFileSystem();
-    const { connectToSerialPort, sendDataToSerialPort, serialOutput, serialReady, serialTitle } = useSerial();
     const { config, set_config, ready: configReady } = useConfig(schemas);
     const [flexModel, setFlexModel] = useState(FlexLayout.Model.fromJson(layout));
 
@@ -100,10 +98,6 @@ function App() {
                 openDirectory: openDirectory,
                 directoryReady: directoryReady,
                 rootDirHandle: rootDirHandle,
-                connectToSerialPort: connectToSerialPort,
-                sendDataToSerialPort: sendDataToSerialPort,
-                serialOutput: serialOutput,
-                serialReady: serialReady,
                 schemas: schemas,
                 config: config,
                 set_config: set_config,
@@ -120,8 +114,8 @@ function App() {
                         <IdeBody />
                     </div>
                     <div className="ide-tail">
-                        CircuitPy Drive: {statusText} | Serial:{" "}
-                        {serialReady ? (serialTitle ? serialTitle : "Connected") : "No Port Connected"}
+                        {/* CircuitPy Drive: {statusText} | Serial:{" "} */}
+                        {/* {serialReady ? (serialTitle ? serialTitle : "Connected") : "No Port Connected"} */}
                     </div>
                 </div>
             </ThemeProvider>
