@@ -75,6 +75,19 @@
             "title": "Enable wrap behaviours",
             "type": "boolean",
             "default": true
+        },
+        "show_print_margin": {
+            "description": "Print margin",
+            "title": "Show print margin",
+            "type": "boolean",
+            "default": true
+        },
+        "print_margin_column": {
+            "title": "Print margin column",
+            "type": "number",
+            "default": 80,
+            "minimum": 1,
+            "maximum": 200
         }
     }
 }
