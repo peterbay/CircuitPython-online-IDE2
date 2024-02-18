@@ -59,16 +59,16 @@ const getTabsByName = (model, location, name, compareMethod) => {
     return tabs;
 };
 
-const getActiveEditorTabConfig = (model) => {
-    const tabset = model.getActiveTabset();
+const getActiveEditorTabConfig = async (model) => {
+    const tabset = await model.getActiveTabset();
     if (!tabset || !tabset.getChildren) {
         return null;
     }
-    const children = tabset.getChildren();
+    const children = await tabset.getChildren();
     if (children) {
         for (let child of children) {
             if (child.isVisible()) {
-                return child.getConfig();
+                return await child.getConfig();
             }
         }
     }

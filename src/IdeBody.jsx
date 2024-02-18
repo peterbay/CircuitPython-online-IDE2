@@ -6,10 +6,11 @@ import IdeFolderView from "./tabs/IdeFolderView";
 import IdeEditor from "./tabs/IdeEditor";
 import { ConfigForms } from "./react-user-config";
 import Navigation from "./tabs/Navigation";
-import RawPlotter from "./tabs/RawPlotter";
+import Dashboard from "./tabs/Dashboard";
 import SerialConsole from "./tabs/SerialConsole";
 import About from "./infopages/About";
 import ContactMe from "./infopages/ContactMe";
+// import Ascii from "./infopages/Ascii";
 // Flex layout
 import * as FlexLayout from "flexlayout-react";
 //context
@@ -94,8 +95,11 @@ export default function IdeBody() {
         else if (component === "navigation") {
             tabContent = <Navigation />;
 
-        } else if (component === "raw_plot") {
-            tabContent = <RawPlotter node={node} />;
+        } else if (component === "dashboard") {
+            tabContent = <Dashboard node={node} />;
+
+        // } else if (component === "ascii_table") {
+        //     tabContent = <Ascii node={node} />;
 
         } else if (component === "serial_console") {
             tabContent = <SerialConsole node={node} />;
@@ -122,9 +126,9 @@ export default function IdeBody() {
         ) : null;
     };
 
-    function updateActiveEditorInfo() {
-        const config = getActiveEditorTabConfig(model);
-        setActiveEditorInfo(config);
+    async function updateActiveEditorInfo() {
+        const config = await getActiveEditorTabConfig(model);
+        await setActiveEditorInfo(config);
     }
 
     return <FlexLayout.Layout
@@ -132,7 +136,7 @@ export default function IdeBody() {
         factory={factory}
         onAction={async (action) => {
             await model.doAction(action);
-            updateActiveEditorInfo();
+            await updateActiveEditorInfo();
         }}
         onModelChange={updateActiveEditorInfo}
         onRenderTab={updateActiveEditorInfo}

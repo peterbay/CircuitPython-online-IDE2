@@ -60,6 +60,12 @@ export default function IdeHead() {
             {
                 label: "Tools",
                 options: [
+                    // {
+                    //     text: "Ascii Table",
+                    //     handler: () => {
+                    //         openTab("Ascii Table", "ascii_table");
+                    //     },
+                    // },
                     {
                         text: "Navigation",
                         handler: () => {
@@ -67,9 +73,9 @@ export default function IdeHead() {
                         },
                     },
                     {
-                        text: "Plot",
+                        text: "Dashboard",
                         handler: () => {
-                            openTab("Plot", "raw_plot");
+                            openTab("Dashboard", "dashboard");
                         },
                     },
                 ],

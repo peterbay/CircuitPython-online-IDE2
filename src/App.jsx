@@ -14,8 +14,10 @@ import WarningIsMac from "./infopages/WarningIsMac";
 import { useFileSystem } from "./react-local-file-system";
 import { useConfig } from "./react-user-config";
 import schemas from "./schemas";
+import { dashboardContent } from "./dashboard";
 // context
 import ideContext from "./ideContext";
+
 // layout
 import * as FlexLayout from "flexlayout-react";
 import layout from "./layout/layout.json";
@@ -58,6 +60,7 @@ if (globalSchema) {
 function App() {
     // get folder handler and status with useFileSystem hook
     const { openDirectory, directoryReady, statusText, rootDirHandle } = useFileSystem();
+    const { dashboardLayout, clearDashboard, processLine, widgets, updateWidget } = dashboardContent();
     const { config, set_config, ready: configReady } = useConfig(schemas);
     const [flexModel, setFlexModel] = useState(FlexLayout.Model.fromJson(layout));
 
@@ -101,6 +104,11 @@ function App() {
                 schemas: schemas,
                 config: config,
                 set_config: set_config,
+                dashboardLayout: dashboardLayout,
+                processLine: processLine,
+                clearDashboard: clearDashboard,
+                widgets: widgets,
+                updateWidget: updateWidget,
             }}
         >
             <WarningModal />

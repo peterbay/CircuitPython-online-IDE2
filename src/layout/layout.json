@@ -62,7 +62,14 @@
                         "name": "Navigation",
                         "component": "navigation",
                         "enableClose": true
-                    }]
+                    },
+                    {
+                        "type": "tab",
+                        "name": "Dashboard",
+                        "component": "dashboard",
+                        "enableClose": true
+                    }
+                ]
             }
         ]
     }
