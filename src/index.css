@@ -135,3 +135,7 @@ body {
     color: rgb(99, 99, 99);
     height: 30px;
 }
+
+.is-dark-theme .widget-header {
+    color: rgb(185, 185, 185);
+}

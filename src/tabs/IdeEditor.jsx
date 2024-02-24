@@ -223,7 +223,6 @@ export default function IdeEditor({ fileHandle, node, isReadOnly, isNewFile }) {
             bindKey: { win: "Alt-Z", mac: "Alt-Z" },
             exec: () => {
                 setConfigWordWrap(!configWordWrap);
-                console.log("word_wrap", configWordWrap);
                 aceEditorRef.current.editor.session.setUseWrapMode(configWordWrap);
             },
         });

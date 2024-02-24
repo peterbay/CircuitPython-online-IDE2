@@ -82,8 +82,6 @@ function App() {
       return () => darkThemeMq.removeListener(mqListener);
     }, []);
 
-    console.log("isDarkTheme", isDarkTheme);
-
     useEffect(() => {
         // https://stackoverflow.com/a/47477519/7037749
         if (directoryReady) {
@@ -118,7 +116,8 @@ function App() {
     }
 
     const themeClass = getThemeClassByLabel(themeLabel);
-    const classes = `ide ${themeClass}`;
+    const themeModeClass = (themeType === "dark") ? "is-dark-theme" : "is-light-theme";
+    const classes = `ide ${themeClass} ${themeModeClass}`;
     const muiTheme = (getThemeTypeByLabel(themeLabel) === "dark") ? darkTheme : lightTheme;
 
     return (
@@ -136,6 +135,7 @@ function App() {
                 clearDashboard: clearDashboard,
                 widgets: widgets,
                 updateWidget: updateWidget,
+                isDarkMode: getThemeTypeByLabel(themeLabel) === "dark",
             }}
         >
             <WarningModal />

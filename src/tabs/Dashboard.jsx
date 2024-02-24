@@ -45,7 +45,7 @@ function ToolbarEntry({ content, fixedWidth = null }) {
 
 
 export default function Dashboard({ node }) {
-    const { dashboardLayout, clearDashboard, widgets, updateWidget } = useContext(ideContext);
+    const { dashboardLayout, clearDashboard, widgets, updateWidget, isDarkMode } = useContext(ideContext);
     const parentHeight = node.getRect().height;
     const parentWidth = node.getRect().width;
 
@@ -167,7 +167,7 @@ export default function Dashboard({ node }) {
                                     key={item.i}
                                     data-grid={item}
                                     style={{
-                                        background: 'white',
+                                        background: isDarkMode ? 'rgb(66, 66, 66)' : 'white',
                                         overflow: 'hidden',
                                     }}
                                 >
