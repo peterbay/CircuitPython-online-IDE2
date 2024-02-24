@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import themes from "./themes.json";
 
 const getThemeClassByLabel = (label) => {
@@ -20,7 +21,14 @@ const getThemesNamesList = () => {
 };
 
 const getDefaultTheme = () => {
-    return themes.default_theme;
+    const selectedTheme = themes.themes.find((theme) => theme.name === themes.default_theme);
+    return selectedTheme ? selectedTheme.label : null;
+};
+
+const getSystemTheme = (isDark) => {
+    const themeName = isDark ? themes.default_dark_theme : themes.default_light_theme;
+    const selectedTheme = themes.themes.find((theme) => theme.name === themeName);
+    return selectedTheme ? selectedTheme.label : "light";
 };
 
 export {
@@ -30,4 +38,5 @@ export {
     getThemeTypeByLabel,
     getThemesNamesList,
     getDefaultTheme,
+    getSystemTheme,
 };

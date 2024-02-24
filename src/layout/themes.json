@@ -1,6 +1,14 @@
 {
-    "default_theme": "tomorrow",
+    "default_theme": "system",
+    "default_light_theme": "tomorrow",
+    "default_dark_theme": "tomorrow_night",
     "themes": [
+        {
+            "name": "system",
+            "label": "System (follow OS)",
+            "class": "system",
+            "type": "system"
+        },
         {
             "name": "ambiance",
             "label": "Ambiance (dark)",

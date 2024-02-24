@@ -21,7 +21,13 @@ import ideContext from "./ideContext";
 // layout
 import * as FlexLayout from "flexlayout-react";
 import layout from "./layout/layout.json";
-import { getThemeClassByLabel, getThemesNamesList, getDefaultTheme, getThemeTypeByLabel } from "./layout/themes.js";
+import {
+    getThemeClassByLabel,
+    getThemesNamesList,
+    getDefaultTheme,
+    getThemeTypeByLabel,
+    getSystemTheme
+} from "./layout/themes.js";
 
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -64,6 +70,20 @@ function App() {
     const { config, set_config, ready: configReady } = useConfig(schemas);
     const [flexModel, setFlexModel] = useState(FlexLayout.Model.fromJson(layout));
 
+    const getCurrentTheme = () => window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const [isDarkTheme, setIsDarkTheme] = useState(getCurrentTheme());  
+    const mqListener = (e => {
+        setIsDarkTheme(e.matches);
+    });
+    
+    useEffect(() => {
+      const darkThemeMq = window.matchMedia("(prefers-color-scheme: dark)");
+      darkThemeMq.addListener(mqListener);
+      return () => darkThemeMq.removeListener(mqListener);
+    }, []);
+
+    console.log("isDarkTheme", isDarkTheme);
+
     useEffect(() => {
         // https://stackoverflow.com/a/47477519/7037749
         if (directoryReady) {
@@ -90,9 +110,16 @@ function App() {
         return;
     }
 
-    const themeClass = getThemeClassByLabel(config.global.theme);
+    let themeLabel = config.global.theme;
+    let themeType = getThemeTypeByLabel(themeLabel);
+
+    if (themeType === "system") {
+        themeLabel = getSystemTheme(isDarkTheme);
+    }
+
+    const themeClass = getThemeClassByLabel(themeLabel);
     const classes = `ide ${themeClass}`;
-    const muiTheme = (getThemeTypeByLabel(config.global.theme) === "dark") ? darkTheme : lightTheme;
+    const muiTheme = (getThemeTypeByLabel(themeLabel) === "dark") ? darkTheme : lightTheme;
 
     return (
         <ideContext.Provider
