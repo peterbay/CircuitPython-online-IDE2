@@ -139,3 +139,7 @@ body {
 .is-dark-theme .widget-header {
     color: rgb(185, 185, 185);
 }
+
+.converters {
+    padding: 20px;
+}

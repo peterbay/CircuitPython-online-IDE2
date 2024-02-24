@@ -11,6 +11,7 @@ import SerialConsole from "./tabs/SerialConsole";
 import About from "./infopages/About";
 import ContactMe from "./infopages/ContactMe";
 import Ascii from "./infopages/Ascii";
+import Converters from "./infopages/Converters";
 // Flex layout
 import * as FlexLayout from "flexlayout-react";
 //context
@@ -100,6 +101,9 @@ export default function IdeBody() {
 
         } else if (component === "ascii_table") {
             tabContent = <Ascii node={node} />;
+
+        } else if (component === "converters") {
+            tabContent = <Converters node={node} />;
 
         } else if (component === "serial_console") {
             tabContent = <SerialConsole node={node} />;

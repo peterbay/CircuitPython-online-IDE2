@@ -67,6 +67,12 @@ export default function IdeHead() {
                         },
                     },
                     {
+                        text: "Converters",
+                        handler: () => {
+                            openTab("Converters", "converters");
+                        },
+                    },
+                    {
                         text: "Navigation",
                         handler: () => {
                             openTab("Navigation", "navigation");
