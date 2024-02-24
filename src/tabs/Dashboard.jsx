@@ -70,90 +70,114 @@ export default function Dashboard({ node }) {
     };
 
     return <>
-        <Box sx={{ flexGrow: 0, maxHeight: "35px" }}>
-            <Divider />
-            <Toolbar
-                variant="dense"
-                disableGutters={true}
-                sx={{ minHeight: "35px", maxHeight: "35px" }}
-            >
-                <ToolbarEntry content={`Dashboard`} />
-                <Tooltip
-                    key={"clear-dashboard"}
-                    id="clear-dashboard"
-                    title={"Clear dashboard"}
-                >
-                    <span>
-                        <IconButton
-                            edge="start"
-                            size="small"
-                            style={{ borderRadius: 0 }}
-                            onClick={() => {
-                                clearDashboard();
-                            }}
-                            disabled={!dashboardLayout.length}
-                        >
-                            <DeleteForeverIcon />
-                        </IconButton>
-                    </span>
-                </Tooltip>
-                <Tooltip
-                    key={"dashboard-lock"}
-                    id="dashboard-lock"
-                    title={locked ? "Unlock dashboard" : "Lock dashboard"}
-                >
-                    <IconButton
-                        edge="start"
-                        size="small"
-                        style={{ borderRadius: 0 }}
-                        onClick={() => {
-                            setLocked(!locked);
-                        }}
-                    >
-                        {locked ? <LockIcon /> : <LockOpenIcon />}
-                    </IconButton>
-                </Tooltip>
-            </Toolbar>
-        </Box>
-        <Divider />
-        <Box sx={{
-            flexGrow: 1,
-            width: parentWidth + 'px',
-            height: "calc(" + parentHeight + "px - 36px)",
-        }}>
-            <widgetsContext.Provider
-                value={{
-                    locked,
+        <div
+            style={{
+                height: "100%",
+                width: "100%",
+                maxHeight: "100%",
+                maxWidth: "100%",
+                display: "flex",
+                flexDirection: "column",
+            }}
+        >
+            <div
+                style={{
+                    flexGrow: 0,
                 }}
             >
-                <ResponsiveGridLayout
-                    className="dashboard-layout"
-                    layout={layout}
-                    breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-                    cols={{ lg: 6, md: 6, sm: 3, xs: 1, xxs: 1 }}
-                    margin={[10, 10]}
-                    rowHeight={rowHeight}
-                    width={parentWidth - 20}
-                    isDraggable={!locked}
-                    isResizable={!locked}
-                    draggableHandle=".widget-header"
-                    onLayoutChange={updateLayout}
-                >
-                    {layout.map((item) => {
-                        return (<div
-                            id="widget-container"
-                            key={item.i}
-                            data-grid={item}
-                            style={{
-                                background: 'white',
-                                overflow: 'hidden',
-                            }}
+                <Box sx={{ flexGrow: 0, maxHeight: "35px" }}>
+                    <Divider />
+                    <Toolbar
+                        variant="dense"
+                        disableGutters={true}
+                        sx={{ minHeight: "35px", maxHeight: "35px" }}
+                    >
+                        <ToolbarEntry content={`Dashboard`} />
+                        <Tooltip
+                            key={"clear-dashboard"}
+                            id="clear-dashboard"
+                            title={"Clear dashboard"}
                         >
-                            { (widgets[item.i] && widgets[item.i].widget) || null }
-                        </div>);
-                    })}
-                </ResponsiveGridLayout>
-            </widgetsContext.Provider>
-        </Box>
+                            <span>
+                                <IconButton
+                                    edge="start"
+                                    size="small"
+                                    style={{ borderRadius: 0 }}
+                                    onClick={() => {
+                                        clearDashboard();
+                                    }}
+                                    disabled={!dashboardLayout.length}
+                                >
+                                    <DeleteForeverIcon />
+                                </IconButton>
+                            </span>
+                        </Tooltip>
+                        <Tooltip
+                            key={"dashboard-lock"}
+                            id="dashboard-lock"
+                            title={locked ? "Unlock dashboard" : "Lock dashboard"}
+                        >
+                            <IconButton
+                                edge="start"
+                                size="small"
+                                style={{ borderRadius: 0 }}
+                                onClick={() => {
+                                    setLocked(!locked);
+                                }}
+                            >
+                                {locked ? <LockIcon /> : <LockOpenIcon />}
+                            </IconButton>
+                        </Tooltip>
+                    </Toolbar>
+                </Box>
+                <Divider />
+            </div>
+            <div
+                style={{
+                    flexGrow: 1,
+                    overflow: "auto",
+                }}
+            >
+                <Box sx={{
+                    flexGrow: 1,
+                    width: parentWidth + 'px',
+                    height: "calc(" + parentHeight + "px - 36px)",
+                }}>
+                    <widgetsContext.Provider
+                        value={{
+                            locked,
+                        }}
+                    >
+                        <ResponsiveGridLayout
+                            className="dashboard-layout"
+                            layout={layout}
+                            breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+                            cols={{ lg: 6, md: 6, sm: 3, xs: 1, xxs: 1 }}
+                            margin={[10, 10]}
+                            rowHeight={rowHeight}
+                            width={parentWidth - 20}
+                            isDraggable={!locked}
+                            isResizable={!locked}
+                            draggableHandle=".widget-header"
+                            onLayoutChange={updateLayout}
+                        >
+                            {layout.map((item) => {
+                                return (<div
+                                    id="widget-container"
+                                    key={item.i}
+                                    data-grid={item}
+                                    style={{
+                                        background: 'white',
+                                        overflow: 'hidden',
+                                    }}
+                                >
+                                    {(widgets[item.i] && widgets[item.i].widget) || null}
+                                </div>);
+                            })}
+                        </ResponsiveGridLayout>
+                    </widgetsContext.Provider>
+                </Box>
+            </div>
+        </div>
     </>;
 }
