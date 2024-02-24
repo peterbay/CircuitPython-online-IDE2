@@ -248,3 +248,44 @@
     font-size: var(--font-size);
     font-family: var(--font-family);
 }
+
+/* ASCII table */
+.solarized-dark .asciiTable th,
+.solarized-dark .asciiTable td {
+    border-left: 1px solid rgb(27, 63, 82);
+}
+
+.solarized-dark .asciiTable tr:nth-child(1) th {
+    border-top: 1px solid rgb(27, 63, 82);
+    border-bottom: 1px solid rgb(27, 63, 82);
+}
+
+.solarized-dark .asciiTable tr:nth-last-child(1) td {
+    border-bottom: 1px solid rgb(27, 63, 82);
+}
+
+.solarized-dark .asciiTable th:nth-child(1),
+.solarized-dark .asciiTable td:nth-child(1) {
+    border-left: 1px solid rgb(27, 63, 82);
+}
+
+.solarized-dark .asciiTable th:nth-last-child(1),
+.solarized-dark .asciiTable td:nth-last-child(1) {
+    border-right: 1px solid rgb(27, 63, 82);
+}
+
+.solarized-dark .asciiTable tr:nth-child(even) {
+    background-color: rgb(12, 40, 55);;
+}
+
+.solarized-dark .asciiTable th:nth-child(6),
+.solarized-dark .asciiTable th:nth-child(10),
+.solarized-dark .asciiTable th:nth-child(14) {
+    background-color: rgb(10, 32, 43);
+}
+
+.solarized-dark .asciiTable td:nth-child(6),
+.solarized-dark .asciiTable td:nth-child(10),
+.solarized-dark .asciiTable td:nth-child(14) {
+    background-color: rgb(10, 32, 43);
+}

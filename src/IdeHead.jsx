@@ -60,12 +60,12 @@ export default function IdeHead() {
             {
                 label: "Tools",
                 options: [
-                    // {
-                    //     text: "Ascii Table",
-                    //     handler: () => {
-                    //         openTab("Ascii Table", "ascii_table");
-                    //     },
-                    // },
+                    {
+                        text: "ASCII table",
+                        handler: () => {
+                            openTab("ASCII table", "ascii_table");
+                        },
+                    },
                     {
                         text: "Navigation",
                         handler: () => {

@@ -381,3 +381,39 @@
     padding-top: 6px;
     padding-bottom: 5px;
 }
+
+.ascii {
+    font-family: monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    white-space: pre;
+    overflow: auto;
+    padding: 20px;
+    width: 100%;
+    height: 100%;
+}
+
+.asciiTable {
+    border-spacing: 0;
+    border-collapse: collapse; 
+}
+
+.asciiTable th,
+.asciiTable td {
+    padding-left: 5px;
+    padding-right: 5px;
+    text-align: left;
+}
+
+.asciiTable th:nth-child(6),
+.asciiTable th:nth-child(10),
+.asciiTable th:nth-child(14) {
+    border-top: unset !important;
+    border-bottom: unset !important;
+}
+
+.asciiTable td:nth-child(6),
+.asciiTable td:nth-child(10),
+.asciiTable td:nth-child(14) {
+    border-bottom: unset !important;
+}

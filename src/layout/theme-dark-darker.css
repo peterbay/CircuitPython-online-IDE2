@@ -248,3 +248,48 @@
     font-size: var(--font-size);
     font-family: var(--font-family);
 }
+
+/* ASCII table */
+.dark-darker .ascii {
+    color: rgb(165, 165, 165);
+}
+
+.dark-darker .asciiTable th,
+.dark-darker .asciiTable td {
+    border-left: 1px solid rgb(47, 47, 47);
+}
+
+.dark-darker .asciiTable tr:nth-child(1) th {
+    border-top: 1px solid rgb(47, 47, 47);
+    border-bottom: 1px solid rgb(47, 47, 47);
+}
+
+.dark-darker .asciiTable tr:nth-last-child(1) td {
+    border-bottom: 1px solid rgb(47, 47, 47);
+}
+
+.dark-darker .asciiTable th:nth-child(1),
+.dark-darker .asciiTable td:nth-child(1) {
+    border-left: 1px solid rgb(47, 47, 47);
+}
+
+.dark-darker .asciiTable th:nth-last-child(1),
+.dark-darker .asciiTable td:nth-last-child(1) {
+    border-right: 1px solid rgb(47, 47, 47);
+}
+
+.dark-darker .asciiTable tr:nth-child(even) {
+    background-color: rgb(27, 27, 27);
+}
+
+.dark-darker .asciiTable th:nth-child(6),
+.dark-darker .asciiTable th:nth-child(10),
+.dark-darker .asciiTable th:nth-child(14) {
+    background-color: rgb(13, 16, 21);
+}
+
+.dark-darker .asciiTable td:nth-child(6),
+.dark-darker .asciiTable td:nth-child(10),
+.dark-darker .asciiTable td:nth-child(14) {
+    background-color: rgb(13, 16, 21);
+}

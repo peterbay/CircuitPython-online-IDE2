@@ -248,3 +248,48 @@
     font-size: var(--font-size);
     font-family: var(--font-family);
 }
+
+/* ASCII table */
+.dark-black .ascii {
+    color: rgb(158, 158, 158);
+}
+
+.dark-black .asciiTable th,
+.dark-black .asciiTable td {
+    border-left: 1px solid #646464;
+}
+
+.dark-black .asciiTable tr:nth-child(1) th {
+    border-top: 1px solid #646464;
+    border-bottom: 1px solid #646464;
+}
+
+.dark-black .asciiTable tr:nth-last-child(1) td {
+    border-bottom: 1px solid #646464;
+}
+
+.dark-black .asciiTable th:nth-child(1),
+.dark-black .asciiTable td:nth-child(1) {
+    border-left: 1px solid #646464;
+}
+
+.dark-black .asciiTable th:nth-last-child(1),
+.dark-black .asciiTable td:nth-last-child(1) {
+    border-right: 1px solid #646464;
+}
+
+.dark-black .asciiTable tr:nth-child(even) {
+    background-color: #2a2a2a;
+}
+
+.dark-black .asciiTable th:nth-child(6),
+.dark-black .asciiTable th:nth-child(10),
+.dark-black .asciiTable th:nth-child(14) {
+    background-color: rgb(0, 0, 0);
+}
+
+.dark-black .asciiTable td:nth-child(6),
+.dark-black .asciiTable td:nth-child(10),
+.dark-black .asciiTable td:nth-child(14) {
+    background-color: rgb(0, 0, 0);
+}

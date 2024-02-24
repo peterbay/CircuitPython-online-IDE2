@@ -10,7 +10,7 @@ import Dashboard from "./tabs/Dashboard";
 import SerialConsole from "./tabs/SerialConsole";
 import About from "./infopages/About";
 import ContactMe from "./infopages/ContactMe";
-// import Ascii from "./infopages/Ascii";
+import Ascii from "./infopages/Ascii";
 // Flex layout
 import * as FlexLayout from "flexlayout-react";
 //context
@@ -98,8 +98,8 @@ export default function IdeBody() {
         } else if (component === "dashboard") {
             tabContent = <Dashboard node={node} />;
 
-        // } else if (component === "ascii_table") {
-        //     tabContent = <Ascii node={node} />;
+        } else if (component === "ascii_table") {
+            tabContent = <Ascii node={node} />;
 
         } else if (component === "serial_console") {
             tabContent = <SerialConsole node={node} />;
