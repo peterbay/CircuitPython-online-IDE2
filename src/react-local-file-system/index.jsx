@@ -107,15 +107,19 @@ function ContentEntry({ entryHandle, activeEditorInfo }) {
     const fileOptions = (entryHandle.extension && filesSettings.extension[entryHandle.extension]) || filesSettings.default;
     const isReadOnly = fileOptions.isBinary;
 
-    let icon = <FileIcon />;
+    const itemSize = 30;
+    const iconSize = itemSize - 10;
+
+    const iconSx = { width: `${iconSize}px`, height: `${iconSize}px` };
+    let icon = <FileIcon sx={iconSx} />;
     if (entryHandle.isParent) {
-        icon = <ReturnIcon />;
+        icon = <ReturnIcon sx={iconSx} />;
 
     } else if (isFolder(entryHandle)) {
-        icon = <FolderIcon />;
+        icon = <FolderIcon sx={iconSx} />;
 
     } else if (fileOptions.isBinary) {
-        icon = <BinaryFileIcon />;
+        icon = <BinaryFileIcon sx={iconSx} />;
 
     }
 
@@ -180,9 +184,9 @@ function ContentEntry({ entryHandle, activeEditorInfo }) {
     }
 
     const entry = (
-        <ListItem onContextMenu={(e)=> e.preventDefault()} disablePadding dense>
-            <ListItemButton onClick={onClickHandler} selected={isSelected}>
-                <ListItemIcon sx={{ minWidth: "30px" }} className={className}>{icon}</ListItemIcon>
+        <ListItem onContextMenu={(e)=> e.preventDefault()} disablePadding dense sx={{ height: `${itemSize}px` }}>
+            <ListItemButton onClick={onClickHandler} selected={isSelected} sx={{ height: `${itemSize}px` }}>
+                <ListItemIcon sx={{ minWidth: `${iconSize + 5}px` }} className={className}>{icon}</ListItemIcon>
                 <ListItemText draggable={isDraggable} onDragStart={onDragHandler} primary={entryName} />
             </ListItemButton>
         </ListItem>
