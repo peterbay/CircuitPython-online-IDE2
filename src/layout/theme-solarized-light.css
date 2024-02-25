@@ -275,17 +275,17 @@
 }
 
 .solarized-light .asciiTable tr:nth-child(even) {
-    background-color: rgb(219, 214, 193);
+    background-color: rgb(233, 230, 215);
 }
 
 .solarized-light .asciiTable th:nth-child(6),
 .solarized-light .asciiTable th:nth-child(10),
 .solarized-light .asciiTable th:nth-child(14) {
-    background-color: rgb(251, 246, 227);;
+    background-color: rgb(251, 246, 227);
 }
 
 .solarized-light .asciiTable td:nth-child(6),
 .solarized-light .asciiTable td:nth-child(10),
 .solarized-light .asciiTable td:nth-child(14) {
-    background-color: rgb(251, 246, 227);;
+    background-color: rgb(251, 246, 227);
 }

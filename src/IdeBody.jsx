@@ -9,6 +9,7 @@ import Navigation from "./tabs/Navigation";
 import Dashboard from "./tabs/Dashboard";
 import SerialConsole from "./tabs/SerialConsole";
 import About from "./infopages/About";
+import KeyboardShortcuts from "./infopages/KeyboardShortcuts";
 import ContactMe from "./infopages/ContactMe";
 import Ascii from "./infopages/Ascii";
 import Converters from "./infopages/Converters";
@@ -112,6 +113,9 @@ export default function IdeBody() {
         // info
         else if (component === "about") {
             tabContent = <About />;
+
+        } else if (component === "keyboard_shortcuts") {
+            tabContent = <KeyboardShortcuts />;
 
         } else if (component === "contact") {
             tabContent = <ContactMe />;

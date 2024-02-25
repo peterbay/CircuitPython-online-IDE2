@@ -11,7 +11,9 @@ body {
     min-width: 200px;
     max-width: 980px;
     margin: 0 auto;
-    padding: 25px;
+    padding: 20px;
+    height: 100%;
+    padding-bottom: 50px;
 }
 
 @media (max-width: 767px) {
@@ -54,6 +56,10 @@ body {
     color: rgb(234, 234, 234);
 }
 
+.light .markdown-body {
+    background-color: rgb(243, 243, 244);
+}
+
 /* THEME dark-lighter */
 .dark-lighter .ide-header {
     background-color: rgb(48, 50, 60);
@@ -63,6 +69,25 @@ body {
 .dark-lighter .ide-tail {
     background-color: rgb(34, 37, 43);
     color: rgb(159, 165, 169);
+}
+
+.dark-lighter .markdown-body,
+.dark-lighter .markdown-body table tr {
+    color: rgb(164, 164, 164);
+    background-color: rgb(34, 37, 43);
+}
+
+.dark-lighter .markdown-body table tr:nth-child(even) {
+    background-color: rgb(27, 27, 27);
+}
+
+.dark-lighter .markdown-body table th,
+.dark-lighter .markdown-body table td {
+    border: 1px solid rgb(88, 88, 88);
+}
+
+.dark-lighter .markdown-body a {
+    color: rgb(113, 143, 219);
 }
 
 /* THEME dark-darker */
@@ -77,6 +102,26 @@ body {
     color: rgb(159, 165, 169);
 }
 
+.dark-darker .markdown-body,
+.dark-darker .markdown-body table tr {
+    background-color: rgb(13, 16, 21);
+    color: rgb(159, 165, 169);
+}
+
+.dark-darker .markdown-body table tr:nth-child(even) {
+    background-color: rgb(27, 27, 27);
+}
+
+.dark-darker .markdown-body table th,
+.dark-darker .markdown-body table td {
+    border: 1px solid rgb(88, 88, 88);
+}
+
+.dark-darker .markdown-body a {
+    color: rgb(113, 143, 219);
+}
+
+
 /* THEME dark-black */
 .dark-black .ide-header {
     background-color: rgb(36, 36, 36)
@@ -85,6 +130,25 @@ body {
 .dark-black .ide-tail {
     background-color: rgb(22, 22, 22);
     color: rgb(159, 165, 169);
+}
+
+.dark-black .markdown-body,
+.dark-black .markdown-body table tr {
+    background-color: rgb(0, 0, 0);
+    color: rgb(159, 165, 169);
+}
+
+.dark-black .markdown-body table tr:nth-child(even) {
+    background-color: rgb(27, 27, 27);
+}
+
+.dark-black .markdown-body table th,
+.dark-black .markdown-body table td {
+    border: 1px solid rgb(88, 88, 88);
+}
+
+.dark-black .markdown-body a {
+    color: rgb(113, 143, 219);
 }
 
 /* THEME solarized-light */
@@ -96,6 +160,15 @@ body {
 .solarized-light .ide-tail {
     background-color: rgb(236, 232, 213);
     color: rgb(66, 66, 66);
+}
+
+.solarized-light .markdown-body,
+.solarized-light .markdown-body table tr {
+    background-color: rgb(251, 246, 227);
+}
+
+.solarized-light .markdown-body table tr:nth-child(even) {
+    background-color: rgb(233, 230, 215);
 }
 
 /* THEME solarized-dark */
@@ -112,6 +185,27 @@ body {
 .solarized-dark .ace_gutter-cell {
     color: rgb(133, 133, 133) !important;
 }
+
+.solarized-dark .markdown-body,
+.solarized-dark .markdown-body tr {
+    color: rgb(164, 164, 164);
+    background-color: rgb(10, 32, 43);
+}
+
+.solarized-dark .markdown-body table tr:nth-child(even) {
+    background-color: rgb(12, 40, 55);
+}
+
+.solarized-dark .markdown-body table th,
+.solarized-dark .markdown-body table td {
+    border: 1px solid rgb(88, 88, 88);
+}
+
+.solarized-dark .markdown-body a {
+    color: rgb(74, 185, 143)
+}
+
+/* Dashboard */
 
 .dashboard-layout {
     width: 100%;

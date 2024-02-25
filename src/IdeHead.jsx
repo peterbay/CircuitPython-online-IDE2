@@ -90,6 +90,12 @@ export default function IdeHead() {
                 label: "Help",
                 options: [
                     {
+                        text: "Keyboard shortcuts",
+                        handler: () => {
+                            openTab("Keyboard shortcuts", "keyboard_shortcuts");
+                        },
+                    },
+                    {
                         text: "About",
                         handler: () => {
                             openTab("About", "about");
