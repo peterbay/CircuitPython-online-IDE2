@@ -1,4 +1,6 @@
-import Button from "@mui/material/Button";
+import {
+    Button,
+} from "@mui/material";
 
 export default function HyperLink({ text, link }) {
     return (

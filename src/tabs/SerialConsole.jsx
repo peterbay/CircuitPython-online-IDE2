@@ -1,26 +1,38 @@
 /* eslint-disable react/prop-types */
-// react
-import { useEffect, useState, useRef, useContext } from "react";
+import {
+    useContext,
+    useEffect,
+    useRef,
+    useState,
+} from "react";
 
-import { Terminal } from 'xterm';
-import { FitAddon } from 'xterm-addon-fit';
+import {
+    Terminal,
+} from 'xterm';
+
+import {
+    FitAddon,
+} from 'xterm-addon-fit';
+
 import 'xterm/css/xterm.css';
 
-// MUI
-import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
+import {
+    IconButton,
+    Tooltip,
+    Box,
+    Toolbar,
+    Typography,
+    Divider,
+} from "@mui/material";
 
-import UsbIcon from '@mui/icons-material/Usb';
-import UsbOffIcon from '@mui/icons-material/UsbOff';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import CancelIcon from '@mui/icons-material/Cancel';
-import RefreshIcon from '@mui/icons-material/Refresh';
-import LinkIcon from '@mui/icons-material/Link';
-import LinkOffIcon from '@mui/icons-material/LinkOff';
+import {
+    Cancel as CancelIcon,
+    DeleteForever as DeleteForeverIcon,
+    Link as LinkIcon,
+    LinkOff as LinkOffIcon,
+    Refresh as RefreshIcon,
+    Usb as UsbIcon,
+} from '@mui/icons-material';
 
 import SerialCommunicator from "../serial/serial";
 

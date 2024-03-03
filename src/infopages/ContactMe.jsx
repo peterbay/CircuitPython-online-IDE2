@@ -1,5 +1,8 @@
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
+import {
+    Box,
+    Typography,
+} from "@mui/material";
+
 import HyperLink from "../layout/HyperLink";
 
 export default function ContactMe() {

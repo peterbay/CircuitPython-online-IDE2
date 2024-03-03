@@ -2,7 +2,7 @@
 // react
 import { useEffect, useState, useRef, useContext } from "react";
 // ace
-import AceEditor from "react-ace-builds";
+import AceEditor from "react-ace";
 import "ace-builds/src-min-noconflict/ext-searchbox";
 // import "ace-builds/src-min-noconflict/ext-language_tools";
 import "ace-builds/src-noconflict/mode-python";

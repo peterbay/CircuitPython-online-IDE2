@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 // mui tab
-import Box from "@mui/material/Box";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
+import {
+    Box,
+    Tab,
+    Tabs,
+} from "@mui/material";
+
 import { TabPanel, a11yProps } from "./TabPanel";
 // schema form
-import Form from "@rjsf/mui";
+import { Form } from "@rjsf/mui";
 import validator from "@rjsf/validator-ajv8";
 // user data
 import uiSchema from "./uiSchema.json";

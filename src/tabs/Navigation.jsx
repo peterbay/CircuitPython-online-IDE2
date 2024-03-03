@@ -3,7 +3,9 @@ import { useContext } from "react";
 //context
 import ideContext from "../ideContext";
 // mui
-import Button from "@mui/material/Button";
+import {
+    Button,
+} from "@mui/material";
 
 export default function Navigation() {
     const { openDirectory, directoryReady, serialReady } = useContext(ideContext);

@@ -1,9 +1,12 @@
-// React
-import { useState } from "react";
-// MUI
-import Modal from "@mui/material/Modal";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
+import {
+    useState,
+} from "react";
+
+import {
+    Box,
+    Modal,
+    Typography,
+} from "@mui/material";
 
 export default function WarningModal({ title, children, closeEnabled }) {
     const [open, setOpen] = useState(true);

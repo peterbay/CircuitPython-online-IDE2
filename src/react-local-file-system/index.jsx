@@ -1,27 +1,40 @@
-import { useState, createContext, useContext, useEffect } from "react";
-import Breadcrumbs from "@mui/material/Breadcrumbs";
-import { Button, Typography } from "@mui/material";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import Divider from "@mui/material/Divider";
-import FolderIcon from "@mui/icons-material/FolderOutlined";
-import NewFolderIcon from "@mui/icons-material/CreateNewFolderOutlined";
-import ReturnIcon from "@mui/icons-material/KeyboardReturnOutlined";
-import RefreshIcon from "@mui/icons-material/RefreshOutlined";
-import FileIcon from "@mui/icons-material/DescriptionOutlined";
-import NewFileIcon from "@mui/icons-material/NoteAddOutlined";
-import BinaryFileIcon from "@mui/icons-material/InsertDriveFileOutlined";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import Backdrop from "@mui/material/Backdrop";
-import CircularProgress from "@mui/material/CircularProgress";
+import {
+    useState,
+    createContext,
+    useContext,
+    useEffect,
+} from "react";
+
+import {
+    Backdrop,
+    Breadcrumbs,
+    Button,
+    CircularProgress,
+    Divider,
+    IconButton,
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
+    Menu,
+    MenuItem,
+    Toolbar,
+    Tooltip,
+    Typography,
+} from "@mui/material";
+
+import {
+    CreateNewFolderOutlined as NewFolderIcon,
+    DescriptionOutlined as FileIcon,
+    FolderOutlined as FolderIcon,
+    InsertDriveFileOutlined as BinaryFileIcon,
+    KeyboardReturnOutlined as ReturnIcon,
+    NoteAddOutlined as NewFileIcon,
+    RefreshOutlined as RefreshIcon,
+} from "@mui/icons-material";
+
 import filesSettings from "./filesSettings.json";
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
 
 // *****************************************
 // COMPONENTS

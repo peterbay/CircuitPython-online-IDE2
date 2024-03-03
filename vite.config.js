@@ -2,12 +2,14 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { viteSingleFile } from "vite-plugin-singlefile";
 import compression from 'vite-plugin-compression2';
+import { visualizer } from 'rollup-plugin-visualizer'
 import build_config from "./build-config.json";
 
 // https://vitejs.dev/config/
 export default build_config["single-file"]
     ? defineConfig({
         plugins: [
+            visualizer(),
             react(),
             viteSingleFile(),
             {
@@ -28,6 +30,7 @@ export default build_config["single-file"]
     })
     : defineConfig({
         plugins: [
+            visualizer(),
             react(),
             compression({
                 algorithm: 'gzip', exclude: [/\.(br)$ /, /\.(gz)$/]

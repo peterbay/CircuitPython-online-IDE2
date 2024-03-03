@@ -1,13 +1,19 @@
 import * as React from "react";
-import Button from "@mui/material/Button";
-import ClickAwayListener from "@mui/material/ClickAwayListener";
-import Grow from "@mui/material/Grow";
-import Paper from "@mui/material/Paper";
-import Popper from "@mui/material/Popper";
-import MenuItem from "@mui/material/MenuItem";
-import MenuList from "@mui/material/MenuList";
-import { grey, deepPurple } from "@mui/material/colors";
-import Stack from "@mui/material/Stack";
+
+import {
+    Button,
+    ClickAwayListener,
+    Grow,
+    MenuItem,
+    MenuList,
+    Paper,
+    Popper,
+    Stack,
+} from "@mui/material";
+
+import {
+    deepPurple,
+} from "@mui/material/colors";
 
 export default function MenuBar({ menuStructure }) {
     return (

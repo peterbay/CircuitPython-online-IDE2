@@ -21,15 +21,19 @@ import ideContext from "./ideContext";
 // layout
 import * as FlexLayout from "flexlayout-react";
 import layout from "./layout/layout.json";
+
 import {
+    getDefaultTheme,
+    getSystemTheme,
     getThemeClassByLabel,
     getThemesNamesList,
-    getDefaultTheme,
     getThemeTypeByLabel,
-    getSystemTheme
 } from "./layout/themes.js";
 
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+import {
+    createTheme,
+    ThemeProvider,
+} from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 
 const darkTheme = createTheme({

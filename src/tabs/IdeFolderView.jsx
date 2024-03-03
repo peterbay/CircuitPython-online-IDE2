@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import FolderView from "../react-local-file-system";
-import Button from "@mui/material/Button";
+import { Button } from "@mui/material";
 //context
 import ideContext from "../ideContext";
 

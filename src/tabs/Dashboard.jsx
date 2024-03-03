@@ -1,19 +1,23 @@
 // react
-import { useEffect, useState, useRef, useContext } from "react";
+import { useEffect, useState, useContext } from "react";
 
 import widgetsContext from "../dashboard/widgetsContext";
 
 // MUI
-import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
+import {
+    Box,
+    Divider,
+    IconButton,
+    Toolbar,
+    Tooltip,
+    Typography,
+} from "@mui/material";
 
-import LockIcon from '@mui/icons-material/Lock';
-import LockOpenIcon from '@mui/icons-material/LockOpen';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import {
+    DeleteForever as DeleteForeverIcon,
+    Lock as LockIcon,
+    LockOpen as LockOpenIcon,
+} from '@mui/icons-material';
 
 import { Responsive as ResponsiveGridLayout } from "react-grid-layout";
 
