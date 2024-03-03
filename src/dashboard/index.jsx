@@ -1,10 +1,8 @@
-import { useState, useRef, createContext, useContext, useEffect } from "react";
+import { useState, useRef } from "react";
 // import { Subject } from 'rxjs'
-import { dataSubscriber, dataService } from "../dataService";
+import { dataService } from "../dataService";
 
 import { Widget } from "./Widget";
-
-import ApexCharts from 'apexcharts';
 
 import widgetsSettings from "./widgetsSettings";
 
@@ -109,9 +107,17 @@ export const dashboardContent = () => {
 
     const processLine = function (line) {
         lineBuffer.current += line;
+
+        if (lineBuffer.current.includes("\x1b\x5d") && lineBuffer.current.includes("\x1b\x5c")) {
+            // eslint-disable-next-line no-control-regex
+            lineBuffer.current = lineBuffer.current.replace(/\x1b\x5d.*\x1b\x5c/, "");
+        }
+
         while (lineBuffer.current.includes("\n")) {
             const index = lineBuffer.current.indexOf("\n");
-            const singleLine = lineBuffer.current.slice(0, index).trim();
+            const singleLine = lineBuffer.current.slice(0, index)
+                .replace(/\r/, "")
+                .trim();
             extractLineData(singleLine);
             lineBuffer.current = lineBuffer.current.slice(index + 1);
         }
