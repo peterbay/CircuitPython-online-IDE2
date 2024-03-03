@@ -70,6 +70,8 @@ import * as FlexLayout from "flexlayout-react";
 
 import { getThemeNameByLabel } from "../layout/themes.js";
 
+import { switchTab } from "./Helpers";
+
 function ToolbarEntry({ content, fixedWidth = null }) {
     const sx = {
         flexGrow: 1,
@@ -223,6 +225,22 @@ export default function IdeEditor({ fileHandle, node, isReadOnly, isNewFile }) {
             exec: () => {
                 setConfigWordWrap(!configWordWrap);
                 aceEditorRef.current.editor.session.setUseWrapMode(configWordWrap);
+            },
+        });
+        commands.addCommand({
+            name: "switch_folder_view",
+            bindKey: { win: "Ctrl-B", mac: "Command-B" },
+            exec: () => {
+                console.log("switch folder view");
+                switchTab(node.getModel(), "folder_view");
+            },
+        });
+        commands.addCommand({
+            name: "switch_serial_console",
+            bindKey: { win: "Ctrl-`", mac: "Command-`" },
+            exec: () => {
+                console.log("switch folder view");
+                switchTab(node.getModel(), "serial_console");
             },
         });
     }

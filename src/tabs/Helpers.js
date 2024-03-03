@@ -92,6 +92,19 @@ const activateTab = (model, name) => {
     }
 };
 
+const switchTab = (model, name) => {
+    const nodes = getListOfAllNodes(model, "all");
+    if (!nodes || !nodes.length) {
+        return;
+    }
+    for (let tabNode of nodes) {
+        if (tabNode.getType() === "tab" && tabNode.getComponent() === name) {
+            model.doAction(FlexLayoutActions.selectTab(tabNode.getId()));
+            return;
+        }
+    }
+};
+
 export {
     activateTab,
     appendNodes,
@@ -99,4 +112,5 @@ export {
     getTabsByPath,
     getTabsByName,
     getActiveEditorTabConfig,
+    switchTab,
 };

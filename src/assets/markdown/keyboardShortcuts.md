@@ -5,6 +5,8 @@
 #### Extra
 |Windows/Linux|Mac|Action|
 |---|---|---|
+|Ctrl-`|Command-`|Show/hide Serial Console tab|
+|Ctrl-B|Command-B|Show/hide Folder View tab|
 |Ctrl-S|Command-S|Save file|
 |Alt-Z|Alt-Z|Toggle word wrap|
 
