@@ -2,9 +2,9 @@
 // react
 import { useEffect, useState, useRef, useContext } from "react";
 // ace
-import AceEditor from "react-ace";
+import AceEditor from "react-ace-builds";
 import "ace-builds/src-min-noconflict/ext-searchbox";
-import "ace-builds/src-min-noconflict/ext-language_tools";
+// import "ace-builds/src-min-noconflict/ext-language_tools";
 import "ace-builds/src-noconflict/mode-python";
 import "ace-builds/src-noconflict/mode-json";
 import "ace-builds/src-noconflict/mode-markdown";
@@ -16,11 +16,9 @@ import "ace-builds/src-noconflict/theme-chrome";
 import "ace-builds/src-noconflict/theme-cloud9_day";
 import "ace-builds/src-noconflict/theme-clouds";
 import "ace-builds/src-noconflict/theme-crimson_editor";
-import "ace-builds/src-noconflict/theme-dreamweaver";
 import "ace-builds/src-noconflict/theme-eclipse";
 import "ace-builds/src-noconflict/theme-github";
 import "ace-builds/src-noconflict/theme-iplastic";
-import "ace-builds/src-noconflict/theme-kuroir";
 import "ace-builds/src-noconflict/theme-solarized_light";
 import "ace-builds/src-noconflict/theme-sqlserver";
 import "ace-builds/src-noconflict/theme-textmate";
@@ -30,7 +28,6 @@ import "ace-builds/src-noconflict/theme-xcode";
 // dark themes
 import "ace-builds/src-noconflict/theme-ambiance";
 import "ace-builds/src-noconflict/theme-chaos";
-import "ace-builds/src-noconflict/theme-cloud9_night_low_color";
 import "ace-builds/src-noconflict/theme-cloud9_night";
 import "ace-builds/src-noconflict/theme-cobalt";
 import "ace-builds/src-noconflict/theme-dracula";
@@ -43,23 +40,25 @@ import "ace-builds/src-noconflict/theme-mono_industrial";
 import "ace-builds/src-noconflict/theme-monokai";
 import "ace-builds/src-noconflict/theme-nord_dark";
 import "ace-builds/src-noconflict/theme-solarized_dark";
-import "ace-builds/src-noconflict/theme-tomorrow_night_blue";
 import "ace-builds/src-noconflict/theme-tomorrow_night_bright";
-import "ace-builds/src-noconflict/theme-tomorrow_night_eighties";
 import "ace-builds/src-noconflict/theme-tomorrow_night";
 import "ace-builds/src-noconflict/theme-twilight";
 
 // MUI
-import SaveIcon from "@mui/icons-material/Save";
-import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
+import {
+    Save as SaveIcon,
+} from "@mui/icons-material";
+
+import {
+    Box,
+    Divider,
+    IconButton,
+    Toolbar,
+    Tooltip,
+    Typography,
+} from "@mui/material";
 
 // Layout
-import PopUp from "../layout/PopUp";
 // file utils
 import { getFileText, writeFileText } from "../react-local-file-system";
 // context
@@ -229,7 +228,7 @@ export default function IdeEditor({ fileHandle, node, isReadOnly, isNewFile }) {
     }
 
     return (
-        <PopUp title={fileHandle.name} parentStyle={{ height: height + "px" }}>
+        <>
             <Box sx={{ flexGrow: 1, height: "calc(" + height + "px - 38px)" }}>
                 <AceEditor
                     ref={aceEditorRef}
@@ -308,6 +307,6 @@ export default function IdeEditor({ fileHandle, node, isReadOnly, isNewFile }) {
                     </Tooltip>
                 </Toolbar>
             </Box>
-        </PopUp>
+        </>
     );
 }

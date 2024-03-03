@@ -34,12 +34,6 @@
             "type": "light"
         },
         {
-            "name": "cloud9_night_low_color",
-            "label": "Cloud9 night low color (dark)",
-            "class": "dark-darker",
-            "type": "dark"
-        },
-        {
             "name": "cloud9_night",
             "label": "Cloud9 night (dark)",
             "class": "dark-darker",
@@ -62,12 +56,6 @@
             "label": "Dracula (dark)",
             "class": "dark-lighter",
             "type": "dark"
-        },
-        {
-            "name": "dreamweaver",
-            "label": "Dreamweaver (light)",
-            "class": "light",
-            "type": "light"
         },
         {
             "name": "eclipse",
@@ -103,12 +91,6 @@
             "label": "Kr theme (dark)",
             "class": "dark-black",
             "type": "dark"
-        },
-        {
-            "name": "kuroir",
-            "label": "Kuroir (light)",
-            "class": "light",
-            "type": "light"
         },
         {
             "name": "merbivore_soft",
@@ -168,12 +150,6 @@
             "name": "tomorrow_night_bright",
             "label": "Tomorrow night bright (dark)",
             "class": "dark-black",
-            "type": "dark"
-        },
-        {
-            "name": "tomorrow_night_eighties",
-            "label": "Tomorrow night eighties (dark)",
-            "class": "dark-lighter",
             "type": "dark"
         },
         {
