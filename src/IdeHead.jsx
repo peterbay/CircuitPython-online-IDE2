@@ -6,7 +6,7 @@ import * as FlexLayout from "flexlayout-react";
 //context
 import ideContext from "./ideContext";
 
-import { getTabsByName } from "./tabs/Helpers";
+import { getTabsByName, activateTab } from "./tabs/Helpers";
 
 export default function IdeHead() {
     const { flexModel: model, openDirectory } = useContext(ideContext);
@@ -57,6 +57,29 @@ export default function IdeHead() {
             //         },
             //     ],
             // },
+            {
+                label: "View",
+                options: [
+                    {
+                        text: "Folder View",
+                        handler: () => {
+                            activateTab(model, "folder_view");
+                        },
+                    },
+                    {
+                        text: "Serial Console",
+                        handler: () => {
+                            activateTab(model, "serial_console");
+                        },
+                    },
+                    {
+                        text: "Settings",
+                        handler: () => {
+                            activateTab(model, "settings");
+                        },
+                    },
+                ],
+            },
             {
                 label: "Tools",
                 options: [

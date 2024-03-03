@@ -1,3 +1,4 @@
+import { Actions as FlexLayoutActions } from "flexlayout-react";
 
 const appendNodes = (nodes, node) => {
     nodes.push(node);
@@ -75,7 +76,24 @@ const getActiveEditorTabConfig = async (model) => {
     return null;
 };
 
+const activateTab = (model, name) => {
+    const nodes = getListOfAllNodes(model, "all");
+    if (!nodes || !nodes.length) {
+        return;
+    }
+    for (let tabNode of nodes) {
+        if (tabNode.getType() === "tab" &&
+            tabNode.getComponent() === name &&
+            !tabNode.isVisible()
+        ) {
+            model.doAction(FlexLayoutActions.selectTab(tabNode.getId()));
+            return;
+        }
+    }
+};
+
 export {
+    activateTab,
     appendNodes,
     getListOfAllNodes,
     getTabsByPath,
