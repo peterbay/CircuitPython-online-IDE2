@@ -6,4 +6,5 @@
 
 - CircuitPython Online IDE
     - is an open-source project published on GitHub Page under GPL 3 license.
-    - It is developed and maintained by [River Wang](https://github.com/urfdvw)
+    - this cloned version is developed and maintained by [Petr Vavrin](https://github.com/peterbay)
+    - original version is developed and maintained by [River Wang](https://github.com/urfdvw)

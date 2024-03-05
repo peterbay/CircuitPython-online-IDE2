@@ -124,12 +124,6 @@ export default function IdeHead() {
                             openTab("About", "about");
                         },
                     },
-                    {
-                        text: "Contact Me",
-                        handler: () => {
-                            openTab("Contact Me", "contact");
-                        },
-                    },
                 ],
             },
         ],
