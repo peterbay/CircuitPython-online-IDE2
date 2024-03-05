@@ -11,7 +11,6 @@ import {
     Button,
     CircularProgress,
     Divider,
-    IconButton,
     List,
     ListItem,
     ListItemButton,
@@ -20,7 +19,6 @@ import {
     Menu,
     MenuItem,
     Toolbar,
-    Tooltip,
     Typography,
 } from "@mui/material";
 
@@ -33,6 +31,8 @@ import {
     NoteAddOutlined as NewFileIcon,
     RefreshOutlined as RefreshIcon,
 } from "@mui/icons-material";
+
+import { ToolbarIconButton } from "../components/ToolbarIconButton";
 
 import filesSettings from "./filesSettings.json";
 
@@ -373,20 +373,13 @@ export default function FolderView({ rootFolder, onFileClick, activeEditorInfo }
                     </Typography>
                     {toolbarItems.map((item) => {
                         return (
-                            <Tooltip
-                                key={"local_file_system_toolbar_item_key_" + item.name}
-                                id={item.name}
+                            <ToolbarIconButton
+                                id={`fs-toolbar-item-${item.name}`}
+                                key={`fs-toolbar-item-${item.name}`}
                                 title={item.title}
-                            >
-                                <IconButton
-                                    edge="start"
-                                    size="small"
-                                    style={{borderRadius: 0}}
-                                    onClick={item.handler}
-                                >
-                                    <item.icon />
-                                </IconButton>
-                            </Tooltip>
+                                icon={item.icon}
+                                onClick={() => item.handler()}
+                            />
                         );
                     })}
                 </Toolbar>

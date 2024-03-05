@@ -7,9 +7,7 @@ import widgetsContext from "../dashboard/widgetsContext";
 import {
     Box,
     Divider,
-    IconButton,
     Toolbar,
-    Tooltip,
 } from "@mui/material";
 
 import {
@@ -21,6 +19,7 @@ import {
 import { Responsive as ResponsiveGridLayout } from "react-grid-layout";
 
 import { ToolbarEntry } from "../components/ToolbarEntry";
+import { ToolbarIconButton } from "../components/ToolbarIconButton";
 
 // context
 import ideContext from "../ideContext";
@@ -74,41 +73,21 @@ export default function Dashboard({ node }) {
                         sx={{ minHeight: "35px", maxHeight: "35px" }}
                     >
                         <ToolbarEntry content={`Dashboard`} />
-                        <Tooltip
-                            key={"clear-dashboard"}
+
+                        <ToolbarIconButton
                             id="clear-dashboard"
-                            title={"Clear dashboard"}
-                        >
-                            <span>
-                                <IconButton
-                                    edge="start"
-                                    size="small"
-                                    style={{ borderRadius: 0 }}
-                                    onClick={() => {
-                                        clearDashboard();
-                                    }}
-                                    disabled={!dashboardLayout.length}
-                                >
-                                    <DeleteForeverIcon />
-                                </IconButton>
-                            </span>
-                        </Tooltip>
-                        <Tooltip
-                            key={"dashboard-lock"}
+                            title="Clear dashboard"
+                            icon={DeleteForeverIcon}
+                            disabled={!dashboardLayout.length}
+                            onClick={() => clearDashboard()}
+                        />
+
+                        <ToolbarIconButton
                             id="dashboard-lock"
                             title={locked ? "Unlock dashboard" : "Lock dashboard"}
-                        >
-                            <IconButton
-                                edge="start"
-                                size="small"
-                                style={{ borderRadius: 0 }}
-                                onClick={() => {
-                                    setLocked(!locked);
-                                }}
-                            >
-                                {locked ? <LockIcon /> : <LockOpenIcon />}
-                            </IconButton>
-                        </Tooltip>
+                            icon={locked ? LockIcon : LockOpenIcon}
+                            onClick={() => setLocked(!locked)}
+                        />
                     </Toolbar>
                 </Box>
                 <Divider />

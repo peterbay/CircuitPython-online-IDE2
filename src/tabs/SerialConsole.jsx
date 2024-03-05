@@ -17,8 +17,6 @@ import {
 import 'xterm/css/xterm.css';
 
 import {
-    IconButton,
-    Tooltip,
     Box,
     Toolbar,
     Divider,
@@ -34,6 +32,7 @@ import {
 } from '@mui/icons-material';
 
 import { ToolbarEntry } from "../components/ToolbarEntry";
+import { ToolbarIconButton } from "../components/ToolbarIconButton";
 
 import SerialCommunicator from "../serial/serial";
 
@@ -166,99 +165,47 @@ export default function SerialConsole({ node }) {
                     sx={{ minHeight: "35px", maxHeight: "35px" }}
                 >
                     <ToolbarEntry content={`Serial console: ${connectionState}`} />
-                    <Tooltip
-                        key={"link-dashboard"}
+
+                    <ToolbarIconButton
                         id="link-dashboard"
                         title={linked ? "Unlink dashboard from serial console"
-                            : "Link dashboard to serial console"}
-                    >
-                        <span>
-                            <IconButton
-                                edge="start"
-                                size="small"
-                                style={{borderRadius: 0}}
-                                onClick={() => {
-                                    linkToggle();
-                                }}
-                                disabled={!serialStatus}
-                            >
-                                {linked ? <LinkIcon /> : <LinkOffIcon />}
-                            </IconButton>
-                        </span>
-                    </Tooltip>
-                    <Tooltip
-                        key={""}
-                        id=""
-                        title={"Send Ctrl+C to stop running program"}
-                    >
-                        <span>
-                            <IconButton
-                                edge="start"
-                                size="small"
-                                style={{borderRadius: 0}}
-                                onClick={() => {
-                                    sendKey("Ctrl+C");
-                                }}
-                                disabled={!serialStatus}
-                            >
-                                <CancelIcon />
-                            </IconButton>
-                        </span>
-                    </Tooltip>
-                    <Tooltip
-                        key={"send-ctrl-d"}
+                        : "Link dashboard to serial console"}
+                        icon={linked ? LinkIcon : LinkOffIcon}
+                        disabled={!serialStatus}
+                        onClick={() => linkToggle()}
+                    />
+
+                    <ToolbarIconButton
+                        id="send-ctrl-c"
+                        title="Send Ctrl+C to stop running program"
+                        icon={CancelIcon}
+                        disabled={!serialStatus}
+                        onClick={() => sendKey("Ctrl+C")}
+                    />
+
+                    <ToolbarIconButton
                         id="send-ctrl-d"
-                        title={"Send Ctrl+D to reload the program"}
-                    >
-                        <span>
-                            <IconButton
-                                edge="start"
-                                size="small"
-                                style={{borderRadius: 0}}
-                                onClick={() => {
-                                    sendKey("Ctrl+D");
-                                }}
-                                disabled={!serialStatus}
-                            >
-                                <RefreshIcon />
-                            </IconButton>
-                        </span>
-                    </Tooltip>
-                    <Tooltip
-                        key={"clear-terminal"}
+                        title="Send Ctrl+D to reload the program"
+                        icon={RefreshIcon}
+                        disabled={!serialStatus}
+                        onClick={() => sendKey("Ctrl+D")}
+                    />
+
+                    <ToolbarIconButton
                         id="clear-terminal"
-                        title={"Clear terminal"}
-                    >
-                        <span>
-                            <IconButton
-                                edge="start"
-                                size="small"
-                                style={{borderRadius: 0}}
-                                onClick={() => {
-                                    clearTerminal();
-                                }}
-                                disabled={!terminal.current}
-                            >
-                                <DeleteForeverIcon />
-                            </IconButton>
-                        </span>
-                    </Tooltip>
-                    <Tooltip
-                        key={"serial-connect"}
+                        title="Clear terminal"
+                        icon={DeleteForeverIcon}
+                        disabled={!terminal.current}
+                        onClick={() => clearTerminal()}
+                    />
+
+                    <ToolbarIconButton
                         id="serial-connect"
                         title={serialStatus ? "Disconnect from serial port" : "Connect to serial port"}
-                    >
-                        <IconButton
-                            edge="start"
-                            size="small"
-                            style={{borderRadius: 0}}
-                            onClick={() => {
-                                serialStatus ? disconnect() : connect();
-                            }}
-                        >
-                            {serialStatus ? <UsbIcon sx={{ color: 'green' }} /> : <UsbIcon sx={{ color: 'blue' }} />}
-                        </IconButton>
-                    </Tooltip>
+                        icon={UsbIcon}
+                        iconSx={{ color: serialStatus ? 'green' : 'blue' }}
+                        onClick={() => serialStatus ? disconnect() : connect()}
+                    />
                 </Toolbar>
             </Box>
             <Box ref={terminalBox} sx={{

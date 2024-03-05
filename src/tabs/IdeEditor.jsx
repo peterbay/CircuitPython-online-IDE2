@@ -52,12 +52,11 @@ import {
 import {
     Box,
     Divider,
-    IconButton,
     Toolbar,
-    Tooltip,
 } from "@mui/material";
 
 import { ToolbarEntry } from "../components/ToolbarEntry";
+import { ToolbarIconButton } from "../components/ToolbarIconButton";
 
 // Layout
 // file utils
@@ -284,22 +283,13 @@ export default function IdeEditor({ fileHandle, node, isReadOnly, isNewFile }) {
                     <ToolbarEntry content={editorNewLineCharacter} />
                     <ToolbarEntry content={tabInfo} />
                     <ToolbarEntry content={selectionInfo} fixedWidth={"200px"} />
-                    <Tooltip
-                        key={"editor-save"}
+
+                    <ToolbarIconButton
                         id="editor-save"
                         title="Save and Run"
-                    >
-                        <IconButton
-                            edge="start"
-                            size="small"
-                            style={{borderRadius: 0}}
-                            onClick={() => {
-                                saveFile(text);
-                            }}
-                        >
-                            <SaveIcon />
-                        </IconButton>
-                    </Tooltip>
+                        icon={SaveIcon}
+                        onClick={() => saveFile(text)()}
+                    />
                 </Toolbar>
             </Box>
         </>
