@@ -10,7 +10,6 @@ import {
     IconButton,
     Toolbar,
     Tooltip,
-    Typography,
 } from "@mui/material";
 
 import {
@@ -21,32 +20,10 @@ import {
 
 import { Responsive as ResponsiveGridLayout } from "react-grid-layout";
 
+import { ToolbarEntry } from "../components/ToolbarEntry";
+
 // context
 import ideContext from "../ideContext";
-
-function ToolbarEntry({ content, fixedWidth = null }) {
-    const sx = {
-        flexGrow: 1,
-        pl: 1,
-        fontSize: "14px",
-    };
-
-    if (fixedWidth) {
-        sx.width = fixedWidth;
-    }
-
-    return (
-        <Typography
-            component="div"
-            noWrap={true}
-            sx={sx}
-        >
-            {content}
-        </Typography>
-    );
-}
-
-
 
 export default function Dashboard({ node }) {
     const { dashboardLayout, clearDashboard, widgets, updateWidget, isDarkMode } = useContext(ideContext);

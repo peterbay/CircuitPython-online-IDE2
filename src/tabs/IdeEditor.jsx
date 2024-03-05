@@ -4,7 +4,7 @@ import { useEffect, useState, useRef, useContext } from "react";
 // ace
 import AceEditor from "react-ace";
 import "ace-builds/src-min-noconflict/ext-searchbox";
-// import "ace-builds/src-min-noconflict/ext-language_tools";
+import "ace-builds/src-min-noconflict/ext-language_tools";
 import "ace-builds/src-noconflict/mode-python";
 import "ace-builds/src-noconflict/mode-json";
 import "ace-builds/src-noconflict/mode-markdown";
@@ -55,8 +55,9 @@ import {
     IconButton,
     Toolbar,
     Tooltip,
-    Typography,
 } from "@mui/material";
+
+import { ToolbarEntry } from "../components/ToolbarEntry";
 
 // Layout
 // file utils
@@ -71,28 +72,6 @@ import * as FlexLayout from "flexlayout-react";
 import { getThemeNameByLabel } from "../layout/themes.js";
 
 import { switchTab } from "./Helpers";
-
-function ToolbarEntry({ content, fixedWidth = null }) {
-    const sx = {
-        flexGrow: 1,
-        pl: 1,
-        fontSize: "14px",
-    };
-
-    if (fixedWidth) {
-        sx.width = fixedWidth;
-    }
-
-    return (
-        <Typography
-            component="div"
-            noWrap={true}
-            sx={sx}
-        >
-            {content}
-        </Typography>
-    );
-}
 
 export default function IdeEditor({ fileHandle, node, isReadOnly, isNewFile }) {
     const { config } = useContext(ideContext);
@@ -231,7 +210,6 @@ export default function IdeEditor({ fileHandle, node, isReadOnly, isNewFile }) {
             name: "switch_folder_view",
             bindKey: { win: "Ctrl-B", mac: "Command-B" },
             exec: () => {
-                console.log("switch folder view");
                 switchTab(node.getModel(), "folder_view");
             },
         });
@@ -239,7 +217,6 @@ export default function IdeEditor({ fileHandle, node, isReadOnly, isNewFile }) {
             name: "switch_serial_console",
             bindKey: { win: "Ctrl-`", mac: "Command-`" },
             exec: () => {
-                console.log("switch folder view");
                 switchTab(node.getModel(), "serial_console");
             },
         });

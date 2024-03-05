@@ -21,7 +21,6 @@ import {
     Tooltip,
     Box,
     Toolbar,
-    Typography,
     Divider,
 } from "@mui/material";
 
@@ -34,34 +33,14 @@ import {
     Usb as UsbIcon,
 } from '@mui/icons-material';
 
+import { ToolbarEntry } from "../components/ToolbarEntry";
+
 import SerialCommunicator from "../serial/serial";
 
 // context
 import ideContext from "../ideContext";
 
 const serial = new SerialCommunicator();
-
-function ToolbarEntry({ content, fixedWidth = null }) {
-    const sx = {
-        flexGrow: 1,
-        pl: 1,
-        fontSize: "14px",
-    };
-
-    if (fixedWidth) {
-        sx.width = fixedWidth;
-    }
-
-    return (
-        <Typography
-            component="div"
-            noWrap={true}
-            sx={sx}
-        >
-            {content}
-        </Typography>
-    );
-}
 
 export default function SerialConsole({ node }) {
     const { config, processLine } = useContext(ideContext);
