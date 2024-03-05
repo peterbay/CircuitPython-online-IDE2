@@ -289,3 +289,8 @@
 .light .asciiTable td:nth-child(14) {
     background-color: rgb(243, 243, 244);
 }
+
+.light .asciiTable tbody tr:hover,
+.light .asciiTable tbody tr:nth-child(even):hover {
+    background-color: rgb(203, 203, 203);
+}

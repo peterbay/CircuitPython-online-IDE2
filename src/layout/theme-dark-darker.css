@@ -293,3 +293,8 @@
 .dark-darker .asciiTable td:nth-child(14) {
     background-color: rgb(13, 16, 21);
 }
+
+.dark-darker .asciiTable tbody tr:hover,
+.dark-darker .asciiTable tbody tr:nth-child(even):hover {
+    background-color: rgb(56, 56, 56);
+}

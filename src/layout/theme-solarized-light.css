@@ -289,3 +289,8 @@
 .solarized-light .asciiTable td:nth-child(14) {
     background-color: rgb(251, 246, 227);
 }
+
+.solarized-light .asciiTable tbody tr:hover,
+.solarized-light .asciiTable tbody tr:nth-child(even):hover {
+    background-color: rgb(211, 206, 182);
+}
