@@ -1,4 +1,8 @@
-import { Actions as FlexLayoutActions } from "flexlayout-react";
+import {
+    Actions as FlexLayoutActions,
+    TabNode as FlexLayoutTabNode,
+    DockLocation as FlexLayoutDockLocation,
+} from "flexlayout-react";
 
 const appendNodes = (nodes, node) => {
     nodes.push(node);
@@ -76,6 +80,30 @@ const getActiveEditorTabConfig = async (model) => {
     return null;
 };
 
+const openTab = async function (model, name, component) {
+    const tabNodes = getTabsByName(model, "root", name, "equal");
+    const tabNode = (tabNodes && tabNodes.length > 0) ? tabNodes[0] : null;
+
+    if (tabNode instanceof FlexLayoutTabNode) {
+        // Activate the found tab
+        model.doAction(FlexLayoutActions.selectTab(tabNode.getId()));
+    } else {
+        // Open a new tab
+        model.doAction(
+            FlexLayoutActions.addNode(
+                {
+                    type: "tab",
+                    name: name,
+                    component: component,
+                },
+                model.getActiveTabset() ? model.getActiveTabset().getId() : "initial_tabset",
+                FlexLayoutDockLocation.CENTER,
+                -1
+            )
+        );
+    }
+};
+
 const activateTab = (model, name) => {
     const nodes = getListOfAllNodes(model, "all");
     if (!nodes || !nodes.length) {
@@ -112,5 +140,6 @@ export {
     getTabsByPath,
     getTabsByName,
     getActiveEditorTabConfig,
+    openTab,
     switchTab,
 };

@@ -1,39 +1,13 @@
 // React
 import { useContext } from "react";
 import MenuBar from "./layout/Menu";
-// Flex layout
-import * as FlexLayout from "flexlayout-react";
 //context
 import ideContext from "./ideContext";
 
-import { getTabsByName, activateTab } from "./tabs/Helpers";
+import { activateTab, openTab } from "./tabs/Helpers";
 
 export default function IdeHead() {
     const { flexModel: model, openDirectory } = useContext(ideContext);
-
-    function openTab(name, component) {
-        const tabNodes = getTabsByName(model, "root", name, "equal");
-        const tabNode = (tabNodes && tabNodes.length > 0) ? tabNodes[0] : null;
-
-        if (tabNode instanceof FlexLayout.TabNode) {
-            // Activate the found tab
-            model.doAction(FlexLayout.Actions.selectTab(tabNode.getId()));
-        } else {
-            // Open a new tab
-            model.doAction(
-                FlexLayout.Actions.addNode(
-                    {
-                        type: "tab",
-                        name: name,
-                        component: component,
-                    },
-                    model.getActiveTabset() ? model.getActiveTabset().getId() : "initial_tabset",
-                    FlexLayout.DockLocation.CENTER,
-                    -1
-                )
-            );
-        }
-    }
 
     const menuStructure = {
         title: "CircuitPython Online IDE",
@@ -86,25 +60,25 @@ export default function IdeHead() {
                     {
                         text: "ASCII table",
                         handler: () => {
-                            openTab("ASCII table", "ascii_table");
+                            openTab(model, "ASCII table", "ascii_table");
                         },
                     },
                     {
                         text: "Converters",
                         handler: () => {
-                            openTab("Converters", "converters");
+                            openTab(model, "Converters", "converters");
                         },
                     },
                     {
                         text: "Navigation",
                         handler: () => {
-                            openTab("Navigation", "navigation");
+                            openTab(model, "Navigation", "navigation");
                         },
                     },
                     {
                         text: "Dashboard",
                         handler: () => {
-                            openTab("Dashboard", "dashboard");
+                            openTab(model, "Dashboard", "dashboard");
                         },
                     },
                 ],
@@ -115,13 +89,13 @@ export default function IdeHead() {
                     {
                         text: "Keyboard shortcuts",
                         handler: () => {
-                            openTab("Keyboard shortcuts", "keyboard_shortcuts");
+                            openTab(model, "Keyboard shortcuts", "keyboard_shortcuts");
                         },
                     },
                     {
                         text: "About",
                         handler: () => {
-                            openTab("About", "about");
+                            openTab(model, "About", "about");
                         },
                     },
                 ],
