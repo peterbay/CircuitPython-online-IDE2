@@ -145,4 +145,3 @@
 |---|---|---|
 |Ctrl-C|Ctrl-C|Stop running program|
 |Ctrl-D|Ctrl-D|Reload|
-

@@ -1,0 +1,264 @@
+body {
+    /* Uncomment the following line to disable scroll.
+       Comment to test content size*/
+    overflow: hidden;
+    margin: 0;
+    background-color: rgb(104, 104, 104);
+}
+
+.markdown-body {
+    box-sizing: border-box;
+    min-width: 200px;
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 20px;
+    height: 100%;
+    padding-bottom: 50px;
+}
+
+@media (max-width: 767px) {
+    .markdown-body {
+        padding: 15px;
+    }
+}
+
+.ide {
+    background-color: rgb(141, 141, 141);
+    gap: 0px;
+    margin: 0;
+    padding: 0px;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+}
+
+.ide-header {
+    background-color: lightgray;
+    flex-grow: 0;
+}
+
+.ide-body {
+    background-color: lightgray;
+    flex-grow: 1;
+}
+
+.ide-tail {
+    background-color: lightgray;
+    flex-grow: 0;
+}
+
+.file-code svg {
+    color: rgb(119, 150, 224);
+}
+.file-binary svg {
+    color: rgb(234, 86, 86);
+}
+.file-text svg {
+    color: rgb(157, 157, 157);
+}
+.file-data svg {
+    color: rgb(208, 211, 26);
+}
+.file-default svg {
+    color: rgb(157, 157, 157);
+}
+
+.ide-tail {
+    height: 30px;
+    font-size: medium;
+    font-family: Roboto, Arial, sans-serif;
+    padding-left: 10px;
+}
+
+/* THEME light */
+.light .ide-header {
+    background-color: rgb(221, 221, 221);
+    border-bottom: 1px solid rgb(204, 204, 204);
+}
+
+.light .ide-tail {
+    background-color: rgb(79, 133, 211);
+    color: rgb(234, 234, 234);
+}
+
+.light .markdown-body {
+    background-color: rgb(243, 243, 244);
+}
+
+/* THEME dark-lighter */
+.dark-lighter .ide-header {
+    background-color: rgb(48, 50, 60);
+    border-bottom: 1px solid rgb(27, 27, 27);
+}
+
+.dark-lighter .ide-tail {
+    background-color: rgb(34, 37, 43);
+    color: rgb(159, 165, 169);
+}
+
+.dark-lighter .markdown-body,
+.dark-lighter .markdown-body table tr {
+    color: rgb(164, 164, 164);
+    background-color: rgb(34, 37, 43);
+}
+
+.dark-lighter .markdown-body table tr:nth-child(even) {
+    background-color: rgb(27, 27, 27);
+}
+
+.dark-lighter .markdown-body table th,
+.dark-lighter .markdown-body table td {
+    border: 1px solid rgb(88, 88, 88);
+}
+
+.dark-lighter .markdown-body a {
+    color: rgb(113, 143, 219);
+}
+
+/* THEME dark-darker */
+.dark-darker .ide-header {
+    /* color: red !important; */
+    background-color: rgb(47, 47, 47);
+    border-bottom: 1px solid rgb(27, 27, 27);
+}
+
+.dark-darker .ide-tail {
+    background-color: rgb(22, 22, 22);
+    color: rgb(159, 165, 169);
+}
+
+.dark-darker .markdown-body,
+.dark-darker .markdown-body table tr {
+    background-color: rgb(13, 16, 21);
+    color: rgb(159, 165, 169);
+}
+
+.dark-darker .markdown-body table tr:nth-child(even) {
+    background-color: rgb(27, 27, 27);
+}
+
+.dark-darker .markdown-body table th,
+.dark-darker .markdown-body table td {
+    border: 1px solid rgb(88, 88, 88);
+}
+
+.dark-darker .markdown-body a {
+    color: rgb(113, 143, 219);
+}
+
+/* THEME dark-black */
+.dark-black .ide-header {
+    background-color: rgb(36, 36, 36);
+}
+
+.dark-black .ide-tail {
+    background-color: rgb(22, 22, 22);
+    color: rgb(159, 165, 169);
+}
+
+.dark-black .markdown-body,
+.dark-black .markdown-body table tr {
+    background-color: rgb(0, 0, 0);
+    color: rgb(159, 165, 169);
+}
+
+.dark-black .markdown-body table tr:nth-child(even) {
+    background-color: rgb(27, 27, 27);
+}
+
+.dark-black .markdown-body table th,
+.dark-black .markdown-body table td {
+    border: 1px solid rgb(88, 88, 88);
+}
+
+.dark-black .markdown-body a {
+    color: rgb(113, 143, 219);
+}
+
+/* THEME solarized-light */
+.solarized-light .ide-header {
+    background-color: rgb(218, 214, 193);
+    border-bottom: 1px solid rgb(249, 246, 227);
+}
+
+.solarized-light .ide-tail {
+    background-color: rgb(236, 232, 213);
+    color: rgb(66, 66, 66);
+}
+
+.solarized-light .markdown-body,
+.solarized-light .markdown-body table tr {
+    background-color: rgb(251, 246, 227);
+}
+
+.solarized-light .markdown-body table tr:nth-child(even) {
+    background-color: rgb(233, 230, 215);
+}
+
+/* THEME solarized-dark */
+.solarized-dark .ide-header {
+    background-color: rgb(32, 54, 71);
+    border-bottom: 1px solid rgb(27, 27, 27);
+}
+
+.solarized-dark .ide-tail {
+    background-color: rgb(10, 32, 43);
+    color: rgb(144, 160, 161);
+}
+
+.solarized-dark .ace_gutter-cell {
+    color: rgb(133, 133, 133) !important;
+}
+
+.solarized-dark .markdown-body,
+.solarized-dark .markdown-body tr {
+    color: rgb(164, 164, 164);
+    background-color: rgb(10, 32, 43);
+}
+
+.solarized-dark .markdown-body table tr:nth-child(even) {
+    background-color: rgb(12, 40, 55);
+}
+
+.solarized-dark .markdown-body table th,
+.solarized-dark .markdown-body table td {
+    border: 1px solid rgb(88, 88, 88);
+}
+
+.solarized-dark .markdown-body a {
+    color: rgb(74, 185, 143);
+}
+
+/* Dashboard */
+
+.dashboard-layout {
+    width: 100%;
+    height: 100%;
+}
+
+.dashboard-layout .widget-header {
+    border-bottom: 1px solid rgb(204, 204, 204);
+    cursor: grab;
+}
+
+.dashboard-layout .widget-locked .widget-header {
+    border-bottom: 1px solid rgb(204, 204, 204);
+    cursor: default;
+}
+
+.widget-header {
+    font-size: 16px;
+    padding-top: 3px;
+    padding-left: 5px;
+    color: rgb(99, 99, 99);
+    height: 30px;
+}
+
+.is-dark-theme .widget-header {
+    color: rgb(185, 185, 185);
+}
+
+.converters {
+    padding: 20px;
+}

@@ -1,8 +1,7 @@
-import {
-    Typography,
-} from "@mui/material";
+import PropTypes from "prop-types";
+import Typography from "@mui/material/Typography";
 
-export function ToolbarEntry({ content, fixedWidth = null }) {
+export default function ToolbarEntry({ children, fixedWidth = null }) {
     const sx = {
         flexGrow: 1,
         pl: 1,
@@ -19,7 +18,12 @@ export function ToolbarEntry({ content, fixedWidth = null }) {
             noWrap={true}
             sx={sx}
         >
-            {content}
+            {children}
         </Typography>
     );
 }
+
+ToolbarEntry.propTypes = {
+    children: PropTypes.any,
+    fixedWidth: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+};

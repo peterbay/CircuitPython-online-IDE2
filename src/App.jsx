@@ -1,26 +1,28 @@
 // React
 import { useState, useEffect } from "react";
-// Style
-import "./App.css";
 // Ide parts
-import IdeBody from "./IdeBody";
-import IdeHead from "./IdeHead";
+import IdeBody from "./components/IdeBody.jsx";
+import IdeHead from "./components/IdeHead.jsx";
 // Device Support Warnings
 import { isMobile, isMacOs, isSafari, isFirefox, isIE } from "react-device-detect";
-import ErrorIsMobile from "./infopages/ErrorIsMobile";
-import ErrorIsNotChrome from "./infopages/ErrorIsNotChrome";
-import WarningIsMac from "./infopages/WarningIsMac";
+import ShowWarning from "./components/ShowWarning.jsx";
 // Features
-import { useFileSystem } from "./react-local-file-system";
-import { useConfig } from "./react-user-config";
-import schemas from "./schemas";
-import { dashboardContent } from "./dashboard";
+import useFileSystem from "./hooks/useFileSystem";
+import useConfig from "./utils/useConfig.js";
+import useDasboard from "./hooks/useDashboard.jsx";
 // context
-import ideContext from "./ideContext";
+import IdeContext from "./contexts/IdeContext.js";
+
+import configGlobal from "./settings/configGlobal";
+import configEditor from "./settings/configEditor";
+import configSerialConsole from "./settings/configSerialConsole";
 
 // layout
-import * as FlexLayout from "flexlayout-react";
-import layout from "./layout/layout.json";
+import {
+    Model as FlexLayoutModel,
+} from "flexlayout-react";
+
+import layout from "./settings/layout";
 
 import {
     getDefaultTheme,
@@ -28,13 +30,16 @@ import {
     getThemeClassByLabel,
     getThemesNamesList,
     getThemeTypeByLabel,
-} from "./layout/themes.js";
+    getThemeNameByLabel,
+} from "./utils/themes.js";
 
 import {
     createTheme,
     ThemeProvider,
 } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
+
+const schemas = [configGlobal, configEditor, configSerialConsole];
 
 const darkTheme = createTheme({
     palette: {
@@ -67,23 +72,24 @@ if (globalSchema) {
     globalSchema.properties.theme.default = getDefaultTheme();
 }
 
+const flexModel = FlexLayoutModel.fromJson(layout);
+
 function App() {
     // get folder handler and status with useFileSystem hook
-    const { openDirectory, directoryReady, statusText, rootDirHandle } = useFileSystem();
-    const { dashboardLayout, clearDashboard, processLine, widgets, updateWidget } = dashboardContent();
-    const { config, set_config, ready: configReady } = useConfig(schemas);
-    const [flexModel, setFlexModel] = useState(FlexLayout.Model.fromJson(layout));
+    const { openDirectory, directoryReady, rootDirHandle } = useFileSystem();
+    const { dashboardLayout, clearDashboard, processLine, widgets, updateWidget } = useDasboard();
+    const { config, setConfig, ready: configReady } = useConfig(schemas);
 
     const getCurrentTheme = () => window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const [isDarkTheme, setIsDarkTheme] = useState(getCurrentTheme());  
+    const [isDarkTheme, setIsDarkTheme] = useState(getCurrentTheme());
     const mqListener = (e => {
         setIsDarkTheme(e.matches);
     });
-    
+
     useEffect(() => {
-      const darkThemeMq = window.matchMedia("(prefers-color-scheme: dark)");
-      darkThemeMq.addListener(mqListener);
-      return () => darkThemeMq.removeListener(mqListener);
+        const darkThemeMq = window.matchMedia("(prefers-color-scheme: dark)");
+        darkThemeMq.addListener(mqListener);
+        return () => darkThemeMq.removeListener(mqListener);
     }, []);
 
     useEffect(() => {
@@ -96,16 +102,6 @@ function App() {
             };
         }
     }, [directoryReady]);
-
-    // error info
-    let WarningModal = () => {};
-    if (isMobile) {
-        WarningModal = ErrorIsMobile;
-    } else if (isSafari || isFirefox || isIE) {
-        WarningModal = ErrorIsNotChrome;
-    } else if (isMacOs) {
-        WarningModal = WarningIsMac;
-    }
 
     // If config initialization not done, don't continue.
     if (!configReady) {
@@ -120,12 +116,13 @@ function App() {
     }
 
     const themeClass = getThemeClassByLabel(themeLabel);
+    const themeName = getThemeNameByLabel(themeLabel);
     const themeModeClass = (themeType === "dark") ? "is-dark-theme" : "is-light-theme";
     const classes = `ide ${themeClass} ${themeModeClass}`;
     const muiTheme = (getThemeTypeByLabel(themeLabel) === "dark") ? darkTheme : lightTheme;
 
     return (
-        <ideContext.Provider
+        <IdeContext.Provider
             value={{
                 flexModel: flexModel,
                 openDirectory: openDirectory,
@@ -133,16 +130,21 @@ function App() {
                 rootDirHandle: rootDirHandle,
                 schemas: schemas,
                 config: config,
-                set_config: set_config,
+                setConfig: setConfig,
                 dashboardLayout: dashboardLayout,
                 processLine: processLine,
                 clearDashboard: clearDashboard,
                 widgets: widgets,
                 updateWidget: updateWidget,
                 isDarkMode: getThemeTypeByLabel(themeLabel) === "dark",
+                themeName: themeName,
             }}
         >
-            <WarningModal />
+            <ShowWarning
+                isMobile={isMobile}
+                isNotChrome={isSafari || isFirefox || isIE}
+                isMac={isMacOs}
+            />
             <ThemeProvider theme={muiTheme}>
                 <CssBaseline />
                 <div className={classes}>
@@ -158,7 +160,7 @@ function App() {
                     </div>
                 </div>
             </ThemeProvider>
-        </ideContext.Provider>
+        </IdeContext.Provider>
     );
 }
 

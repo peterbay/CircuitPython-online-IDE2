@@ -1,0 +1,301 @@
+.solarized-dark .flexlayout__layout {
+    scrollbar-color: rgb(58, 73, 81) rgba(73, 80, 83, 0.1);
+    --color-text: rgb(164, 164, 164);
+    --color-tab-text: rgb(74, 185, 143);
+    --color-background: rgb(10, 32, 43);
+    --color-base: rgb(16, 42, 54);
+    --color-1: rgb(22, 55, 71);
+    --color-2: rgba(11, 195, 84, 0.791);
+    --color-3: rgb(27, 63, 82);
+    --color-4: rgb(16, 42, 55);
+    --color-5: rgb(227, 225, 212);
+    --color-6: rgb(56, 112, 113);
+    --color-7: rgb(56, 112, 113);
+    --color-drag1: rgb(69, 116, 138);
+    --color-drag2: rgb(38, 83, 104);
+    --color-drag1-background: rgba(16, 42, 54, 0.7);
+    --color-drag2-background: rgba(16, 42, 54, 0.3);
+    --font-size: medium;
+    --font-family: Roboto, Arial, sans-serif;
+    --color-overflow: gray;
+    --color-icon: gray;
+
+    --color-tabset-background: var(--color-background);
+    --color-tabset-background-selected: var(--color-1);
+    --color-tabset-background-maximized: var(--color-6);
+    --color-tabset-divider-line: var(--color-4);
+    --color-tabset-header-background: var(--color-background);
+    --color-tabset-header: var(--color-text);
+    --color-border-background: var(--color-1);
+    --color-border-divider-line: var(--color-4);
+    --color-tab-selected: var(--color-tab-text);
+    --color-tab-selected-background: var(--color-4);
+    --color-tab-unselected: var(--color-tab-text);
+    --color-tab-unselected-background: transparent;
+    --color-tab-textbox: var(--color-tab-text);
+    --color-tab-textbox-background: var(--color-3);
+    --color-border-tab-selected: var(--color-tab-text);
+    --color-border-tab-selected-background: var(--color-4);
+    --color-border-tab-unselected: var(--color-tab-text);
+    --color-border-tab-unselected-background: var(--color-3);
+    --color-splitter: var(--color-1);
+    --color-splitter-hover: var(--color-6);
+    --color-splitter-drag: var(--color-6);
+    --color-drag-rect-border: var(--color-6);
+    --color-drag-rect-background: var(--color-4);
+    --color-drag-rect: var(--color-text);
+    --color-popup-border: var(--color-6);
+    --color-popup-unselected: var(--color-text);
+    --color-popup-unselected-background: var(--color-background);
+    --color-popup-selected: var(--color-text);
+    --color-popup-selected-background: var(--color-3);
+    --color-edge-marker: gray;
+}
+
+.solarized-dark .panel {
+    background-color: var(--color-background);
+    border: 1px solid var(--color-1);
+}
+
+.solarized-dark .flexlayout__layout {
+    background-color: var(--color-background);
+}
+
+.solarized-dark .flexlayout__splitter {
+    background-color: var(--color-splitter);
+}
+@media (hover: hover) {
+    .solarized-dark .flexlayout__splitter:hover {
+        background-color: var(--color-splitter-hover);
+    }
+}
+.solarized-dark .flexlayout__splitter_drag {
+    background-color: var(--color-splitter-drag);
+}
+.solarized-dark .flexlayout__outline_rect {
+    border: 2px solid var(--color-drag1);
+    background: var(--color-drag1-background);
+}
+.solarized-dark .flexlayout__outline_rect_edge {
+    border: 2px solid var(--color-drag2);
+    background: var(--color-drag2-background);
+}
+.solarized-dark .flexlayout__edge_rect {
+    background-color: var(--color-edge-marker);
+}
+.solarized-dark .flexlayout__drag_rect {
+    color: var(--color-drag-rect);
+    background-color: var(--color-drag-rect-background);
+    border: 2px solid var(--color-drag-rect-border);
+    font-size: var(--font-size);
+    font-family: var(--font-family);
+}
+.solarized-dark .flexlayout__tabset {
+    background-color: var(--color-tabset-background);
+    box-sizing: border-box;
+    font-size: var(--font-size);
+    font-family: var(--font-family);
+}
+.solarized-dark .flexlayout__tabset_header {
+    border-bottom: 1px solid var(--color-tabset-divider-line);
+    color: var(--color-tabset-header);
+    background-color: var(--color-tabset-header-background);
+}
+.solarized-dark .flexlayout__tabset_header_content {
+    flex-grow: 1;
+}
+.solarized-dark .flexlayout__tabset_tabbar_outer {
+    background-color: var(--color-tabset-background);
+}
+.solarized-dark .flexlayout__tabset_tabbar_outer_top {
+    border-bottom: 1px solid var(--color-tabset-divider-line);
+}
+.solarized-dark .flexlayout__tabset_tabbar_outer_bottom {
+    border-top: 1px solid var(--color-tabset-divider-line);
+}
+.solarized-dark .flexlayout__tabset-selected {
+    background-color: var(--color-tabset-background-selected);
+}
+.solarized-dark .flexlayout__tabset-maximized {
+    background-color: var(--color-tabset-background-maximized);
+}
+.solarized-dark .flexlayout__tab {
+    overflow: auto;
+    position: absolute;
+    box-sizing: border-box;
+    background-color: var(--color-background);
+    color: var(--color-text);
+}
+.solarized-dark .flexlayout__tab_button {
+    border-right: 1px solid var(--color-4);
+    border-left: 1px solid var(--color-4);
+    border-top: 2px solid var(--color-4);
+}
+.solarized-dark .flexlayout__tab_button--selected {
+    background-color: var(--color-tab-selected-background);
+    color: var(--color-tab-selected);
+}
+@media (hover: hover) {
+    .solarized-dark .flexlayout__tab_button:hover {
+        background-color: var(--color-tab-selected-background);
+        color: var(--color-tab-selected);
+    }
+}
+.solarized-dark .flexlayout__tab_button--unselected {
+    background-color: var(--color-tab-unselected-background);
+    color: var(--color-tab-unselected);
+}
+
+.solarized-dark .flexlayout__tab_button_top.flexlayout__tab_button--selected {
+    border-left: 1px solid var(--color-3);
+    border-right: 1px solid var(--color-3);
+    border-top: 2px solid var(--color-7);
+}
+
+.solarized-dark .flexlayout__tab_button_textbox {
+    border: none;
+    font-family: var(--font-family);
+    font-size: var(--font-size);
+    color: var(--color-tab-textbox);
+    background-color: var(--color-tab-textbox-background);
+    border: 1px inset var(--color-1);
+    border-radius: 3px;
+    width: 10em;
+}
+.solarized-dark .flexlayout__tab_button_trailing:hover {
+    background-color: var(--color-5);
+}
+.solarized-dark .flexlayout__tab_button_overflow {
+    color: var(--color-overflow);
+}
+@media (hover: hover) {
+    .solarized-dark .flexlayout__tab_toolbar_button:hover {
+        background-color: var(--color-2);
+    }
+}
+.solarized-dark .flexlayout__tab_floating {
+    color: var(--color-text);
+    background-color: var(--color-background);
+}
+.solarized-dark .flexlayout__tab_floating_inner div a {
+    color: rgb(138, 138, 138);
+}
+.solarized-dark .flexlayout__border {
+    font-size: var(--font-size);
+    font-family: var(--font-family);
+    color: var(--color-border);
+    background-color: var(--color-border-background);
+}
+.solarized-dark .flexlayout__border_top {
+    border-bottom: 1px solid var(--color-border-divider-line);
+}
+.solarized-dark .flexlayout__border_bottom {
+    border-top: 1px solid var(--color-border-divider-line);
+}
+.solarized-dark .flexlayout__border_left {
+    border-right: 1px solid var(--color-border-divider-line);
+}
+.solarized-dark .flexlayout__border_right {
+    border-left: 1px solid var(--color-border-divider-line);
+}
+.solarized-dark .flexlayout__border_button--selected {
+    background-color: var(--color-border-tab-selected-background);
+    color: var(--color-border-tab-selected);
+}
+@media (hover: hover) {
+    .solarized-dark .flexlayout__border_button:hover {
+        background-color: var(--color-border-tab-selected-background);
+        color: var(--color-border-tab-selected);
+    }
+}
+.solarized-dark .flexlayout__border_button--unselected {
+    background-color: var(--color-border-tab-unselected-background);
+    color: var(--color-border-tab-unselected);
+}
+.solarized-dark .flexlayout__border_button_trailing:hover {
+    background-color: var(--color-5);
+}
+@media (hover: hover) {
+    .solarized-dark .flexlayout__border_toolbar_button:hover {
+        background-color: var(--color-2);
+    }
+}
+.solarized-dark .flexlayout__border_toolbar_button_overflow {
+    color: var(--color-overflow);
+}
+.solarized-dark .flexlayout__popup_menu {
+    font-size: var(--font-size);
+    font-family: var(--font-family);
+}
+@media (hover: hover) {
+    .solarized-dark .flexlayout__popup_menu_item:hover {
+        background-color: var(--color-6);
+    }
+}
+.solarized-dark .flexlayout__popup_menu_container {
+    border: 1px solid var(--color-popup-border);
+    color: var(--color-popup-unselected);
+    background: var(--color-popup-unselected-background);
+}
+.solarized-dark .flexlayout__floating_window_tab {
+    background-color: var(--color-background);
+    color: var(--color-text);
+}
+.solarized-dark .flexlayout__tabset_sizer {
+    font-size: var(--font-size);
+    font-family: var(--font-family);
+}
+.solarized-dark .flexlayout__tabset_header_sizer {
+    font-size: var(--font-size);
+    font-family: var(--font-family);
+}
+.solarized-dark .flexlayout__border_sizer {
+    font-size: var(--font-size);
+    font-family: var(--font-family);
+}
+
+/* ASCII table */
+.solarized-dark .asciiTable th,
+.solarized-dark .asciiTable td {
+    border-left: 1px solid rgb(27, 63, 82);
+}
+
+.solarized-dark .asciiTable tr:nth-child(1) th {
+    border-top: 1px solid rgb(27, 63, 82);
+    border-bottom: 1px solid rgb(27, 63, 82);
+}
+
+.solarized-dark .asciiTable tr:nth-last-child(1) td {
+    border-bottom: 1px solid rgb(27, 63, 82);
+}
+
+.solarized-dark .asciiTable th:nth-child(1),
+.solarized-dark .asciiTable td:nth-child(1) {
+    border-left: 1px solid rgb(27, 63, 82);
+}
+
+.solarized-dark .asciiTable th:nth-last-child(1),
+.solarized-dark .asciiTable td:nth-last-child(1) {
+    border-right: 1px solid rgb(27, 63, 82);
+}
+
+.solarized-dark .asciiTable tr:nth-child(even) {
+    background-color: rgb(12, 40, 55);
+}
+
+.solarized-dark .asciiTable th:nth-child(6),
+.solarized-dark .asciiTable th:nth-child(10),
+.solarized-dark .asciiTable th:nth-child(14) {
+    background-color: rgb(10, 32, 43);
+}
+
+.solarized-dark .asciiTable td:nth-child(6),
+.solarized-dark .asciiTable td:nth-child(10),
+.solarized-dark .asciiTable td:nth-child(14) {
+    background-color: rgb(10, 32, 43);
+}
+
+.solarized-dark .asciiTable tbody tr:hover,
+.solarized-dark .asciiTable tbody tr:nth-child(even):hover {
+    background-color: rgb(29, 65, 83);
+}

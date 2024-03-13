@@ -1,0 +1,16 @@
+const configGlobal = {
+    title: 'Global',
+    description: 'Settings that affect everything.',
+    type: 'object',
+    properties: {
+        theme: {
+            title: 'Global theme',
+            description: "Choose 'system' to follow OS theme settings",
+            type: 'string',
+            enum: [],
+            default: '',
+        },
+    },
+};
+
+export default configGlobal;
