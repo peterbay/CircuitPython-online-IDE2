@@ -37,7 +37,7 @@ import IdeContext from "../contexts/IdeContext";
 const serial = new SerialCommunication();
 
 export default function SerialConsole({ node }) {
-    const { config, processLine } = useContext(IdeContext);
+    const { configApi, dashboardApi } = useContext(IdeContext);
     const terminalBox = useRef(null);
     const [serialStatus, setSerialStatus] = useState(false);
     const [connectionState, setConnectionState] = useState("Not connected");
@@ -54,7 +54,7 @@ export default function SerialConsole({ node }) {
     const readerCallback = function (data) {
         terminal.current.write(data);
         if (linked) {
-            processLine(data);
+            dashboardApi.processLine(data);
         }
     }.bind(this);
 
@@ -63,7 +63,7 @@ export default function SerialConsole({ node }) {
 
             const terminalOptions = {
                 cursorBlink: true,
-                fontSize: config.serial_console.font_size,
+                fontSize: configApi.config.serial_console.font_size,
             };
 
             terminal.current = new Terminal(terminalOptions);
@@ -143,9 +143,9 @@ export default function SerialConsole({ node }) {
         if (!terminal.current) {
             return;
         }
-        terminal.current.options.fontSize = config.serial_console.font_size;
+        terminal.current.options.fontSize = configApi.config.serial_console.font_size;
         fitAddon.current.fit();
-    }, [config.serial_console.font_size]);
+    }, [configApi.config.serial_console.font_size]);
 
     useEffect(() => {
         if (terminalBox.current === null) {
@@ -163,7 +163,7 @@ export default function SerialConsole({ node }) {
                     disableGutters={true}
                     sx={{ minHeight: "35px", maxHeight: "35px" }}
                 >
-                    <ToolbarEntry>Serial console: ${connectionState}</ToolbarEntry>
+                    <ToolbarEntry>Serial console: {connectionState}</ToolbarEntry>
 
                     <TooltipIconButton
                         id="link-dashboard"

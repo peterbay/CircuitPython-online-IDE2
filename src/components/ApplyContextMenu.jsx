@@ -2,10 +2,12 @@ import PropTypes from "prop-types";
 import { useState } from "react";
 import {
     Menu,
-    MenuItem
+    MenuItem,
+    Tooltip,
 } from "@mui/material";
 
 export default function ApplyContextMenu({ children, items }) {
+
     const [contextMenu, setContextMenu] = useState(null);
 
     const handleContextMenu = (event) => {
@@ -39,20 +41,30 @@ export default function ApplyContextMenu({ children, items }) {
                         contextMenu !== null ? { top: contextMenu.mouseY, left: contextMenu.mouseX } : undefined
                     }
                 >
-                    {items.map((item) => {
-                        return (
-                            <MenuItem
-                                key={"local_file_system_menu_item_key_" + item.name}
-                                onClick={(event) => {
-                                    handleClose();
-                                    item.handler(event);
-                                }}
-                                dense={true}
-                            >
-                                {item.name}
-                            </MenuItem>
-                        );
-                    })}
+                    {items.filter((item) => item.show)
+                        .map((item) => {
+                            return (
+                                <Tooltip
+                                    key={`fs_item_key_${item.name}`}
+                                    id={`fs_item_id_${item.name}`}
+                                    title={item.tooltip}
+                                    placement="right-start"
+                                >
+                                    <MenuItem
+                                        key={"local_file_system_menu_item_key_" + item.name}
+                                        onClick={(event) => {
+                                            handleClose();
+                                            item.handler(event);
+                                        }}
+                                        dense={true}
+                                        disabled={!!item.disabled}
+                                    >
+                                        {item.name}
+                                    </MenuItem>
+                                </Tooltip>
+
+                            );
+                        })}
                 </Menu>
             </div>
         </>

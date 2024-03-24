@@ -299,3 +299,22 @@
 .solarized-dark .asciiTable tbody tr:nth-child(even):hover {
     background-color: rgb(29, 65, 83);
 }
+
+.solarized-dark .fs-entry {
+    border-left: 3px solid transparent;
+}
+
+.solarized-dark .file-opened {
+    border-left: 3px solid var(--color-7);
+    color: rgb(203, 151, 6);
+}
+
+.solarized-dark .file-unsaved {
+    border-left: 3px solid var(--color-7);
+    color: rgb(234, 86, 86);
+}
+
+.solarized-dark .folder-has-opened-files {
+    border-left: 3px solid var(--color-7);
+    color: rgb(203, 151, 6);
+}

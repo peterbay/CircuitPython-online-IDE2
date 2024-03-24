@@ -1,10 +1,9 @@
 import { useContext } from "react";
 import MenuBar from "./MenuBar";
-import { activateTab, openTab } from "../utils/tabUtils";
 import IdeContext from "../contexts/IdeContext";
 
 export default function IdeHead() {
-    const { flexModel: model } = useContext(IdeContext);
+    const { tabsApi } = useContext(IdeContext);
 
     const menuStructure = {
         title: "CircuitPython Online IDE",
@@ -16,7 +15,7 @@ export default function IdeHead() {
             //             text: "CircuitPy Drive",
             //             handler: () => {
             //                 console.log("clicked on `CircuitPy Drive`");
-            //                 openDirectory();
+            //                 openRootDirectory();
             //             },
             //         },
             //         {
@@ -34,19 +33,19 @@ export default function IdeHead() {
                     {
                         text: "Folder View",
                         handler: () => {
-                            activateTab(model, "folder_view");
+                            tabsApi.tabActivate("folder_view");
                         },
                     },
                     {
                         text: "Serial Console",
                         handler: () => {
-                            activateTab(model, "serial_console");
+                            tabsApi.tabActivate("serial_console");
                         },
                     },
                     {
                         text: "Settings",
                         handler: () => {
-                            activateTab(model, "settings");
+                            tabsApi.tabActivate("settings");
                         },
                     },
                 ],
@@ -57,25 +56,25 @@ export default function IdeHead() {
                     {
                         text: "ASCII table",
                         handler: () => {
-                            openTab(model, "ASCII table", "ascii_table");
+                            tabsApi.tabOpen("ASCII table", "ascii_table");
                         },
                     },
                     {
                         text: "Converters",
                         handler: () => {
-                            openTab(model, "Converters", "converters");
+                            tabsApi.tabOpen("Converters", "converters");
                         },
                     },
                     {
                         text: "Navigation",
                         handler: () => {
-                            openTab(model, "Navigation", "navigation");
+                            tabsApi.tabOpen("Navigation", "navigation");
                         },
                     },
                     {
                         text: "Dashboard",
                         handler: () => {
-                            openTab(model, "Dashboard", "dashboard");
+                            tabsApi.tabOpen("Dashboard", "dashboard");
                         },
                     },
                 ],
@@ -86,13 +85,13 @@ export default function IdeHead() {
                     {
                         text: "Keyboard shortcuts",
                         handler: () => {
-                            openTab(model, "Keyboard shortcuts", "keyboard_shortcuts");
+                            tabsApi.tabOpen("Keyboard shortcuts", "keyboard_shortcuts");
                         },
                     },
                     {
                         text: "About",
                         handler: () => {
-                            openTab(model, "About", "about");
+                            tabsApi.tabOpen("About", "about");
                         },
                     },
                 ],

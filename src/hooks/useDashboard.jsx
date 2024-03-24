@@ -1,9 +1,6 @@
 import { useState, useRef } from "react";
-// import { Subject } from 'rxjs'
 import { dataService } from "../utils/dataService";
-
 import { Widget } from "../components/Widget";
-
 import widgetsSettings from "../settings/widgetsSettings";
 
 export default function useDasboard() {

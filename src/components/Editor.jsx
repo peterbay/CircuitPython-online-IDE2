@@ -62,8 +62,6 @@ import { fileReadText, fileWriteText } from "../utils/fsUtils";
 import IdeContext from "../contexts/IdeContext";
 import { Actions as FlexLayoutActions } from "flexlayout-react";
 
-import { switchTab } from "../utils/tabUtils";
-
 const editorModes = {
     py: {
         mode: "python",
@@ -92,8 +90,8 @@ const defaultEditorMode = {
     label: "Text",
 };
 
-export default function Editor({ fileHandle, node, isReadOnly, isNewFile, saveAndClose, setTabToClose }) {
-    const { config, themeName } = useContext(IdeContext);
+export default function Editor({ fileHandle, node, isNewFile }) {
+    const { fsApi, configApi, themeApi, tabsApi } = useContext(IdeContext);
     const aceEditorRef = useRef(null);
 
     const [configNewLine, setConfigNewLine] = useState(false);
@@ -107,31 +105,41 @@ export default function Editor({ fileHandle, node, isReadOnly, isNewFile, saveAn
     const [text, setText] = useState("");
     const [fileIsLoaded, setFileIsLoaded] = useState(false);
     const [editorOptions, setEditorOptions] = useState({});
-
+    const [editorMode, setEditorMode] = useState("text");
+    const [editorModeLabel, setEditorModeLabel] = useState("Text");
+    const [stateInfo, setStateInfo] = useState("Saved");
     const height = node.getRect().height;
-    const fileNameLower = fileHandle.name.toLowerCase();
-    const extensionMatch = fileNameLower.match(/\.([^.]+)$/);
-    const extension = extensionMatch ? extensionMatch[1] : "";
-    const editorMode = (editorModes[extension] || defaultEditorMode).mode;
-    const editorModeLabel = (editorModes[extension] || defaultEditorMode).label;
-    const stateInfo = isReadOnly ? "Read Only" : (fileEdited ? "Unsaved" : "Saved");
 
     useEffect(() => {
-        if (saveAndClose && saveAndClose.getId() === node.getId()) {
-            fileWriteText(fileHandle, text);
-            node.getModel().doAction(FlexLayoutActions.deleteTab(node.getId(), name));
-            setTabToClose(null);
+        if (!fileHandle) {
+            return;
         }
-    }, [node, saveAndClose, fileHandle, text, setTabToClose]);
+        const fileNameLower = fileHandle.name.toLowerCase();
+        const extensionMatch = fileNameLower.match(/\.([^.]+)$/);
+        const extension = extensionMatch ? extensionMatch[1] : "";
+        setEditorMode((editorModes[extension] || defaultEditorMode).mode);
+        setEditorModeLabel((editorModes[extension] || defaultEditorMode).label);
+        setStateInfo(fileHandle.isReadOnly ? "Read Only" : (fileEdited ? "Unsaved" : "Saved"));
+
+    }, [fileHandle, fileEdited]);
 
     useEffect(() => {
-        setConfigWordWrap(config.editor.wrap);
+        if (tabsApi.saveAndClose && tabsApi.saveAndClose.getId() === node.getId()) {
+            fileWriteText(fileHandle, text);
+            fsApi.fileClosed(node);
+            node.getModel().doAction(FlexLayoutActions.deleteTab(node.getId()));
+            tabsApi.setTabToClose(null);
+        }
+    }, [node, fileHandle, text, fsApi, tabsApi]);
+
+    useEffect(() => {
+        setConfigWordWrap(configApi.config.editor.wrap);
         if (isNewFile) {
-            setConfigNewLine(config.editor.newline_mode);
+            setConfigNewLine(configApi.config.editor.newline_mode);
         } else {
             setConfigNewLine("auto");
         }
-    }, [isNewFile, config.editor.wrap, config.editor.newline_mode]);
+    }, [isNewFile, configApi.config.editor.wrap, configApi.config.editor.newline_mode]);
 
     useEffect(() => {
         const line = (editorCursorInfo.row || 0) + 1;
@@ -142,15 +150,14 @@ export default function Editor({ fileHandle, node, isReadOnly, isNewFile, saveAn
     }, [editorCursorInfo, editorSelectedLength]);
 
     useEffect(() => {
-        const softTabs = (config.editor.use_soft_tabs === "spaces");
-        const softTabsLabel = softTabs ? "Spaces" : "Tabs";
-        const tabSize = config.editor.tab_size;
+        const softTabsLabel = (configApi.config.editor.use_soft_tabs === "spaces") ? "Spaces" : "Tabs";
+        const tabSize = configApi.config.editor.tab_size;
         setTabInfo(`${softTabsLabel}: ${tabSize}`);
-    }, [config.editor.use_soft_tabs, config.editor.tab_size]);
+    }, [configApi.config.editor.use_soft_tabs, configApi.config.editor.tab_size]);
 
     useEffect(() => {
         let namePrefix = "";
-        if (isReadOnly) {
+        if (fileHandle.isReadOnly) {
             namePrefix = `🔒 `;
         } else if (fileEdited) {
             namePrefix = `✏️ `;
@@ -160,6 +167,8 @@ export default function Editor({ fileHandle, node, isReadOnly, isNewFile, saveAn
         const model = node.getModel();
         const nodeId = node.getId();
 
+        fileHandle.unsaved = fileEdited;
+
         model.doAction(FlexLayoutActions.renameTab(nodeId, name));
 
         const action = FlexLayoutActions.updateNodeAttributes(nodeId, {
@@ -168,7 +177,7 @@ export default function Editor({ fileHandle, node, isReadOnly, isNewFile, saveAn
 
         model.doAction(action);
 
-    }, [node, isReadOnly, fileEdited, fileHandle.name]);
+    }, [node, fileHandle, fileEdited, fileHandle.name]);
 
     useEffect(() => {
         async function loadText() {
@@ -184,22 +193,22 @@ export default function Editor({ fileHandle, node, isReadOnly, isNewFile, saveAn
         setEditorOptions({
             cursorStyle: "shooth", // "ace"|"slim"|"smooth"|"wide"
             enableBasicAutocompletion: true,
-            enableLiveAutocompletion: config.editor.live_autocompletion,
+            enableLiveAutocompletion: configApi.config.editor.live_autocompletion,
             enableSnippets: false,
-            highlightActiveLine: config.editor.highlight_active_line,
-            highlightSelectedWord: config.editor.highlight_selected_word,
+            highlightActiveLine: configApi.config.editor.highlight_active_line,
+            highlightSelectedWord: configApi.config.editor.highlight_selected_word,
             hScrollBarAlwaysVisible: true,
             newLineMode: configNewLine,
-            printMarginColumn: config.editor.print_margin_column,
-            showInvisibles: config.editor.show_invisibles,
-            showLineNumbers: config.editor.show_line_numbers,
-            showPrintMargin: config.editor.show_print_margin,
-            tabSize: config.editor.tab_size,
-            useSoftTabs: (config.editor.use_soft_tabs === "spaces"),
+            printMarginColumn: configApi.config.editor.print_margin_column,
+            showInvisibles: configApi.config.editor.show_invisibles,
+            showLineNumbers: configApi.config.editor.show_line_numbers,
+            showPrintMargin: configApi.config.editor.show_print_margin,
+            tabSize: configApi.config.editor.tab_size,
+            useSoftTabs: (configApi.config.editor.use_soft_tabs === "spaces"),
             vScrollBarAlwaysVisible: true,
             wrap: configWordWrap,
         });
-    }, [config.editor, configWordWrap, configNewLine]);
+    }, [configApi.config.editor, configWordWrap, configNewLine]);
 
     function saveFile(text) {
         fileWriteText(fileHandle, text);
@@ -252,14 +261,14 @@ export default function Editor({ fileHandle, node, isReadOnly, isNewFile, saveAn
             name: "switch_folder_view",
             bindKey: { win: "Ctrl-B", mac: "Command-B" },
             exec: () => {
-                switchTab(node.getModel(), "folder_view");
+                tabsApi.tabSwitch("folder_view");
             },
         });
         commands.addCommand({
             name: "switch_serial_console",
             bindKey: { win: "Ctrl-`", mac: "Command-`" },
             exec: () => {
-                switchTab(node.getModel(), "serial_console");
+                tabsApi.tabSwitch("serial_console");
             },
         });
     }
@@ -271,18 +280,18 @@ export default function Editor({ fileHandle, node, isReadOnly, isNewFile, saveAn
                     <AceEditor
                         ref={aceEditorRef}
                         mode={editorMode}
-                        useSoftTabs={config.editor.use_soft_tabs}
+                        useSoftTabs={configApi.config.editor.use_soft_tabs}
                         wrapEnabled={true}
-                        tabSize={config.editor.tab_size}
-                        theme={themeName}
+                        tabSize={configApi.config.editor.tab_size}
+                        theme={themeApi.themeName}
                         value={text}
                         height="100%"
                         width="100%"
                         onChange={onEditorChange}
                         onLoad={onEditorLoad}
-                        fontSize={config.editor.font + "pt"}
+                        fontSize={configApi.config.editor.font + "pt"}
                         setOptions={editorOptions}
-                        readOnly={isReadOnly || false}
+                        readOnly={fileHandle.isReadOnly || false}
                         onCursorChange={onEditorCursorChange}
                     />
                 )}
@@ -315,8 +324,5 @@ export default function Editor({ fileHandle, node, isReadOnly, isNewFile, saveAn
 Editor.propTypes = {
     fileHandle: PropTypes.object.isRequired,
     node: PropTypes.object.isRequired,
-    isReadOnly: PropTypes.bool,
     isNewFile: PropTypes.bool,
-    saveAndClose: PropTypes.object,
-    setTabToClose: PropTypes.func,
 };

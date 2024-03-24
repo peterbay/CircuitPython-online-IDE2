@@ -1,6 +1,5 @@
-import PropTypes from "prop-types";
 import snakeCase from "lodash/snakeCase";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import {
     Box,
     Tab,
@@ -8,8 +7,12 @@ import {
 } from "@mui/material";
 import TabPanel from "./TabPanel";
 import SchemaForm from "./SchemaForm";
+import IdeContext from "../contexts/IdeContext";
 
-export default function ConfigForms({ schemas, config, setConfig }) {
+export default function ConfigForms() {
+
+    const { configApi } = useContext(IdeContext);
+
     const [tabValue, setTabValue] = useState(0);
     return (
         <Box sx={{ flexGrow: 1 }}>
@@ -22,7 +25,7 @@ export default function ConfigForms({ schemas, config, setConfig }) {
                     variant="scrollable"
                     scrollButtons="auto"
                 >
-                    {schemas.map((schema, index) => {
+                    {configApi.schemas.map((schema, index) => {
                         return (
                             <Tab
                                 label={schema.title}
@@ -34,14 +37,14 @@ export default function ConfigForms({ schemas, config, setConfig }) {
                     })}
                 </Tabs>
             </Box>
-            {schemas.map((schema, index) => {
+            {configApi.schemas.map((schema, index) => {
                 return (
                     <TabPanel value={tabValue} index={index} key={"schema_key_" + snakeCase(schema.title)}>
                         <SchemaForm
-                            initFormData={config[snakeCase(schema.title)]}
+                            initFormData={configApi.config[snakeCase(schema.title)]}
                             schema={schema}
                             onSubmit={(formData) => {
-                                setConfig(snakeCase(schema.title), formData);
+                                configApi.setConfig(snakeCase(schema.title), formData);
                             }}
                         />
                     </TabPanel>
@@ -50,9 +53,3 @@ export default function ConfigForms({ schemas, config, setConfig }) {
         </Box>
     );
 }
-
-ConfigForms.propTypes = {
-    schemas: PropTypes.array,
-    config: PropTypes.object,
-    setConfig: PropTypes.func,
-};

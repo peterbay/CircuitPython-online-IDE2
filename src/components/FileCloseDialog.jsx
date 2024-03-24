@@ -1,5 +1,4 @@
-import PropTypes from "prop-types";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import {
     Dialog,
     DialogContent,
@@ -10,44 +9,44 @@ import {
 
 import { Actions as FlexLayoutActions } from 'flexlayout-react';
 
-export default function FileCloseDialog({ model, tabToClose, setTabToClose, setCancelClosing, setSaveAndClose }) {
+import IdeContext from "../contexts/IdeContext";
+
+export default function FileCloseDialog() {
+
+    const { flexModel, fsApi, tabsApi } = useContext(IdeContext);
 
     const [dialogOpen, setDialogOpen] = useState(false);
     const [fileName, setFileName] = useState("");
 
     useEffect(() => {
-        setDialogOpen(!!tabToClose);
-
-        const name = tabToClose && tabToClose.getName()?.toString()
-            .replace("🔒 ", "")
-            .replace("✏️ ", "");
-
+        setDialogOpen(!!tabsApi.tabToClose);
+        const name = tabsApi.tabToClose && tabsApi.tabToClose?.getConfig()?.fileName;
         setFileName(name);
-
-    }, [tabToClose]);
+    }, [tabsApi.tabToClose]);
 
     const handleDialogClose = () => {
         setDialogOpen(false);
-        setCancelClosing(true);
+        tabsApi.setCancelClosing(true);
     }
 
-    const handleConfirm = (state) => {
-        if (!tabToClose) {
+    const handleConfirm = async (state) => {
+        if (!tabsApi.tabToClose) {
             return;
         }
 
         if (state === "save") {
-            setSaveAndClose(tabToClose);
+            tabsApi.setSaveAndClose(tabsApi.tabToClose);
 
         } else if (state === "dont-save") {
-            if (tabToClose.isEnableClose()) {
-                model.doAction(FlexLayoutActions.deleteTab(tabToClose.getId()));
+            if (tabsApi.tabToClose.isEnableClose()) {
+                await fsApi.fileClosed(tabsApi.tabToClose);
+                flexModel.doAction(FlexLayoutActions.deleteTab(tabsApi.tabToClose.getId()));
             }
-            setTabToClose(null);
+            tabsApi.setTabToClose(null);
 
         } else if (state === "cancel") {
             handleDialogClose();
-            setTabToClose(null);
+            tabsApi.setTabToClose(null);
 
         }
     }
@@ -55,7 +54,7 @@ export default function FileCloseDialog({ model, tabToClose, setTabToClose, setC
     return (
         <>
             <Dialog
-                open={dialogOpen && !!tabToClose}
+                open={dialogOpen && !!tabsApi.tabToClose}
                 onClose={handleDialogClose}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
@@ -74,11 +73,3 @@ export default function FileCloseDialog({ model, tabToClose, setTabToClose, setC
         </>
     );
 }
-
-FileCloseDialog.propTypes = {
-    model: PropTypes.object,
-    tabToClose: PropTypes.object,
-    setTabToClose: PropTypes.func,
-    setCancelClosing: PropTypes.func,
-    setSaveAndClose: PropTypes.func,
-};

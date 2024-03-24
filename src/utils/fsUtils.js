@@ -1,3 +1,5 @@
+import filesSettings from "../settings/filesSettings";
+
 /* file manipulation functions */
 
 const fileExists = async function (parentHandle, fileName) {
@@ -51,22 +53,34 @@ const isFolder = function (entryHandle) {
     return entryHandle.kind === 'directory';
 };
 
+const extendEntryOtions = function (entryHandle) {
+    /* eslint-disable no-useless-escape */
+    const matchExtension = entryHandle.name.match(/\.([^\.]+)$/i);
+    const extension = matchExtension ? matchExtension[1].toLowerCase() : null;
+    const fileOptions = (extension && filesSettings.extension[extension]) || filesSettings.default;
+
+    entryHandle.label = (entryHandle.name === '\\') ? 'ROOT' : entryHandle.name;
+    entryHandle.extension = extension
+    entryHandle.isFolder = (entryHandle.kind === 'directory');
+    entryHandle.isBinary = fileOptions.isBinary;
+    entryHandle.canRun = fileOptions.canRun;
+    entryHandle.class = fileOptions.class;
+    entryHandle.isReadOnly = fileOptions.isBinary;
+}
+
 const folderGetContent = async function (folderHandle, withParent = false) {
     const layer = [];
     if (withParent && folderHandle.parent) {
         const parentEntry = folderHandle.parent;
         parentEntry.isParent = true;
+        extendEntryOtions(parentEntry);
         layer.push(parentEntry);
     }
     for await (const entry of await folderHandle.values()) {
-        /* eslint-disable no-useless-escape */
-        const matchExtension = entry.name.match(/\.([^\.]+)$/i);
-
         entry.parent = folderHandle;
         entry.isParent = false;
         entry.fullPath = (folderHandle.fullPath || '') + '/' + entry.name;
-        entry.extension = matchExtension ? matchExtension[1].toLowerCase() : null;
-
+        extendEntryOtions(entry);
         layer.push(entry);
     }
 
@@ -77,10 +91,10 @@ const folderGetContent = async function (folderHandle, withParent = false) {
         if (!a.isParent && b.isParent) {
             return 1;
         }
-        if (isFolder(a) && !isFolder(b)) {
+        if (a.isFolder && !b.isFolder) {
             return -1;
         }
-        if (!isFolder(a) && isFolder(b)) {
+        if (!a.isFolder && b.isFolder) {
             return 1;
         }
         if (a.name < b.name) {
@@ -107,30 +121,44 @@ const folderPurge = async function (parentHandle) {
         return 0;
     });
     for (var i = 0; i < folder_content.length; i++) {
-        await entryRemove(parentHandle, folder_content[i]);
-    }
-};
-
-const folderBackup = async function (folderHandle, newFolderHandle, clean = false) {
-    if (clean) {
-        await folderPurge(newFolderHandle);
-    }
-    for (const entry of await folderGetContent(folderHandle)) {
-        await entryCopy(entry, newFolderHandle, entry.name);
+        await entryRemove(folder_content[i]);
     }
 };
 
 /* entry manipulation functions */
 
-const entryRename = async function (parentHandle, entryHandle, newName) {
-    const newEntryHandle = await entryCopy(entryHandle, parentHandle, newName);
-    await entryRemove(parentHandle, entryHandle);
+const getDuplicateName = async function (parentHandle, entry) {
+    let cloneIndex = 0;
+    let namePart = entry.name;
+    let extensionPart = null;
+
+    if (!isFolder(entry)) {
+        /* eslint-disable no-useless-escape */
+        const fileNameParts = entry.name.match(/^(.*)(\.[^\.]+)$/);
+        if (fileNameParts) {
+            namePart = fileNameParts[1];
+            extensionPart = fileNameParts[2];
+        }
+    }
+
+    let cloneName = namePart + '_copy' + (extensionPart || '');
+    while (await entryExists(parentHandle, cloneName)) {
+        cloneIndex++;
+        cloneName = namePart + '_copy_' + cloneIndex.toString() + (extensionPart || '');
+    }
+
+    return cloneName;
+};
+
+const entryRename = async function (entryHandle, newName) {
+    const newEntryHandle = await entryCopy(entryHandle, entryHandle.parent, newName);
+    await entryRemove(entryHandle);
     return newEntryHandle;
 };
 
-const entryMove = async function (parentHandle, entryHandle, targetFolderHandle) {
+const entryMove = async function (entryHandle, targetFolderHandle) {
     const newEntryHandle = await entryCopy(entryHandle, targetFolderHandle, entryHandle.name);
-    await entryRemove(parentHandle, entryHandle);
+    await entryRemove(entryHandle);
     return newEntryHandle;
 };
 
@@ -170,21 +198,21 @@ const entryCopy = async function (entryHandle, targetFolderHandle, newName) {
     }
 };
 
-const entryRemove = async function (parentHandle, entryHandle) {
+const entryRemove = async function (entryHandle) {
     // Will not work without https
     if (isFolder(entryHandle)) {
         await folderPurge(entryHandle);
-        await parentHandle.removeEntry(entryHandle.name);
-    } else {
-        await parentHandle.removeEntry(entryHandle.name);
     }
+    await entryHandle.parent.removeEntry(entryHandle.name);
 };
 
 /* private functions */
 
 const _folderCopy = async function (folderHandle, targetFolderHandle, newName) {
     const newFolderHandle = await folderCreate(targetFolderHandle, newName);
-    await folderBackup(folderHandle, newFolderHandle);
+    for (const entry of await folderGetContent(folderHandle)) {
+        await entryCopy(entry, newFolderHandle, entry.name);
+    }
     return newFolderHandle;
 };
 
@@ -209,11 +237,11 @@ export {
     fileExists,
     fileReadText,
     fileWriteText,
-    folderBackup,
     folderCreate,
     folderExists,
     folderGetContent,
     folderPurge,
+    getDuplicateName,
     isEntryHealthy,
     isFolder,
 };

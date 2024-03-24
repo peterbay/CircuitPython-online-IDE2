@@ -1,29 +1,31 @@
 import PropTypes from "prop-types";
 import {
-    Button,
+    Typography,
     Stack,
 } from "@mui/material";
-
-import {
-    deepPurple,
-} from "@mui/material/colors";
 
 import Menu from "./Menu";
 
 export default function MenuBar({ menuStructure }) {
     return (
         <Stack direction="row" spacing={0}>
-            <Button
-                disabled
-                style={{
-                    textTransform: "none",
-                    color: deepPurple[500],
+            <Typography
+                component="div"
+                noWrap={true}
+                sx={{
+                    paddingTop: "6px",
+                    paddingLeft: "10px",
+                    paddingRight: "40px",
                 }}
             >
                 {menuStructure.title}
-            </Button>
+            </Typography>
             {menuStructure.menu.map((column) => {
-                return <Menu label={column.label} options={column.options} key={"menu_key_" + column.label} />;
+                return <Menu
+                    label={column.label}
+                    options={column.options}
+                    key={"menu_key_" + column.label}
+                />;
             })}
         </Stack>
     );

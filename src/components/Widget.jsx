@@ -10,7 +10,7 @@ import ApexCharts from 'apexcharts';
 
 export function Widget({ widgetOptions, height, chartOptions, type }) {
     const { locked } = useContext(widgetsContext);
-    const { isDarkMode } = useContext(IdeContext);
+    const { themeApi } = useContext(IdeContext);
     const [lastData, setLastData] = useState([]);
     const [extendedOptions, setExtendedOptions] = useState(chartOptions.options);
 
@@ -19,7 +19,7 @@ export function Widget({ widgetOptions, height, chartOptions, type }) {
             return {
                 ...prev,
                 theme: {
-                    mode: isDarkMode ? 'dark' : 'light'
+                    mode: themeApi.isDarkMode ? 'dark' : 'light'
                 },
                 chart: {
                     ...prev.chart,
@@ -29,7 +29,7 @@ export function Widget({ widgetOptions, height, chartOptions, type }) {
                 }
             };
         });
-    }, [isDarkMode, locked]);
+    }, [themeApi.isDarkMode, locked]);
 
     useEffect(() => {
         const sub = dataSubscriber.subscribe({

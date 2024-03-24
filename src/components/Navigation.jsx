@@ -8,7 +8,8 @@ import {
 } from "@mui/material";
 
 export default function Navigation() {
-    const { openDirectory, directoryReady, serialReady } = useContext(IdeContext);
+
+    const { fsApi, serialReady } = useContext(IdeContext);
 
     return (
         <>
@@ -29,14 +30,14 @@ export default function Navigation() {
                     (Skip if you already did)
                 </li>
                 <li>
-                    Step 1. <Button onClick={openDirectory}>Open CircuitPy Drive</Button>
-                    {directoryReady ? "✅" : ""}
+                    Step 1. <Button onClick={fsApi.openRootDirectory}>Open CircuitPy Drive</Button>
+                    {fsApi.directoryReady ? "✅" : ""}
                 </li>
                 {/* <li>
                     Step 2. <Button onClick={connectToSerialPort}>Connect to Serial Port</Button>
                     {serialReady ? "✅" : ""}
                 </li> */}
-                {serialReady && directoryReady ? <li>🎉 All ready! Close this tab and start coding!</li> : ""}
+                {serialReady && fsApi.directoryReady ? <li>🎉 All ready! Close this tab and start coding!</li> : ""}
             </ul>
         </>
     );

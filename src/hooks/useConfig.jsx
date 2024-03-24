@@ -7,7 +7,7 @@ import isEmpty from 'lodash/isEmpty';
 import isObject from 'lodash/isObject';
 
 // local storage hook
-import { useLocalStorage } from './useLocalStorage';
+import { useLocalStorage } from '../utils/useLocalStorage';
 
 function getConfigWithDefaults(current_config, schema) {
     var config = jsonSchemaDefaults(schema);
@@ -21,26 +21,9 @@ function getConfigWithDefaults(current_config, schema) {
     return config;
 }
 
-export default function useConfig(schemas) {
+export default function useConfig({ schemas }) {
     const { localStorageState, setLocalStorageState, initLocalStorageState } = useLocalStorage('config');
     const [initStep, setInitStep] = useState(0);
-
-    useEffect(() => {
-        if (initStep === 0) {
-            console.log('init step 0: initialize localStorageState');
-            initLocalStorageState();
-            setInitStep(1);
-        }
-        if (initStep === 1) {
-            console.log('init step 1: update localStorageState by schema defaults');
-            for (const schema of schemas) {
-                const schema_name = snakeCase(schema.title);
-                var config_values = getConfigWithDefaults(getConfig(schema_name), schema);
-                setConfig(schema_name, config_values);
-            }
-            setInitStep(-1); // mark as done
-        }
-    }, [initStep]);
 
     function getConfig(schema_name) {
         const config = localStorageState[schema_name];
@@ -74,10 +57,28 @@ export default function useConfig(schemas) {
         }
     }
 
+    useEffect(() => {
+        if (initStep === 0) {
+            console.log('init step 0: initialize localStorageState');
+            initLocalStorageState();
+            setInitStep(1);
+        }
+        if (initStep === 1) {
+            console.log('init step 1: update localStorageState by schema defaults');
+            for (const schema of schemas) {
+                const schema_name = snakeCase(schema.title);
+                var config_values = getConfigWithDefaults(getConfig(schema_name), schema);
+                setConfig(schema_name, config_values);
+            }
+            setInitStep(-1); // mark as done
+        }
+    }, [initStep]);
+
     return {
         config: localStorageState,
         setConfig,
         setConfig_field,
         ready: initStep < 0,
+        schemas,
     };
 }

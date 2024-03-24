@@ -17,27 +17,27 @@ import TooltipIconButton from "./TooltipIconButton";
 import IdeContext from "../contexts/IdeContext";
 
 export default function Dashboard({ node }) {
-    const { dashboardLayout, clearDashboard, widgets, updateWidget, isDarkMode } = useContext(IdeContext);
+    const { dashboardApi, themeApi } = useContext(IdeContext);
     const parentHeight = node.getRect().height;
     const parentWidth = node.getRect().width;
 
-    const [layout, setLayout] = useState(dashboardLayout);
+    const [layout, setLayout] = useState(dashboardApi.dashboardLayout);
     const [locked, setLocked] = useState(true);
 
     const rowHeight = 40;
 
     useEffect(() => {
-        if (!dashboardLayout.length) {
+        if (!dashboardApi.dashboardLayout.length) {
             setLayout([]);
             return;
         }
 
-        setLayout(dashboardLayout);
-    }, [dashboardLayout]);
+        setLayout(dashboardApi.dashboardLayout);
+    }, [dashboardApi.dashboardLayout]);
 
     const updateLayout = (layout) => {
         layout.forEach((item) => {
-            updateWidget(item.i, item);
+            dashboardApi.updateWidget(item.i, item);
         });
     };
 
@@ -70,8 +70,8 @@ export default function Dashboard({ node }) {
                             id="clear-dashboard"
                             title="Clear dashboard"
                             icon={DeleteForeverIcon}
-                            disabled={!dashboardLayout.length}
-                            onClick={() => clearDashboard()}
+                            disabled={!dashboardApi.dashboardLayout.length}
+                            onClick={() => dashboardApi.clearDashboard()}
                         />
 
                         <TooltipIconButton
@@ -119,11 +119,11 @@ export default function Dashboard({ node }) {
                                     key={item.i}
                                     data-grid={item}
                                     style={{
-                                        background: isDarkMode ? 'rgb(66, 66, 66)' : 'white',
+                                        background: themeApi.isDarkMode ? 'rgb(66, 66, 66)' : 'white',
                                         overflow: 'hidden',
                                     }}
                                 >
-                                    {(widgets[item.i] && widgets[item.i].widget) || null}
+                                    {(dashboardApi.widgets[item.i] && dashboardApi.widgets[item.i].widget) || null}
                                 </div>);
                             })}
                         </ResponsiveGridLayout>

@@ -1,28 +1,19 @@
-import PropTypes from "prop-types";
 import { useContext } from "react";
 import { Button } from "@mui/material";
-import FolderView from "./FsFolderView"
+import FsFolderView from "./FsFolderView"
 import IdeContext from "../contexts/IdeContext";
 
-export default function IdeFolderView({ onFileClick, activeEditorInfo }) {
-    const { openDirectory, directoryReady, rootDirHandle } = useContext(IdeContext);
+export default function IdeFolderView() {
+    const { fsApi } = useContext(IdeContext);
+
     // Show FolderView component only when its ready
-    return directoryReady ? (
+    return fsApi.directoryReady ? (
         <div style={{ height: "100%" }}>
-            <FolderView
-                rootFolder={rootDirHandle}
-                onFileClick={onFileClick}
-                activeEditorInfo={activeEditorInfo}
-            />
+            <FsFolderView />
         </div>
     ) : (
         <>
-            <Button onClick={openDirectory}>Open CircuitPy Drive</Button>
+            <Button onClick={fsApi.openRootDirectory}>Open CircuitPy Drive</Button>
         </>
     );
 }
-
-IdeFolderView.propTypes = {
-    onFileClick: PropTypes.func,
-    activeEditorInfo: PropTypes.object,
-};

@@ -1,8 +1,11 @@
 import PropTypes from "prop-types";
 import HyperLink from "./HyperLink";
 import WarningModal from "./WarningModal";
+import { isMobile, isMacOs, isSafari, isFirefox, isIE } from "react-device-detect";
+export default function ShowWarning() {
 
-export default function ShowWarning({ isMobile = false, isNotChrome = false, isMac = false }) {
+    const isNotChrome = isSafari || isFirefox || isIE;
+
     return (
         <>
             {(isMobile && (
@@ -27,7 +30,7 @@ export default function ShowWarning({ isMobile = false, isNotChrome = false, isM
                         for more information
                     </WarningModal>
                 )) ||
-                (isMac && (
+                (isMacOs && (
                     <WarningModal title="Warning for MacOS users!" closeEnabled={true}>
                         If you have issues writing files to microcontrollers, it is not a bug of the IDE or CircuitPython, but a
                         known issue of MacOS 14 (Sonoma). Please check

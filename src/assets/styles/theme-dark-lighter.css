@@ -303,3 +303,22 @@
 .dark-lighter .asciiTable tbody tr:nth-child(even):hover {
     background-color: rgb(72, 72, 72);
 }
+
+.dark-lighter .fs-entry {
+    border-left: 3px solid transparent;
+}
+
+.dark-lighter .file-opened {
+    border-left: 3px solid var(--color-7);
+    color: rgb(203, 151, 6);
+}
+
+.dark-lighter .file-unsaved {
+    border-left: 3px solid var(--color-7);
+    color: rgb(234, 86, 86);
+}
+
+.dark-lighter .folder-has-opened-files {
+    border-left: 3px solid var(--color-7);
+    color: rgb(203, 151, 6);
+}

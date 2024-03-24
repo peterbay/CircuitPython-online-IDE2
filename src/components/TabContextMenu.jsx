@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import {
     Menu,
     MenuItem,
@@ -7,14 +7,18 @@ import {
 
 import { Actions as FlexLayoutActions } from 'flexlayout-react';
 
+import IdeContext from "../contexts/IdeContext";
+
 import findIndex from "lodash/findIndex";
 
-export default function TabContextMenu({ model, tabContextMenu, setTabsToClose }) {
+export default function TabContextMenu({ tabContextMenu }) {
+
+    const { flexModel, fsApi, tabsApi } = useContext(IdeContext);
 
     const [contextMenu, setContextMenu] = useState(null);
     const [selectedNode, setSelectedNode] = useState(null);
 
-    const closeFilteredTabs = function (filter) {
+    const closeFilteredTabs = async function (filter) {
         if (!selectedNode) {
             return;
         }
@@ -22,7 +26,7 @@ export default function TabContextMenu({ model, tabContextMenu, setTabsToClose }
         const parent = selectedNode.getParent();
 
         if (parent?.getChildren) {
-            const children = parent.getChildren();
+            const children = parent.getChildren().filter((child) => child?.getConfig()?.fullPath);
             const position = findIndex(children, (child) => child.getId() === nodeId);
             let nodes = [];
 
@@ -53,12 +57,13 @@ export default function TabContextMenu({ model, tabContextMenu, setTabsToClose }
                 while (savedNodes.length) {
                     const node = savedNodes.pop();
                     if (node.isEnableClose()) {
-                        model.doAction(FlexLayoutActions.deleteTab(node.getId()));
+                        await fsApi.fileClosed(node);
+                        flexModel.doAction(FlexLayoutActions.deleteTab(node.getId()));
                     }
                 }
 
                 if (unsavedNodes.length) {
-                    setTabsToClose((prev) => {
+                    tabsApi.setTabsToClose((prev) => {
                         return [...prev, ...nodes];
                     });
                 }
@@ -88,7 +93,7 @@ export default function TabContextMenu({ model, tabContextMenu, setTabsToClose }
             handler: () => closeFilteredTabs("saved"),
         },
         {
-            name: "Close all",
+            name: "Close All",
             handler: () => closeFilteredTabs("all"),
         }
     ];
@@ -138,5 +143,4 @@ export default function TabContextMenu({ model, tabContextMenu, setTabsToClose }
 TabContextMenu.propTypes = {
     model: PropTypes.object,
     tabContextMenu: PropTypes.object,
-    setTabsToClose: PropTypes.func,
 };

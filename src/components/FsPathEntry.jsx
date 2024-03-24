@@ -2,12 +2,11 @@ import PropTypes from "prop-types";
 import { useContext } from "react";
 import { Button } from "@mui/material";
 import ApplyDrop from "./ApplyDrop";
-import CurFolderContext from "../contexts/CurFolderContext";
+import IdeContext from "../contexts/IdeContext";
 import DragContext from "../contexts/DragContext";
-import { getPathEntryLabel } from "../utils/fsUiUtils";
 
-export default function PathEntry({ entryHandle }) {
-    const { showFolderView } = useContext(CurFolderContext);
+export default function FsPathEntry({ entryHandle }) {
+    const { fsApi } = useContext(IdeContext);
     const { handleDrop } = useContext(DragContext);
 
     function onDropHandler() {
@@ -15,18 +14,18 @@ export default function PathEntry({ entryHandle }) {
     }
 
     function onClickHandler() {
-        showFolderView(entryHandle);
+        fsApi.folderOpen(entryHandle);
     }
 
     return (
         <ApplyDrop onDropHandler={onDropHandler}>
             <Button size="small" onClick={onClickHandler} sx={{ minWidth: 10, textTransform: "none" }}>
-                {getPathEntryLabel(entryHandle.name)}
+                {entryHandle?.label}
             </Button>
         </ApplyDrop>
     );
 }
 
-PathEntry.propTypes = {
+FsPathEntry.propTypes = {
     entryHandle: PropTypes.object,
 };

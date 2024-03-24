@@ -3,15 +3,14 @@ import { useState, useEffect } from "react";
 // Ide parts
 import IdeBody from "./components/IdeBody.jsx";
 import IdeHead from "./components/IdeHead.jsx";
-// Device Support Warnings
-import { isMobile, isMacOs, isSafari, isFirefox, isIE } from "react-device-detect";
 import ShowWarning from "./components/ShowWarning.jsx";
 // Features
-import useFileSystem from "./hooks/useFileSystem";
-import useConfig from "./utils/useConfig.js";
+import useFileSystem from "./hooks/useFileSystem.jsx";
+import useConfig from "./hooks/useConfig.jsx";
 import useDasboard from "./hooks/useDashboard.jsx";
+import useTabs from "./hooks/useTabs.jsx";
 // context
-import IdeContext from "./contexts/IdeContext.js";
+import IdeContext from "./contexts/IdeContext";
 
 import configGlobal from "./settings/configGlobal";
 import configEditor from "./settings/configEditor";
@@ -51,17 +50,30 @@ const darkTheme = createTheme({
                 sx: { color: "rgb(157, 157, 157)" },
             },
         },
-        // MuiButton: {
-        //     defaultProps: {
-        //         // sx: { color: "rgb(157, 157, 157)" },
-        //     },
-        // },
+        MuiInputBase: {
+            styleOverrides: {
+                input: {
+                    paddingTop: "10px !important",
+                    paddingBottom: "10px !important",
+                }
+            },
+        },
     },
 });
 
 const lightTheme = createTheme({
     palette: {
         mode: 'light',
+    },
+    components: {
+        MuiInputBase: {
+            styleOverrides: {
+                input: {
+                    paddingTop: "10px !important",
+                    paddingBottom: "10px !important",
+                }
+            },
+        },
     },
 });
 
@@ -76,9 +88,10 @@ const flexModel = FlexLayoutModel.fromJson(layout);
 
 function App() {
     // get folder handler and status with useFileSystem hook
-    const { openDirectory, directoryReady, rootDirHandle } = useFileSystem();
-    const { dashboardLayout, clearDashboard, processLine, widgets, updateWidget } = useDasboard();
-    const { config, setConfig, ready: configReady } = useConfig(schemas);
+    const fsApi = useFileSystem({ flexModel });
+    const tabsApi = useTabs({ flexModel, fsApi });
+    const dashboardApi = useDasboard();
+    const configApi = useConfig({ schemas });
 
     const getCurrentTheme = () => window.matchMedia("(prefers-color-scheme: dark)").matches;
     const [isDarkTheme, setIsDarkTheme] = useState(getCurrentTheme());
@@ -94,21 +107,21 @@ function App() {
 
     useEffect(() => {
         // https://stackoverflow.com/a/47477519/7037749
-        if (directoryReady) {
+        if (fsApi.directoryReady) {
             window.onbeforeunload = function (e) {
                 var dialogText = "Are you sure to leave?"; // TODO: not shown up yet
                 e.returnValue = dialogText;
                 return dialogText;
             };
         }
-    }, [directoryReady]);
+    }, [fsApi.directoryReady]);
 
     // If config initialization not done, don't continue.
-    if (!configReady) {
+    if (!configApi.ready) {
         return;
     }
 
-    let themeLabel = config.global.theme;
+    let themeLabel = configApi.config.global.theme;
     let themeType = getThemeTypeByLabel(themeLabel);
 
     if (themeType === "system") {
@@ -121,30 +134,28 @@ function App() {
     const classes = `ide ${themeClass} ${themeModeClass}`;
     const muiTheme = (getThemeTypeByLabel(themeLabel) === "dark") ? darkTheme : lightTheme;
 
+    const themeApi = {
+        themeLabel,
+        themeName,
+        themeType,
+        themeClass,
+        themeModeClass,
+        muiTheme,
+        isDarkMode: getThemeTypeByLabel(themeLabel) === "dark",
+    }
+
+    const ideProviderValue = {
+        flexModel,
+        fsApi,
+        tabsApi,
+        configApi,
+        dashboardApi,
+        themeApi,
+    }
+
     return (
-        <IdeContext.Provider
-            value={{
-                flexModel: flexModel,
-                openDirectory: openDirectory,
-                directoryReady: directoryReady,
-                rootDirHandle: rootDirHandle,
-                schemas: schemas,
-                config: config,
-                setConfig: setConfig,
-                dashboardLayout: dashboardLayout,
-                processLine: processLine,
-                clearDashboard: clearDashboard,
-                widgets: widgets,
-                updateWidget: updateWidget,
-                isDarkMode: getThemeTypeByLabel(themeLabel) === "dark",
-                themeName: themeName,
-            }}
-        >
-            <ShowWarning
-                isMobile={isMobile}
-                isNotChrome={isSafari || isFirefox || isIE}
-                isMac={isMacOs}
-            />
+        <IdeContext.Provider value={ideProviderValue}>
+            <ShowWarning />
             <ThemeProvider theme={muiTheme}>
                 <CssBaseline />
                 <div className={classes}>
@@ -155,8 +166,6 @@ function App() {
                         <IdeBody />
                     </div>
                     <div className="ide-tail">
-                        {/* CircuitPy Drive: {statusText} | Serial:{" "} */}
-                        {/* {serialReady ? (serialTitle ? serialTitle : "Connected") : "No Port Connected"} */}
                     </div>
                 </div>
             </ThemeProvider>

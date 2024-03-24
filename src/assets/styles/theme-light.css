@@ -299,3 +299,22 @@
 .light .asciiTable tbody tr:nth-child(even):hover {
     background-color: rgb(203, 203, 203);
 }
+
+.light .fs-entry {
+    border-left: 3px solid transparent;
+}
+
+.light .file-opened {
+    border-left: 3px solid var(--color-7);
+    color: rgb(203, 151, 6);
+}
+
+.light .file-unsaved {
+    border-left: 3px solid var(--color-7);
+    color: rgb(234, 86, 86);
+}
+
+.light .folder-has-opened-files {
+    border-left: 3px solid var(--color-7);
+    color: rgb(203, 151, 6);
+}
