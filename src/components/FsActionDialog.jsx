@@ -38,59 +38,45 @@ export default function FsActionDialog() {
 
     useEffect(() => {
         async function prepare() {
+            const action = fsApi.fsAction.action;
+            const entryHandle = fsApi.fsAction?.entryHandle;
+            const parentEntryHandle = fsApi.fsAction?.parentEntryHandle || entryHandle?.parent;
 
-            if (fsApi.fsAction?.action) {
-                const action = fsApi.fsAction.action;
-                const entryHandle = fsApi.fsAction?.entryHandle;
-                const parentEntryHandle = fsApi.fsAction?.parentEntryHandle || entryHandle?.parent;
+            setEntryHandle(entryHandle);
+            setParentEntryHandle(parentEntryHandle);
 
-                setEntryHandle(entryHandle);
-                setParentEntryHandle(parentEntryHandle);
+            if (["rename", "duplicate", "new_file", "new_folder"].includes(action)) {
+                setNewEntryNameNeeded(true);
+            } else {
+                setNewEntryNameNeeded(false);
+            }
 
-                if (["rename", "duplicate", "new_file", "new_folder"].includes(action)) {
-                    setNewEntryNameNeeded(true);
-                } else {
-                    setNewEntryNameNeeded(false);
-                }
+            if (action === "rename" || action === "delete") {
+                setOriginalEntryName(entryHandle?.name);
+                setNewEntryName(entryHandle?.name);
 
-                if (action === "rename" || action === "delete") {
-                    setOriginalEntryName(entryHandle?.name);
-                    setNewEntryName(entryHandle?.name);
-
-                } else if (action === "duplicate") {
-                    const duplicateName = await getDuplicateName(parentEntryHandle, entryHandle);
-                    setOriginalEntryName(entryHandle?.name);
-                    setNewEntryName(duplicateName);
-
-                } else {
-                    setOriginalEntryName("");
-                    setNewEntryName("");
-
-                }
-
-                setAction(action);
-                setDialogOpen(true);
+            } else if (action === "duplicate") {
+                const duplicateName = await getDuplicateName(parentEntryHandle, entryHandle);
+                setOriginalEntryName(entryHandle?.name);
+                setNewEntryName(duplicateName);
 
             } else {
-                setDialogOpen(false);
-                setOriginalEntryName(null);
-                setNewEntryName(null);
-                setAction(null);
-                setNewEntryNameNeeded(false);
+                setOriginalEntryName("");
+                setNewEntryName("");
 
             }
+
+            setAction(action);
+            setDialogOpen(true);
 
             setWarningLabel("");
         }
 
-        prepare();
+        if (!dialogOpen && fsApi.fsAction?.action) {
+            prepare();
+        }
 
-    }, [fsApi]);
-
-    const handleDialogClose = () => {
-        fsApi.setFsAction(null);
-        setDialogOpen(false);
-    }
+    }, [dialogOpen, fsApi]);
 
     const handleConfirm = async (state) => {
         if (!dialogOpen || !action) {
@@ -102,7 +88,7 @@ export default function FsActionDialog() {
             if (newEntryNameNeeded) {
                 if (action === "rename" && newEntryName === originalEntryName) {
                     // nothing to do
-                    handleDialogClose();
+                    setDialogOpen(false);
                     return;
                 }
 
@@ -136,20 +122,25 @@ export default function FsActionDialog() {
 
             await fsApi.folderOpen(parentEntryHandle);
         }
-        handleDialogClose();
+
+        fsApi.setFsAction(null);
+        setDialogOpen(false);
     }
 
     const changeNewEntryName = (e) => {
-        const value = e.target.value;
-        setNewEntryName(value.toString().trim());
+        setNewEntryName((e.target.value || "").trim());
     }
 
     return (
         <Dialog
             open={dialogOpen && !!fsApi.fsAction?.action}
-            onClose={handleDialogClose}
+            onClose={() => {
+                setDialogOpen(false);
+                fsApi.setFsAction(null);
+            }}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
+            disableRestoreFocus={true}
         >
             <DialogTitle>
                 {action === "rename" && `Rename`}
@@ -171,7 +162,7 @@ export default function FsActionDialog() {
                 {newEntryNameNeeded && (
                     <TextField
                         autoComplete='off'
-                        autoFocus
+                        autoFocus={true}
                         fullWidth
                         id="name"
                         margin="dense"
@@ -189,7 +180,6 @@ export default function FsActionDialog() {
                                 handleConfirm("confirm");
                             }
                         }}
-                        inputRef={input => input && input.focus()}
                     />
                 )}
 

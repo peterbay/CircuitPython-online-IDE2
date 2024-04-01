@@ -10,7 +10,7 @@ export default function ShowWarning() {
         <>
             {(isMobile && (
                 <WarningModal title="Mobile devices are not supported!" closeEnabled={false}>
-                    CircuitPython Online IDE is not supported on mobile devices. Please use Chrome, MS Edge, or other
+                    CP Online IDE is not supported on mobile devices. Please use Chrome, MS Edge, or other
                     Chromium-based browsers on a Windows PC, Mac or Chromebook. Check out
                     <HyperLink
                         text="this link"
@@ -21,7 +21,7 @@ export default function ShowWarning() {
             )) ||
                 (isNotChrome && (
                     <WarningModal title="Your Browser Is Not Supported!" closeEnabled={false}>
-                        CircuitPython Online IDE only supports Chrome, MS Edge, or other Chromium-based browsers on a Windows PC,
+                        CP Online IDE only supports Chrome, MS Edge, or other Chromium-based browsers on a Windows PC,
                         Mac or Chromebook. Check out
                         <HyperLink
                             text="this link"

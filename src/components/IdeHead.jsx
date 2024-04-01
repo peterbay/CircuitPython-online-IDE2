@@ -6,7 +6,7 @@ export default function IdeHead() {
     const { tabsApi } = useContext(IdeContext);
 
     const menuStructure = {
-        title: "CircuitPython Online IDE",
+        title: "CP Online IDE",
         menu: [
             // {
             //     label: "Connect",

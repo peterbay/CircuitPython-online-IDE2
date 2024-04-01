@@ -37,9 +37,7 @@ import {
 export default function FsFolderView() {
 
     const { fsApi } = useContext(IdeContext);
-
     const [entryOnDrag, setEntryOnDrag] = useState();
-    const [isLoading, setIsLoading] = useState(false);
     const [path, setPath] = useState([]);
 
     useEffect(() => {
@@ -59,10 +57,10 @@ export default function FsFolderView() {
             alert('"' + entryOnDrag.name + '" conflicts with another name in the target folder.');
             return;
         }
-        setIsLoading(true);
+        fsApi.setIsLoading(true);
         await entryMove(entryOnDrag, targetFolder);
         await fsApi.folderOpen(fsApi.currentFolderHandle);
-        setIsLoading(false);
+        fsApi.setIsLoading(false);
     }
 
     const toolbarItems = [
@@ -70,33 +68,19 @@ export default function FsFolderView() {
             name: "new_file",
             title: "New file",
             icon: NewFileIcon,
-            handler: async () => {
-                fsApi.setFsAction({
-                    action: "new_file",
-                    parentEntryHandle: fsApi.currentFolderHandle,
-                });
-            },
+            handler: async () => await fsApi.initNewFile(),
         },
         {
             name: "new_folder",
             title: "New folder",
             icon: NewFolderIcon,
-            handler: async () => {
-                fsApi.setFsAction({
-                    action: "new_folder",
-                    parentEntryHandle: fsApi.currentFolderHandle,
-                });
-            },
+            handler: async () => await fsApi.initNewFolder(),
         },
         {
             name: "refresh",
             title: "Refresh",
             icon: RefreshIcon,
-            handler: async () => {
-                setIsLoading(true);
-                await fsApi.folderOpen(fsApi.currentFolderHandle);
-                setIsLoading(false);
-            },
+            handler: async () => await fsApi.folderReload(),
         },
     ];
 
@@ -180,7 +164,7 @@ export default function FsFolderView() {
                 </Toolbar>
                 <Divider />
             </div>
-            <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={isLoading}>
+            <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={fsApi.isLoading}>
                 <CircularProgress color="inherit" />
             </Backdrop>
         </div>

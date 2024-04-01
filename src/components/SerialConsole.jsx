@@ -29,18 +29,12 @@ import {
 import ToolbarEntry from "./ToolbarEntry";
 import TooltipIconButton from "./TooltipIconButton";
 
-import SerialCommunication from "../utils/serial";
-
-// context
 import IdeContext from "../contexts/IdeContext";
 
-const serial = new SerialCommunication();
-
 export default function SerialConsole({ node }) {
-    const { configApi, dashboardApi } = useContext(IdeContext);
+    const { configApi, dashboardApi, serialApi, paletteApi } = useContext(IdeContext);
     const terminalBox = useRef(null);
-    const [serialStatus, setSerialStatus] = useState(false);
-    const [connectionState, setConnectionState] = useState("Not connected");
+
     const [linked, setLinked] = useState(true);
 
     const terminalRef = useRef(null);
@@ -58,9 +52,8 @@ export default function SerialConsole({ node }) {
         }
     }.bind(this);
 
-    const connect = async function () {
+    useEffect(() => {
         if (!terminal.current) {
-
             const terminalOptions = {
                 cursorBlink: true,
                 fontSize: configApi.config.serial_console.font_size,
@@ -69,60 +62,22 @@ export default function SerialConsole({ node }) {
             terminal.current = new Terminal(terminalOptions);
             terminal.current.loadAddon(fitAddon.current);
             terminal.current.open(terminalRef.current);
+            terminal.current.attachCustomKeyEventHandler((e) => {
+                if (e.ctrlKey && e.shiftKey && e.key === 'Q') {
+                    paletteApi.setOpen(true);
+                    return false;
+                }
+                return true;
+            });
             fitAddon.current.fit();
 
+            serialApi.setTerminal(terminal.current);
+
             terminal.current.onData((data) => {
-                serial.write(data);
+                serialApi.serial.write(data);
             });
-
-            serial.setReaderCallback(readerCallback);
         }
-
-        const status = await serial.open();
-        setSerialStatus(status);
-        if (!status) {
-            serial.close();
-            setConnectionState("Failed to open serial port");
-            console.error("Failed to open serial port");
-        } else {
-            setConnectionState("Connected");
-        }
-    };
-
-    const disconnect = function () {
-        serial.close();
-        setSerialStatus(false);
-        setConnectionState("Disconnected");
-    };
-
-    const clearTerminal = function () {
-        if (!terminal.current) {
-            return;
-        }
-        terminal.current.clear();
-    };
-
-    const sendKey = function (key) {
-        if (!serialStatus) {
-            return;
-        }
-
-        const keys = {
-            "Ctrl+C": "\x03",
-            "Ctrl+D": "\x04",
-            "Ctrl+Z": "\x1A",
-            "Ctrl+L": "\x0C",
-            "Ctrl+R": "\x12",
-            "Ctrl+T": "\x14",
-            "Ctrl+U": "\x15",
-            "Ctrl+W": "\x17",
-            "Ctrl+Y": "\x19",
-        };
-
-        if (keys[key]) {
-            serial.write(keys[key]);
-        }
-    };
+    }, [serialApi, configApi.config.serial_console.font_size, paletteApi]);
 
     const linkToggle = function () {
         setLinked(!linked);
@@ -132,12 +87,18 @@ export default function SerialConsole({ node }) {
     const width = node.getRect().width;
 
     useEffect(() => {
-        if (linked) {
-            serial.setReaderCallback(readerCallback);
-        } else {
-            serial.setReaderCallback(null);
+        if (!serialApi.serial) {
+            return;
         }
-    }, [linked, readerCallback]);
+        if (linked) {
+            serialApi.serial.setReaderCallback(readerCallback);
+        } else {
+            serialApi.serial.setReaderCallback(null);
+        }
+        return () => {
+            serialApi.serial.setReaderCallback(null);
+        }
+    }, [linked, readerCallback, serialApi.serial]);
 
     useEffect(() => {
         if (!terminal.current) {
@@ -163,14 +124,14 @@ export default function SerialConsole({ node }) {
                     disableGutters={true}
                     sx={{ minHeight: "35px", maxHeight: "35px" }}
                 >
-                    <ToolbarEntry>Serial console: {connectionState}</ToolbarEntry>
+                    <ToolbarEntry>Serial console: {serialApi.connectionState}</ToolbarEntry>
 
                     <TooltipIconButton
                         id="link-dashboard"
                         title={linked ? "Unlink dashboard from serial console"
                             : "Link dashboard to serial console"}
                         icon={linked ? LinkIcon : LinkOffIcon}
-                        disabled={!serialStatus}
+                        disabled={!serialApi.serialStatus}
                         onClick={() => linkToggle()}
                     />
 
@@ -178,16 +139,16 @@ export default function SerialConsole({ node }) {
                         id="send-ctrl-c"
                         title="Send Ctrl+C to stop running program"
                         icon={CancelIcon}
-                        disabled={!serialStatus}
-                        onClick={() => sendKey("Ctrl+C")}
+                        disabled={!serialApi.serialStatus}
+                        onClick={() => serialApi.sendKey("Ctrl+C")}
                     />
 
                     <TooltipIconButton
                         id="send-ctrl-d"
                         title="Send Ctrl+D to reload the program"
                         icon={RefreshIcon}
-                        disabled={!serialStatus}
-                        onClick={() => sendKey("Ctrl+D")}
+                        disabled={!serialApi.serialStatus}
+                        onClick={() => serialApi.sendKey("Ctrl+D")}
                     />
 
                     <TooltipIconButton
@@ -195,15 +156,15 @@ export default function SerialConsole({ node }) {
                         title="Clear terminal"
                         icon={DeleteForeverIcon}
                         disabled={!terminal.current}
-                        onClick={() => clearTerminal()}
+                        onClick={() => serialApi.clearTerminal()}
                     />
 
                     <TooltipIconButton
                         id="serial-connect"
-                        title={serialStatus ? "Disconnect from serial port" : "Connect to serial port"}
+                        title={serialApi.serialStatus ? "Disconnect from serial port" : "Connect to serial port"}
                         icon={UsbIcon}
-                        iconSx={{ color: serialStatus ? 'green' : 'blue' }}
-                        onClick={() => serialStatus ? disconnect() : connect()}
+                        iconSx={{ color: serialApi.serialStatus ? 'green' : 'blue' }}
+                        onClick={() => serialApi.serialStatus ? serialApi.disconnect() : serialApi.connect()}
                     />
                 </Toolbar>
             </Box>

@@ -157,17 +157,21 @@ export default function FsContentEntry({ entryHandle }) {
             dense
             sx={{
                 height: `${itemSize}px`,
-                borderLeft: isOpened || hasOpenedFiles ? '3px solid #ffcc00' : '3px solid transparent'
             }}
             className={entryStatusClassName}
         >
             <ListItemButton
                 onClick={onClickHandler}
                 selected={isSelected}
-                sx={{ height: `${itemSize}px` }}
+                sx={{
+                    height: `${itemSize}px`,
+                    padding: "0 5px",
+                }}
             >
                 <ListItemIcon
-                    sx={{ minWidth: `${iconSize + 5}px` }}
+                    sx={{
+                        minWidth: `${iconSize + 5}px`,
+                    }}
                     className={fileClassName}
                 >{icon}</ListItemIcon>
                 <ListItemText

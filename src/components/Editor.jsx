@@ -91,9 +91,11 @@ const defaultEditorMode = {
 };
 
 export default function Editor({ fileHandle, node, isNewFile }) {
-    const { fsApi, configApi, themeApi, tabsApi } = useContext(IdeContext);
+    const { fsApi, configApi, themeApi, tabsApi, editorApi, paletteApi } = useContext(IdeContext);
     const aceEditorRef = useRef(null);
 
+    const [nodeId, ] = useState(node.getId());
+    const [nodeModel, ] = useState(node.getModel());
     const [configNewLine, setConfigNewLine] = useState(false);
     const [configWordWrap, setConfigWordWrap] = useState(false);
     const [editorCursorInfo, setEditorCursorInfo] = useState(false);
@@ -119,8 +121,13 @@ export default function Editor({ fileHandle, node, isNewFile }) {
         const extension = extensionMatch ? extensionMatch[1] : "";
         setEditorMode((editorModes[extension] || defaultEditorMode).mode);
         setEditorModeLabel((editorModes[extension] || defaultEditorMode).label);
-        setStateInfo(fileHandle.isReadOnly ? "Read Only" : (fileEdited ? "Unsaved" : "Saved"));
+    }, [fileHandle]);
 
+    useEffect(() => {
+        if (!fileHandle) {
+            return;
+        }
+        setStateInfo(fileHandle.isReadOnly ? "Read Only" : (fileEdited ? "Unsaved" : "Saved"));
     }, [fileHandle, fileEdited]);
 
     useEffect(() => {
@@ -134,12 +141,15 @@ export default function Editor({ fileHandle, node, isNewFile }) {
 
     useEffect(() => {
         setConfigWordWrap(configApi.config.editor.wrap);
+    }, [configApi.config.editor.wrap]);
+
+    useEffect(() => {
         if (isNewFile) {
             setConfigNewLine(configApi.config.editor.newline_mode);
         } else {
             setConfigNewLine("auto");
         }
-    }, [isNewFile, configApi.config.editor.wrap, configApi.config.editor.newline_mode]);
+    }, [isNewFile, configApi.config.editor.newline_mode]);
 
     useEffect(() => {
         const line = (editorCursorInfo.row || 0) + 1;
@@ -164,20 +174,17 @@ export default function Editor({ fileHandle, node, isNewFile }) {
         }
 
         const name = `${namePrefix}${fileHandle.name}`;
-        const model = node.getModel();
-        const nodeId = node.getId();
-
         fileHandle.unsaved = fileEdited;
 
-        model.doAction(FlexLayoutActions.renameTab(nodeId, name));
+        nodeModel.doAction(FlexLayoutActions.renameTab(nodeId, name));
 
         const action = FlexLayoutActions.updateNodeAttributes(nodeId, {
             className: fileEdited ? "unsaved" : "",
         });
 
-        model.doAction(action);
+        nodeModel.doAction(action);
 
-    }, [node, fileHandle, fileEdited, fileHandle.name]);
+    }, [nodeId, nodeModel, fileHandle, fileEdited, fileHandle.name]);
 
     useEffect(() => {
         async function loadText() {
@@ -209,6 +216,20 @@ export default function Editor({ fileHandle, node, isNewFile }) {
             wrap: configWordWrap,
         });
     }, [configApi.config.editor, configWordWrap, configNewLine]);
+
+    useEffect(() => {
+        if (editorApi.activeEditorNode === nodeId && editorApi.editorAction) {
+            const editor = aceEditorRef?.current?.editor;
+
+            if (editor) {
+                editorApi.applyTransform(editor, editorApi.editorAction);
+            }
+
+            editorApi.setEditorAction(null);
+        }
+
+    }, [editorApi.activeEditorNode, editorApi.editorAction, nodeId, aceEditorRef, editorApi]);
+
 
     function saveFile(text) {
         fileWriteText(fileHandle, text);
@@ -269,6 +290,13 @@ export default function Editor({ fileHandle, node, isNewFile }) {
             bindKey: { win: "Ctrl-`", mac: "Command-`" },
             exec: () => {
                 tabsApi.tabSwitch("serial_console");
+            },
+        });
+        commands.addCommand({
+            name: "command_palette",
+            bindKey: { win: "Ctrl-Shift-q", mac: "Ctrl-Shift-q" },
+            exec: () => {
+                paletteApi.setOpen(true);
             },
         });
     }

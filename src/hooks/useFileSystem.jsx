@@ -1,9 +1,7 @@
 import { useState, useEffect } from 'react';
-import { isEntryHealthy } from '../utils/fsUtils';
+import { isEntryHealthy, folderGetContent } from '../utils/fsUtils';
 
-import { folderGetContent } from '../utils/fsUtils';
-
-export default function useFileSystem() {
+export default function useFileSystem({ statesApi }) {
     const [directoryReady, setDirectoryReady] = useState(false);
     const [directoryStatus, setDirectoryStatus] = useState('');
     const [rootDirHandle, setRootDirHandle] = useState(null);
@@ -11,6 +9,7 @@ export default function useFileSystem() {
     const [path, setPath] = useState([]);
     const [folderContent, setFolderContent] = useState([]);
     const [activeFileFullPath, setActiveFileFullPath] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     const [fileLookUp, setFileLookUp] = useState({});
     const [fsAction, setFsAction] = useState();
@@ -39,12 +38,21 @@ export default function useFileSystem() {
     }, [rootDirHandle, directoryReady]);
 
     useEffect(() => {
+        const newState = !!rootDirHandle;
+        if (statesApi.states['folder-opened'] !== newState) {
+            statesApi.setState('folder-opened', newState);
+        }
+    }, [rootDirHandle, statesApi]);
+
+    useEffect(() => {
         if (!rootDirHandle) {
             return;
         }
         async function showRoot() {
+            const rootFolderContent = await folderGetContent(rootDirHandle, false);
+
             setCurrentFolderHandle(rootDirHandle);
-            setFolderContent(await folderGetContent(rootDirHandle, false));
+            setFolderContent(rootFolderContent);
             setPath([rootDirHandle]);
         }
         showRoot();
@@ -89,6 +97,35 @@ export default function useFileSystem() {
         });
     }
 
+    async function folderReload() {
+        if (!currentFolderHandle) {
+            return;
+        }
+        setIsLoading(true);
+        await folderOpen(currentFolderHandle);
+        setIsLoading(false);
+    }
+
+    async function initNewFile() {
+        if (!currentFolderHandle) {
+            return;
+        }
+        setFsAction({
+            action: "new_file",
+            parentEntryHandle: currentFolderHandle,
+        });
+    }
+
+    async function initNewFolder() {
+        if (!currentFolderHandle) {
+            return;
+        }
+        setFsAction({
+            action: "new_folder",
+            parentEntryHandle: currentFolderHandle,
+        });
+    }
+
     async function fileClosed(node) {
         const fullPath = await node.getConfig()?.fullPath;
         if (fullPath) {
@@ -110,6 +147,7 @@ export default function useFileSystem() {
         fileLookUp,
         folderContent,
         folderOpen,
+        folderReload,
         fsAction,
         openRootDirectory,
         path,
@@ -117,5 +155,9 @@ export default function useFileSystem() {
         setActiveFileFullPath,
         setFileLookUp,
         setFsAction,
+        isLoading,
+        setIsLoading,
+        initNewFile,
+        initNewFolder,
     };
 }

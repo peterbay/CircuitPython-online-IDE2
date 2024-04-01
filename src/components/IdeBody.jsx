@@ -15,12 +15,13 @@ import KeyboardShortcuts from "./KeyboardShortcuts";
 import Navigation from "./Navigation";
 import SerialConsole from "./SerialConsole";
 import TabContextMenu from "./TabContextMenu.jsx";
+import CommandPaletteDialog from './CommandPalette.jsx';
 
 const fullSize = { height: "100%", width: "100%" };
 
 export default function IdeBody() {
 
-    const { flexModel, fsApi, tabsApi } = useContext(IdeContext);
+    const { flexModel, fsApi, tabsApi, editorApi } = useContext(IdeContext);
 
     const [tabContextMenu, setTabContextMenu] = useState(null);
 
@@ -84,8 +85,19 @@ export default function IdeBody() {
     };
 
     async function updateActiveEditorInfo() {
-        const config = await tabsApi.getActiveEditorTabConfig(flexModel);
-        await fsApi.setActiveFileFullPath(config?.fullPath);
+        const activeTab = await tabsApi.getActiveEditorTab();
+
+        if (!activeTab) {
+            return;
+        }
+
+        const { config, node } = activeTab;
+
+        if (config?.fullPath && fsApi.activeFileFullPath !== config?.fullPath) {
+            await fsApi.setActiveFileFullPath(config?.fullPath);
+            editorApi.setActiveEditorNode(node.getId());
+
+        }
     }
 
     async function onAction(action) {
@@ -125,6 +137,7 @@ export default function IdeBody() {
             />
             <FileCloseDialog />
             <FsActionDialog />
+            <CommandPaletteDialog />
             <Layout
                 model={flexModel}
                 factory={factory}

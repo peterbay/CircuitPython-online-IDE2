@@ -73,7 +73,7 @@ export default function useTabs({ flexModel, fsApi }) {
         }
     }
 
-    async function getActiveEditorTabConfig () {
+    async function getActiveEditorTab () {
         const tabset = await flexModel.getActiveTabset();
         if (!tabset || !tabset.getChildren) {
             return null;
@@ -84,7 +84,11 @@ export default function useTabs({ flexModel, fsApi }) {
         }
         for (let child of children) {
             if (child.isVisible()) {
-                return await child.getConfig();
+                const config = await child.getConfig();
+                return {
+                    config,
+                    node: child,
+                };
             }
         }
         return null;
@@ -193,7 +197,7 @@ export default function useTabs({ flexModel, fsApi }) {
         tabActivate,
         tabOpen,
         tabSwitch,
-        getActiveEditorTabConfig,
+        getActiveEditorTab,
         tabsGetByFullPath,
         tabOpenFile,
         tabCloseFile,

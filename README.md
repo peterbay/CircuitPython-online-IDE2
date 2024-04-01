@@ -1,6 +1,6 @@
-# CircuitPython Online IDE 2.0
+# CP Online IDE 2.0
 
-CircuitPython online IDE is a browser-based IDE for CircuitPython supported microcontrollers. No installation needed. Handy and powerful.
+CP online IDE is a browser-based IDE for CircuitPython supported microcontrollers. No installation needed. Handy and powerful.
 
 This Project is currently under Alpha (inner test).
 You are welcome to try it out and give feedbacks.

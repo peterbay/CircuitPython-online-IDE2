@@ -5,9 +5,13 @@ import IdeBody from "./components/IdeBody.jsx";
 import IdeHead from "./components/IdeHead.jsx";
 import ShowWarning from "./components/ShowWarning.jsx";
 // Features
-import useFileSystem from "./hooks/useFileSystem.jsx";
 import useConfig from "./hooks/useConfig.jsx";
 import useDasboard from "./hooks/useDashboard.jsx";
+import useEditor from "./hooks/useEditor.jsx";
+import useFileSystem from "./hooks/useFileSystem.jsx";
+import useGlobalStates from "./hooks/useGlobalStates.jsx";
+import usePalette from "./hooks/usePalette.jsx";
+import useSerial from "./hooks/useSerial.jsx";
 import useTabs from "./hooks/useTabs.jsx";
 // context
 import IdeContext from "./contexts/IdeContext";
@@ -87,11 +91,15 @@ if (globalSchema) {
 const flexModel = FlexLayoutModel.fromJson(layout);
 
 function App() {
-    // get folder handler and status with useFileSystem hook
-    const fsApi = useFileSystem({ flexModel });
-    const tabsApi = useTabs({ flexModel, fsApi });
-    const dashboardApi = useDasboard();
-    const configApi = useConfig({ schemas });
+
+    const statesApi = useGlobalStates();
+    const configApi = useConfig({ schemas, statesApi });
+    const editorApi = useEditor({ statesApi });
+    const fsApi = useFileSystem({ statesApi });
+    const serialApi = useSerial({ configApi, statesApi });
+    const tabsApi = useTabs({ flexModel, fsApi, statesApi });
+    const dashboardApi = useDasboard({ statesApi });
+    const paletteApi = usePalette({ statesApi });
 
     const getCurrentTheme = () => window.matchMedia("(prefers-color-scheme: dark)").matches;
     const [isDarkTheme, setIsDarkTheme] = useState(getCurrentTheme());
@@ -107,13 +115,14 @@ function App() {
 
     useEffect(() => {
         // https://stackoverflow.com/a/47477519/7037749
-        if (fsApi.directoryReady) {
-            window.onbeforeunload = function (e) {
-                var dialogText = "Are you sure to leave?"; // TODO: not shown up yet
-                e.returnValue = dialogText;
-                return dialogText;
-            };
+        if (!fsApi.directoryReady) {
+            return;
         }
+        window.onbeforeunload = function (e) {
+            var dialogText = "Are you sure to leave?"; // TODO: not shown up yet
+            e.returnValue = dialogText;
+            return dialogText;
+        };
     }, [fsApi.directoryReady]);
 
     // If config initialization not done, don't continue.
@@ -142,16 +151,20 @@ function App() {
         themeModeClass,
         muiTheme,
         isDarkMode: getThemeTypeByLabel(themeLabel) === "dark",
-    }
+    };
 
     const ideProviderValue = {
         flexModel,
-        fsApi,
-        tabsApi,
         configApi,
         dashboardApi,
+        editorApi,
+        fsApi,
+        paletteApi,
+        serialApi,
+        statesApi,
+        tabsApi,
         themeApi,
-    }
+    };
 
     return (
         <IdeContext.Provider value={ideProviderValue}>

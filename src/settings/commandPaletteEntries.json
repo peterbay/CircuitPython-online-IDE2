@@ -1,0 +1,149 @@
+[
+    {
+        "cmdId": "folder-open",
+        "label": "Folder View: Open Circuit Python Drive",
+        "handler": ["fsApi.openRootDirectory"],
+        "dependency": ["!folder-opened"]
+    },
+
+    {
+        "cmdId": "folder-reload",
+        "label": "Folder View: Reload folder",
+        "handler": ["fsApi.folderReload"],
+        "dependency": ["folder-opened"]
+    },
+
+    {
+        "cmdId": "folder-new-file",
+        "label": "Folder View: New File",
+        "handler": ["fsApi.initNewFile"],
+        "dependency": ["folder-opened"]
+    },
+
+    {
+        "cmdId": "folder-new-folder",
+        "label": "Folder View: New Folder",
+        "handler": ["fsApi.initNewFolder"],
+        "dependency": ["folder-opened"]
+    },
+    {
+        "cmdId": "serial-connect",
+        "label": "Serial Console: Connect to serial port",
+        "handler": ["serialApi.connect"],
+        "dependency": ["!serial-connected"]
+    },
+    {
+        "cmdId": "serial-disconnect",
+        "label": "Serial Console: Disconnect from serial port",
+        "handler": ["serialApi.disconnect"],
+        "dependency": ["serial-connected"]
+    },
+    {
+        "cmdId": "serial-clear",
+        "label": "Serial Console: Clear console",
+        "handler": ["serialApi.clearTerminal"],
+        "dependency": ["serial-initialized"]
+    },
+    {
+        "cmdId": "transform-uppercase",
+        "label": "Transform to Upper Case",
+        "handler": ["editorApi.transformText", "uppercase"],
+        "dependency": []
+    },
+    {
+        "cmdId": "transform-lowercase",
+        "label": "Transform to Lower Case",
+        "handler": ["editorApi.transformText", "lowercase"],
+        "dependency": []
+    },
+    {
+        "cmdId": "transform-camelcase",
+        "label": "Transform to Camel Case",
+        "handler": ["editorApi.transformText", "camelcase"],
+        "dependency": []
+    },
+    {
+        "cmdId": "transform-kebabcase",
+        "label": "Transform to Kebab Case",
+        "handler": ["editorApi.transformText", "kebabcase"],
+        "dependency": []
+    },
+    {
+        "cmdId": "transform-snakecase",
+        "label": "Transform to Snake Case",
+        "handler": ["editorApi.transformText", "snakecase"],
+        "dependency": []
+    },
+    {
+        "cmdId": "transform-upperfirst",
+        "label": "Transform to Upper First",
+        "handler": ["editorApi.transformText", "upperfirst"],
+        "dependency": []
+    },
+    {
+        "cmdId": "transform-lowerfirst",
+        "label": "Transform to Lower First",
+        "handler": ["editorApi.transformText", "lowerfirst"],
+        "dependency": []
+    },
+    {
+        "cmdId": "transform-capitalize",
+        "label": "Transform to Capitalize",
+        "handler": ["editorApi.transformText", "capitalize"],
+        "dependency": []
+    },
+    {
+        "cmdId": "transform-startcase",
+        "label": "Transform to Start Case",
+        "handler": ["editorApi.transformText", "startcase"],
+        "dependency": []
+    },
+    {
+        "cmdId": "sort-lines-ascending",
+        "label": "Sort Lines Ascending",
+        "handler": ["editorApi.transformText", "sort-ascending"],
+        "dependency": []
+    },
+    {
+        "cmdId": "sort-lines-descending",
+        "label": "Sort Lines Descending",
+        "handler": ["editorApi.transformText", "sort-descending"],
+        "dependency": []
+    },
+    {
+        "cmdId": "convert-dec-to-hex",
+        "label": "Convert Decimal to Hexadecimal",
+        "handler": ["editorApi.transformText", "convert-dec-to-hex"],
+        "dependency": []
+    },
+    {
+        "cmdId": "convert-dec-to-bin",
+        "label": "Convert Decimal to Binary",
+        "handler": ["editorApi.transformText", "convert-dec-to-bin"],
+        "dependency": []
+    },
+    {
+        "cmdId": "convert-hex-to-dec",
+        "label": "Convert Hexadecimal to Decimal",
+        "handler": ["editorApi.transformText", "convert-hex-to-dec"],
+        "dependency": []
+    },
+    {
+        "cmdId": "convert-hex-to-bin",
+        "label": "Convert Hexadecimal to Binary",
+        "handler": ["editorApi.transformText", "convert-hex-to-bin"],
+        "dependency": []
+    },
+    {
+        "cmdId": "convert-bin-to-dec",
+        "label": "Convert Binary to Decimal",
+        "handler": ["editorApi.transformText", "convert-bin-to-dec"],
+        "dependency": []
+    },
+    {
+        "cmdId": "convert-bin-to-hex",
+        "label": "Convert Binary to Hexadecimal",
+        "handler": ["editorApi.transformText", "convert-bin-to-hex"],
+        "dependency": []
+    }
+]
