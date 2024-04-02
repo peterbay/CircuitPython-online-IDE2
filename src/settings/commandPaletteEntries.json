@@ -113,36 +113,42 @@
     {
         "cmdId": "convert-dec-to-hex",
         "label": "Convert Decimal to Hexadecimal",
+        "short": "dec2hex",
         "handler": ["editorApi.transformText", "convert-dec-to-hex"],
         "dependency": []
     },
     {
         "cmdId": "convert-dec-to-bin",
         "label": "Convert Decimal to Binary",
+        "short": "dec2bin",
         "handler": ["editorApi.transformText", "convert-dec-to-bin"],
         "dependency": []
     },
     {
         "cmdId": "convert-hex-to-dec",
         "label": "Convert Hexadecimal to Decimal",
+        "short": "hex2dec",
         "handler": ["editorApi.transformText", "convert-hex-to-dec"],
         "dependency": []
     },
     {
         "cmdId": "convert-hex-to-bin",
         "label": "Convert Hexadecimal to Binary",
+        "short": "hex2bin",
         "handler": ["editorApi.transformText", "convert-hex-to-bin"],
         "dependency": []
     },
     {
         "cmdId": "convert-bin-to-dec",
         "label": "Convert Binary to Decimal",
+        "short": "bin2dec",
         "handler": ["editorApi.transformText", "convert-bin-to-dec"],
         "dependency": []
     },
     {
         "cmdId": "convert-bin-to-hex",
         "label": "Convert Binary to Hexadecimal",
+        "short": "bin2hex",
         "handler": ["editorApi.transformText", "convert-bin-to-hex"],
         "dependency": []
     }

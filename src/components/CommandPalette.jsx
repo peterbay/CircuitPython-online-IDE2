@@ -7,9 +7,12 @@ import {
 } from "@mui/material";
 
 import { useHotkeys } from 'react-hotkeys-hook'
+import { matchSorter } from 'match-sorter';
 
 import IdeContext from "../contexts/IdeContext";
 import get from "lodash/get";
+
+const filterOptions = (options, { inputValue }) => matchSorter(options, inputValue, { keys: ['label', 'short'] });
 
 export default function CommandPaletteDialog() {
 
@@ -94,6 +97,7 @@ export default function CommandPaletteDialog() {
                         disablePortal
                         id="combo-box-demo"
                         options={context?.paletteApi?.paletteList}
+                        filterOptions={filterOptions}
                         sx={{
                             maxHeight: 300,
                             width: '100%',
