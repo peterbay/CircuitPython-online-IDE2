@@ -99,6 +99,24 @@
         "dependency": []
     },
     {
+        "cmdId": "transform-humanize",
+        "label": "Transform to Humanize",
+        "handler": ["editorApi.transformText", "humanize"],
+        "dependency": []
+    },
+    {
+        "cmdId": "transform-collapse-whitespace",
+        "label": "Transform to Collapse Whitespace",
+        "handler": ["editorApi.transformText", "collapse-whitespace"],
+        "dependency": []
+    },
+    {
+        "cmdId": "transform-latinise",
+        "label": "Transform to Latinise",
+        "handler": ["editorApi.transformText", "latinise"],
+        "dependency": []
+    },
+    {
         "cmdId": "sort-lines-ascending",
         "label": "Sort Lines Ascending",
         "handler": ["editorApi.transformText", "sort-ascending"],

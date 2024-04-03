@@ -4,7 +4,17 @@ import {
     DialogContent,
     TextField,
     Autocomplete,
+    Box,
+    Toolbar,
+    Divider,
+    Chip,
 } from "@mui/material";
+
+import {
+    SwapVert as ArrowUpDownIcon,
+} from "@mui/icons-material";
+
+import ToolbarEntry from "./ToolbarEntry";
 
 import { useHotkeys } from 'react-hotkeys-hook'
 import { matchSorter } from 'match-sorter';
@@ -12,7 +22,26 @@ import { matchSorter } from 'match-sorter';
 import IdeContext from "../contexts/IdeContext";
 import get from "lodash/get";
 
-const filterOptions = (options, { inputValue }) => matchSorter(options, inputValue, { keys: ['label', 'short'] });
+const matchSorterOptions = {
+    keys: ['label', 'short'],
+    baseSort: (a, b) => {
+        if (a.date && !b.date) {
+            return -1;
+        }
+        if (!a.date && b.date) {
+            return 1;
+        }
+        if (a.label < b.label) {
+            return -1;
+        }
+        if (a.label > b.label) {
+            return 1;
+        }
+        return 0;
+    },
+};
+
+const filterOptions = (options, { inputValue }) => matchSorter(options, inputValue, matchSorterOptions);
 
 export default function CommandPaletteDialog() {
 
@@ -25,6 +54,9 @@ export default function CommandPaletteDialog() {
     useHotkeys('ctrl+shift+q', () => {
         autocompleteValue.current = null;
         setDialogOpen(true);
+        setTimeout(() => {
+            autocompleteRef?.current?.focus();
+        }, 100);
     }, {
         preventDefault: true,
     });
@@ -48,6 +80,7 @@ export default function CommandPaletteDialog() {
     const onKeyDown = (e) => {
         if (e.key === 'Escape') {
             handleDialogClose();
+
         }
     };
 
@@ -87,12 +120,41 @@ export default function CommandPaletteDialog() {
                 <DialogContent
                     sx={{
                         width: "500px",
-                        height: '450px',
-                        maxHeight: '450px !important',
+                        height: '485px',
+                        maxHeight: '485px !important',
                         overflow: 'hidden',
                         padding: '0px',
                     }}
                 >
+                    <Box sx={{
+                        maxHeight: "35px",
+                        marginBottom: "2px",
+                    }}>
+                        <Divider />
+                        <Toolbar
+                            variant="dense"
+                            disableGutters={true}
+                            sx={{ minHeight: "35px", maxHeight: "35px" }}
+                        >
+                            <ToolbarEntry>Command Palette</ToolbarEntry>
+                            <Chip
+                                icon={<ArrowUpDownIcon />}
+                                label="to navigate"
+                                size="small"
+                                sx={{ marginRight: '10px' }}
+                            />
+                            <Chip
+                                label="Enter to select"
+                                size="small"
+                                sx={{ marginRight: '10px' }}
+                            />
+                            <Chip
+                                label="Esc to dismiss"
+                                size="small"
+                                sx={{ marginRight: '10px' }}
+                            />
+                        </Toolbar>
+                    </Box>
                     <Autocomplete
                         disablePortal
                         id="combo-box-demo"
@@ -113,8 +175,9 @@ export default function CommandPaletteDialog() {
                         ListboxProps={
                             {
                                 style: {
-                                    maxHeight: '400px',
+                                    maxHeight: '405px',
                                     fontWeight: 300,
+                                    padding: '0px',
                                 },
                                 sx: {
                                     '& li.Mui-focused': {
@@ -135,7 +198,12 @@ export default function CommandPaletteDialog() {
                             props.key = `${option.used ? 'used' : 'not-used'}-${option.cmdId}`;
                             return (
                                 <li {...props}>
-                                    <span style={{ float: 'left' }} >{option.label}</span>
+                                    <span
+                                        style={{ float: 'left' }}
+                                    >
+                                        {/* {option.prefix ? `${option.prefix}. ` : ''} */}
+                                        {option.label}
+                                    </span>
                                     <span style={{ float: 'right', fontSize: '12px' }}>
                                         {option.recentlyUsed && '(recently used)'}
                                         {option.others && '(other commands)'}
@@ -149,6 +217,7 @@ export default function CommandPaletteDialog() {
                                 inputRef={autocompleteRef}
                                 autoFocus={true}
                                 onKeyDown={onKeyDown}
+                                placeholder=">"
                             />
                         }}
                         isOptionEqualToValue={(option, value) => {

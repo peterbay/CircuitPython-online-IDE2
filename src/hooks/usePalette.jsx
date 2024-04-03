@@ -53,20 +53,24 @@ export default function usePalette({ statesApi }) {
             if (prev.find((e) => e.cmdId === entry.cmdId)) {
                 prev = prev.filter((e) => e.cmdId !== entry.cmdId);
             }
+
             prev.forEach((e) => {
                 e.recentlyUsed = false;
-                prev[prev.length - 1].delimiter = false;
             });
 
             const newEntry = { ...entry };
             newEntry.recentlyUsed = true;
             newEntry.used = true;
+            newEntry.others = false;
+            newEntry.date = new Date().getTime();
 
             prev.unshift(newEntry);
             if (prev.length > 5) {
                 prev.pop();
             }
-            prev[prev.length - 1].delimiter = true;
+            prev.forEach((e, index) => {
+                e.prefix = index + 1;
+            });
             return prev;
         });
         preparePaletteEntries();

@@ -8,6 +8,7 @@ import upperFirst from "lodash/upperFirst";
 import lowerFirst from "lodash/lowerFirst";
 import capitalize from "lodash/capitalize";
 import startCase from "lodash/startCase";
+import S from "string";
 
 function sortComparer(a,b){
     return a?.localeCompare(b) || 0;
@@ -54,8 +55,6 @@ export default function useEditor() {
             return;
         }
 
-        // console.log("editorAction", type);
-        // console.log("textRange", textRange);
         let newText = textRange;
 
         try {
@@ -86,6 +85,15 @@ export default function useEditor() {
 
             } else if (type === "startcase") {
                 newText = startCase(textRange);
+
+            } else if (type === "humanize") {
+                newText = S(textRange).humanize().s;
+
+            } else if (type === "collapse-whitespace") {
+                newText = S(textRange).collapseWhitespace().s;
+
+            } else if (type === "latinise") {
+                newText = S(textRange).latinise().s;
 
             } else if (type === "sort-ascending") {
                 const lines = textRange.split(newLineCharacter);
@@ -121,12 +129,10 @@ export default function useEditor() {
 
         session.replace(selectionRange, newText);
 
-        // console.log("newText", newText);
-
         const startRow = selectionRange.start.row;
         const startColumn = selectionRange.start.column;
 
-        const newTextLines = newText.split("\n");
+        const newTextLines = newText.split(newLineCharacter);
         const endRow = startRow + newTextLines.length - 1;
         const endColumn = (newTextLines.length === 1 ? startColumn : 0) + newTextLines[newTextLines.length - 1].length;
 
