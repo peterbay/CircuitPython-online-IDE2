@@ -3,30 +3,28 @@ import MenuBar from "./MenuBar";
 import IdeContext from "../contexts/IdeContext";
 
 export default function IdeHead() {
-    const { tabsApi } = useContext(IdeContext);
+    const { tabsApi, fsApi, serialApi } = useContext(IdeContext);
 
     const menuStructure = {
         title: "CP Online IDE",
         menu: [
-            // {
-            //     label: "Connect",
-            //     options: [
-            //         {
-            //             text: "CircuitPy Drive",
-            //             handler: () => {
-            //                 console.log("clicked on `CircuitPy Drive`");
-            //                 openRootDirectory();
-            //             },
-            //         },
-            //         {
-            //             text: "Serial Port",
-            //             handler: () => {
-            //                 console.log("clicked on Serial");
-            //                 // connectToSerialPort();
-            //             },
-            //         },
-            //     ],
-            // },
+            {
+                label: "Connection",
+                options: [
+                    {
+                        text: fsApi.directoryReady ? "✅ Close CircuitPy Drive" : "❌ Open CircuitPy Drive",
+                        handler: () => {
+                            fsApi.directoryReady ? fsApi.closeRootDirectory() : fsApi.openRootDirectory();
+                        },
+                    },
+                    {
+                        text: serialApi.serialStatus ? "✅ Disconnect Serial Port" : "❌ Connect Serial Port",
+                        handler: () => {
+                            serialApi.serialStatus ? serialApi.disconnect : serialApi.connect();
+                        },
+                    },
+                ],
+            },
             {
                 label: "View",
                 options: [

@@ -31,7 +31,7 @@ const baseConverter = (fromBase, toBase, value) => {
     return toValue;
 }
 
-export default function useEditor() {
+export default function useEditor({ configApi }) {
 
     const [activeEditorNode, setActiveEditorNode] = useState(null);
     const [editorAction, setEditorAction] = useState(null);
@@ -140,6 +140,22 @@ export default function useEditor() {
         editor.getSelection().setSelectionRange(newRange, false);
     };
 
+    const changeSettings = function (type) {
+        if (type === 'font-size-increase') {
+            const actualValue = configApi.getConfigField('editor', 'font');
+            if (actualValue < 48) {
+                configApi.setConfigField('editor', 'font', actualValue + 1);
+            }
+
+        } else if (type === 'font-size-decrease') {
+            const actualValue = configApi.getConfigField('editor', 'font');
+            if (actualValue > 6) {
+                configApi.setConfigField('editor', 'font', actualValue - 1);
+            }
+
+        }
+    }
+
     return {
         activeEditorNode,
         applyTransform,
@@ -147,5 +163,6 @@ export default function useEditor() {
         setActiveEditorNode,
         setEditorAction,
         transformText,
+        changeSettings,
     };
 }

@@ -34,7 +34,7 @@ export default function useConfig({ schemas }) {
         setLocalStorageState(schema_name, config_values);
     }
 
-    function setConfig_field(schema_name, field_name, field_value) {
+    function setConfigField(schema_name, field_name, field_value) {
         const config = getConfig(schema_name);
         if (field_name in config) {
             if (typeof field_value !== typeof config[field_name]) {
@@ -49,6 +49,11 @@ export default function useConfig({ schemas }) {
         } else {
             console.error(`no field called ${field_name} in config schema ${schema_name}`);
         }
+    }
+
+    function getConfigField(schema_name, field_name) {
+        const config = getConfig(schema_name);
+        return field_name in config ? config[field_name] : null;
     }
 
     useEffect(() => {
@@ -69,13 +74,14 @@ export default function useConfig({ schemas }) {
     }, [initStep]);
 
     function setTheme(theme) {
-        setConfig_field('global', 'theme', theme);
+        setConfigField('global', 'theme', theme);
     }
 
     return {
         config: localStorageState,
         setConfig,
-        setConfig_field,
+        setConfigField,
+        getConfigField,
         ready: initStep < 0,
         schemas,
         setTheme,

@@ -5,21 +5,24 @@
         "handler": ["fsApi.openRootDirectory"],
         "dependency": ["!folder-opened"]
     },
-
+    {
+        "cmdId": "folder-close",
+        "label": "Folder View: Close Circuit Python Drive",
+        "handler": ["fsApi.closeRootDirectory"],
+        "dependency": ["folder-opened"]
+    },
     {
         "cmdId": "folder-reload",
         "label": "Folder View: Reload folder",
         "handler": ["fsApi.folderReload"],
         "dependency": ["folder-opened"]
     },
-
     {
         "cmdId": "folder-new-file",
         "label": "Folder View: New File",
         "handler": ["fsApi.initNewFile"],
         "dependency": ["folder-opened"]
     },
-
     {
         "cmdId": "folder-new-folder",
         "label": "Folder View: New Folder",
@@ -37,6 +40,18 @@
         "label": "Serial Console: Disconnect from serial port",
         "handler": ["serialApi.disconnect"],
         "dependency": ["serial-connected"]
+    },
+    {
+        "cmdId": "console-font-size-increase",
+        "label": "Serial Console: Increase Font Size",
+        "handler": ["serialApi.changeSettings", "font-size-increase"],
+        "dependency": []
+    },
+    {
+        "cmdId": "console-font-size-decrease",
+        "label": "Serial Console: Decrease Font Size",
+        "handler": ["serialApi.changeSettings", "font-size-decrease"],
+        "dependency": []
     },
     {
         "cmdId": "serial-clear",
@@ -168,6 +183,18 @@
         "label": "Convert Binary to Hexadecimal",
         "short": "bin2hex",
         "handler": ["editorApi.transformText", "convert-bin-to-hex"],
+        "dependency": []
+    },
+    {
+        "cmdId": "editor-font-size-increase",
+        "label": "Editor: Increase Font Size",
+        "handler": ["editorApi.changeSettings", "font-size-increase"],
+        "dependency": []
+    },
+    {
+        "cmdId": "editor-font-size-decrease",
+        "label": "Editor: Decrease Font Size",
+        "handler": ["editorApi.changeSettings", "font-size-decrease"],
         "dependency": []
     }
 ]

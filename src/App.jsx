@@ -94,7 +94,7 @@ function App() {
 
     const statesApi = useGlobalStates();
     const configApi = useConfig({ schemas, statesApi });
-    const editorApi = useEditor({ statesApi });
+    const editorApi = useEditor({ configApi, statesApi });
     const fsApi = useFileSystem({ statesApi });
     const serialApi = useSerial({ configApi, statesApi });
     const tabsApi = useTabs({ flexModel, fsApi, statesApi });

@@ -6,7 +6,7 @@ import SerialCommunication from "../utils/serial";
 
 const serial = new SerialCommunication();
 
-export default function useSerial({ statesApi }) {
+export default function useSerial({ statesApi, configApi }) {
 
     const [serialStatus, setSerialStatus] = useState(false);
     const [connectionState, setConnectionState] = useState("Not connected");
@@ -77,6 +77,22 @@ export default function useSerial({ statesApi }) {
         });
     };
 
+    const changeSettings = function (type) {
+        if (type === 'font-size-increase') {
+            const actualValue = configApi.getConfigField('serial_console', 'font_size');
+            if (actualValue < 48) {
+                configApi.setConfigField('serial_console', 'font_size', actualValue + 1);
+            }
+
+        } else if (type === 'font-size-decrease') {
+            const actualValue = configApi.getConfigField('serial_console', 'font_size');
+            if (actualValue > 6) {
+                configApi.setConfigField('serial_console', 'font_size', actualValue - 1);
+            }
+
+        }
+    }
+
     return {
         clearTerminal,
         connect,
@@ -89,5 +105,6 @@ export default function useSerial({ statesApi }) {
         setOnConnect,
         onConnect,
         setTerminal,
+        changeSettings,
     };
 }

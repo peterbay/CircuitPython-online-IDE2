@@ -79,6 +79,13 @@ export default function useFileSystem({ statesApi }) {
         }
     }
 
+    async function closeRootDirectory() {
+        setRootDirHandle(null);
+        setCurrentFolderHandle(null);
+        setFolderContent([]);
+        setPath([]);
+    }
+
     async function folderOpen(folderHandle) {
         setCurrentFolderHandle(folderHandle);
         setFolderContent(await folderGetContent(folderHandle, true));
@@ -150,6 +157,7 @@ export default function useFileSystem({ statesApi }) {
         folderReload,
         fsAction,
         openRootDirectory,
+        closeRootDirectory,
         path,
         rootDirHandle,
         setActiveFileFullPath,

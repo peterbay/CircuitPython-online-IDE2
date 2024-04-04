@@ -181,7 +181,7 @@ export default function CommandPaletteDialog() {
                                 },
                                 sx: {
                                     '& li.Mui-focused': {
-                                        backgroundColor: '#6080bb !important',
+                                        backgroundColor: 'rgb(21, 101, 192) !important',
                                         color: 'white !important',
                                     }
                                 },
@@ -194,6 +194,10 @@ export default function CommandPaletteDialog() {
                                 display: 'flex',
                                 justifyContent: 'space-between',
                                 alignItems: 'center',
+                                fontSize: '15px',
+                                paddingTop: '3px',
+                                paddingBottom: '3px',
+                                fontWeight: 400,
                             };
                             props.key = `${option.used ? 'used' : 'not-used'}-${option.cmdId}`;
                             return (
@@ -205,8 +209,8 @@ export default function CommandPaletteDialog() {
                                         {option.label}
                                     </span>
                                     <span style={{ float: 'right', fontSize: '12px' }}>
-                                        {option.recentlyUsed && '(recently used)'}
-                                        {option.others && '(other commands)'}
+                                        {option.recentlyUsed && 'recently used'}
+                                        {option.others && 'other commands'}
                                     </span>
                                 </li>
                             );
