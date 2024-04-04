@@ -38,14 +38,8 @@ export default function useConfig({ schemas }) {
         const config = getConfig(schema_name);
         if (field_name in config) {
             if (typeof field_value !== typeof config[field_name]) {
-                console.error(
-                    'given value ' +
-                        field_value +
-                        ' has a different type from config schema. Given: ' +
-                        typeof field_value +
-                        ', required: ' +
-                        typeof config[field_name]
-                );
+                console.error(`given value ${field_value} has a different type from config schema. Given: ` +
+                    `${typeof field_value} , required: ${typeof config[field_name]}`);
             } else {
                 setConfig(schema_name, {
                     ...config,
@@ -53,7 +47,7 @@ export default function useConfig({ schemas }) {
                 });
             }
         } else {
-            console.error('no field called ' + field_name + ' in config schema ' + schema_name);
+            console.error(`no field called ${field_name} in config schema ${schema_name}`);
         }
     }
 
@@ -74,11 +68,16 @@ export default function useConfig({ schemas }) {
         }
     }, [initStep]);
 
+    function setTheme(theme) {
+        setConfig_field('global', 'theme', theme);
+    }
+
     return {
         config: localStorageState,
         setConfig,
         setConfig_field,
         ready: initStep < 0,
         schemas,
+        setTheme,
     };
 }

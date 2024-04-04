@@ -3,6 +3,7 @@ import get from "lodash/get";
 import every from "lodash/every";
 import sortBy from "lodash/sortBy";
 import commandPaletteEntries from "../settings/commandPaletteEntries.json";
+import themes from '../settings/themesSettings';
 
 export default function usePalette({ statesApi }) {
     const [paletteEntries, setPaletteEntries] = useState([]);
@@ -10,7 +11,7 @@ export default function usePalette({ statesApi }) {
     const [usedPaletteList, setUsedPaletteList] = useState([]);
     const [open, setOpen] = useState(false);
 
-    const preparePaletteEntries = useCallback (() => {
+    const preparePaletteEntries = useCallback(() => {
         const entries = paletteEntries.filter((entry) => {
             if (entry.dependency) {
                 return every(entry.dependency, (dep) => {
@@ -79,6 +80,15 @@ export default function usePalette({ statesApi }) {
     function registerCommandPaletteEntries() {
         commandPaletteEntries.forEach((entry) => {
             addPaletteEntry(entry);
+        });
+
+        themes.themes.forEach((theme) => {
+            addPaletteEntry({
+                cmdId: `theme-${theme.name}`,
+                label: `Theme - ${theme.label}`,
+                handler: ["configApi.setTheme", theme.label],
+                dependency: [],
+            });
         });
     }
 
