@@ -48,6 +48,7 @@ import "ace-builds/src-noconflict/theme-twilight";
 
 import {
     Save as SaveIcon,
+    Preview as PreviewIcon,
 } from "@mui/icons-material";
 
 import {
@@ -56,6 +57,7 @@ import {
     Toolbar,
 } from "@mui/material";
 
+import MarkdownExtended from "./MarkdownExtended";
 import ToolbarEntry from "./ToolbarEntry";
 import TooltipIconButton from "./TooltipIconButton";
 import { fileReadText, fileWriteText } from "../utils/fsUtils";
@@ -66,36 +68,47 @@ const editorModes = {
     py: {
         mode: "python",
         label: "Python",
+        enablePreview: false,
     },
     md: {
         mode: "markdown",
         label: "Markdown",
+        enablePreview: true,
     },
     json: {
         mode: "json",
         label: "JSON",
+        enablePreview: false,
+    },
+    htm: {
+        mode: "html",
+        label: "HTML",
+        enablePreview: true,
     },
     html: {
         mode: "html",
         label: "HTML",
+        enablePreview: true,
     },
     toml: {
         mode: "toml",
         label: "TOML",
+        enablePreview: false,
     },
 };
 
 const defaultEditorMode = {
     mode: "text",
     label: "Text",
+    enablePreview: false,
 };
 
 export default function Editor({ fileHandle, node, isNewFile }) {
     const { fsApi, configApi, themeApi, tabsApi, editorApi, paletteApi } = useContext(IdeContext);
     const aceEditorRef = useRef(null);
 
-    const [nodeId, ] = useState(node.getId());
-    const [nodeModel, ] = useState(node.getModel());
+    const [nodeId,] = useState(node.getId());
+    const [nodeModel,] = useState(node.getModel());
     const [configNewLine, setConfigNewLine] = useState(false);
     const [configWordWrap, setConfigWordWrap] = useState(false);
     const [editorCursorInfo, setEditorCursorInfo] = useState(false);
@@ -110,6 +123,8 @@ export default function Editor({ fileHandle, node, isNewFile }) {
     const [editorMode, setEditorMode] = useState("text");
     const [editorModeLabel, setEditorModeLabel] = useState("Text");
     const [stateInfo, setStateInfo] = useState("Saved");
+    const [showPreview, setShowPreview] = useState(false);
+    const [enablePreview, setEnablePreview] = useState(false);
     const height = node.getRect().height;
 
     useEffect(() => {
@@ -119,8 +134,13 @@ export default function Editor({ fileHandle, node, isNewFile }) {
         const fileNameLower = fileHandle.name.toLowerCase();
         const extensionMatch = fileNameLower.match(/\.([^.]+)$/);
         const extension = extensionMatch ? extensionMatch[1] : "";
-        setEditorMode((editorModes[extension] || defaultEditorMode).mode);
-        setEditorModeLabel((editorModes[extension] || defaultEditorMode).label);
+        const editorMode = editorModes[extension] || defaultEditorMode;
+        setEditorMode(editorMode.mode);
+        setEditorModeLabel(editorMode.label);
+        if (editorMode.enablePreview) {
+            setEnablePreview(true);
+            setShowPreview(true);
+        }
     }, [fileHandle]);
 
     useEffect(() => {
@@ -303,25 +323,56 @@ export default function Editor({ fileHandle, node, isNewFile }) {
 
     return (
         <>
-            <Box sx={{ flexGrow: 1, height: "calc(" + height + "px - 38px)" }}>
-                {fileIsLoaded && (
-                    <AceEditor
-                        ref={aceEditorRef}
-                        mode={editorMode}
-                        useSoftTabs={configApi.config.editor.use_soft_tabs}
-                        wrapEnabled={true}
-                        tabSize={configApi.config.editor.tab_size}
-                        theme={themeApi.themeName}
-                        value={text}
-                        height="100%"
-                        width="100%"
-                        onChange={onEditorChange}
-                        onLoad={onEditorLoad}
-                        fontSize={configApi.config.editor.font + "pt"}
-                        setOptions={editorOptions}
-                        readOnly={fileHandle.isReadOnly || false}
-                        onCursorChange={onEditorCursorChange}
-                    />
+            <Box sx={{
+                flexGrow: 1,
+                flexDirection: 'row',
+                display: 'flex',
+                height: "calc(" + height + "px - 38px)"
+            }}>
+                <Box sx={{
+                    height: "100%",
+                    width: showPreview ? "50% !important" : "100% !important",
+                    maxWidth: showPreview ? "50% !important" : "100% !important",
+                    minWidth: showPreview ? "50% !important" : "100% !important"
+                }}>
+                    {fileIsLoaded && (
+                        <AceEditor
+                            ref={aceEditorRef}
+                            mode={editorMode}
+                            useSoftTabs={configApi.config.editor.use_soft_tabs}
+                            wrapEnabled={true}
+                            tabSize={configApi.config.editor.tab_size}
+                            theme={themeApi.themeName}
+                            value={text}
+                            height="100%"
+                            width="100%"
+                            onChange={onEditorChange}
+                            onLoad={onEditorLoad}
+                            fontSize={configApi.config.editor.font + "pt"}
+                            setOptions={editorOptions}
+                            readOnly={fileHandle.isReadOnly || false}
+                            onCursorChange={onEditorCursorChange}
+                        />
+                    )}
+                </Box>
+                {enablePreview && showPreview && (
+                    <Box
+                        sx={{
+                            height: "calc(" + height + "px - 38px)",
+                            maxHeight: "calc(" + height + "px - 38px)",
+                            width: showPreview ? "50% !important" : "100% !important",
+                            maxWidth: showPreview ? "50% !important" : "100% !important",
+                            minWidth: showPreview ? "50% !important" : "100% !important",
+                            overflow: "auto"
+                        }}
+                    >
+                        {editorMode === "markdown" && (
+                            <MarkdownExtended>{text}</MarkdownExtended>
+                        )}
+                        {editorMode === "html" && (
+                            <div dangerouslySetInnerHTML={{ __html: text }} />
+                        )}
+                    </Box>
                 )}
             </Box>
             <Box sx={{ flexGrow: 0, maxHeight: "35px" }}>
@@ -339,9 +390,16 @@ export default function Editor({ fileHandle, node, isNewFile }) {
 
                     <TooltipIconButton
                         id="editor-save"
+                        title="Preview"
+                        icon={PreviewIcon}
+                        onClick={() => setShowPreview(!showPreview)}
+                    />
+
+                    <TooltipIconButton
+                        id="editor-save"
                         title="Save and Run"
                         icon={SaveIcon}
-                        onClick={() => saveFile(text)()}
+                        onClick={() => saveFile(text)}
                     />
                 </Toolbar>
             </Box>

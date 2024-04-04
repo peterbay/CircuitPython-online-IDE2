@@ -1,4 +1,4 @@
-import filesSettings from "../settings/filesSettings";
+import filesSettings from '../settings/filesSettings';
 
 /* file manipulation functions */
 
@@ -59,14 +59,14 @@ const extendEntryOtions = function (entryHandle) {
     const extension = matchExtension ? matchExtension[1].toLowerCase() : null;
     const fileOptions = (extension && filesSettings.extension[extension]) || filesSettings.default;
 
-    entryHandle.label = (entryHandle.name === '\\') ? 'ROOT' : entryHandle.name;
-    entryHandle.extension = extension
-    entryHandle.isFolder = (entryHandle.kind === 'directory');
+    entryHandle.label = entryHandle.name === '\\' ? 'ROOT' : entryHandle.name;
+    entryHandle.extension = extension;
+    entryHandle.isFolder = entryHandle.kind === 'directory';
     entryHandle.isBinary = fileOptions.isBinary;
     entryHandle.canRun = fileOptions.canRun;
     entryHandle.class = fileOptions.class;
     entryHandle.isReadOnly = fileOptions.isBinary;
-}
+};
 
 const folderGetContent = async function (folderHandle, withParent = false) {
     const layer = [];

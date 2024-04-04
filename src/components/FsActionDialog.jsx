@@ -28,8 +28,6 @@ export default function FsActionDialog() {
     const { flexModel, fsApi, tabsApi } = useContext(IdeContext);
 
     const [dialogOpen, setDialogOpen] = useState(false);
-    const [entryHandle, setEntryHandle] = useState(false);
-    const [parentEntryHandle, setParentEntryHandle] = useState(false);
     const [originalEntryName, setOriginalEntryName] = useState("");
     const [newEntryName, setNewEntryName] = useState("");
     const [newEntryNameNeeded, setNewEntryNameNeeded] = useState(false);
@@ -41,9 +39,6 @@ export default function FsActionDialog() {
             const action = fsApi.fsAction.action;
             const entryHandle = fsApi.fsAction?.entryHandle;
             const parentEntryHandle = fsApi.fsAction?.parentEntryHandle || entryHandle?.parent;
-
-            setEntryHandle(entryHandle);
-            setParentEntryHandle(parentEntryHandle);
 
             if (["rename", "duplicate", "new_file", "new_folder"].includes(action)) {
                 setNewEntryNameNeeded(true);
@@ -82,6 +77,9 @@ export default function FsActionDialog() {
         if (!dialogOpen || !action) {
             return;
         }
+
+        const entryHandle = fsApi.fsAction?.entryHandle;
+        const parentEntryHandle = fsApi.fsAction?.parentEntryHandle || entryHandle?.parent;
 
         if (state === "confirm" && (entryHandle || parentEntryHandle)) {
 
