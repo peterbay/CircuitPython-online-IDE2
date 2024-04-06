@@ -7,6 +7,7 @@ import ConfigForms from "../components/ConfigForms";
 import Converters from "./Converters";
 import Dashboard from "./Dashboard";
 import Editor from "./Editor";
+import ImageViewer from "./ImageViewer";
 import FileCloseDialog from "./FileCloseDialog.jsx";
 import FsActionDialog from "./FsActionDialog";
 import IdeContext from "../contexts/IdeContext";
@@ -32,12 +33,24 @@ export default function IdeBody() {
         // main ones
         if (component === "editor") {
             const config = node.getConfig();
-            tabContent = fsApi.fileLookUp[config.fullPath] ?
-                <Editor
-                    fileHandle={fsApi.fileLookUp[config.fullPath]?.fileHandle}
-                    node={node}
-                    isNewFile={config.isNewFile}
-                /> : null;
+            const extension = config?.fullPath?.split('.')?.pop()?.toLowerCase();
+
+            if (fsApi.fileLookUp[config.fullPath]) {
+                if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg'].includes(extension)) {
+                    tabContent = <ImageViewer
+                        fileHandle={fsApi.fileLookUp[config.fullPath]?.fileHandle}
+                        node={node}
+                    />;
+
+                } else {
+                    tabContent = <Editor
+                        fileHandle={fsApi.fileLookUp[config.fullPath]?.fileHandle}
+                        node={node}
+                        isNewFile={config.isNewFile}
+                    />
+
+                }
+            }
 
         } else if (component === "folder_view") {
             tabContent = <IdeFolderView />;

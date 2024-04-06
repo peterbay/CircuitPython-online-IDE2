@@ -37,6 +37,7 @@
     "react-dom": "^18.2.0",
     "react-grid-layout": "^1.4.4",
     "react-hotkeys-hook": "^4.5.0",
+    "react-image-pan-zoom-rotate": "^1.6.0",
     "react-markdown": "^9.0.1",
     "remark-gfm": "^4.0.0",
     "rxjs": "^7.8.1",
