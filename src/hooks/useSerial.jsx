@@ -77,6 +77,25 @@ export default function useSerial({ statesApi, configApi }) {
         });
     };
 
+    const sendText = function (text) {
+        if (!serialStatus) {
+            return;
+        }
+
+        if (text.trim().length === 0) {
+            return;
+        }
+
+        let serialText = text.replace(/(\r\n|\n|\r)/g, "\r\n")
+            .trim();
+
+        if (!serialText.endsWith("\r\n")) {
+            serialText += "\r\n";
+        }
+
+        serial.write(serialText);
+    };
+
     const changeSettings = function (type) {
         if (type === 'font-size-increase') {
             const actualValue = configApi.getConfigField('serial_console', 'font_size');
@@ -100,6 +119,7 @@ export default function useSerial({ statesApi, configApi }) {
         disconnect,
         sendKey,
         sendKeys,
+        sendText,
         serial,
         serialStatus,
         setOnConnect,

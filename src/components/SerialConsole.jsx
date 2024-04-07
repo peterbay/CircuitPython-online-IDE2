@@ -5,11 +5,23 @@ import {
     useRef,
     useState,
 } from "react";
+import {
+    IconButton,
+    Tooltip,
+} from "@mui/material";
+
+import {
+    TerminalOutlined as SendToTerminalIcon,
+} from '@mui/icons-material/';
 
 import { Terminal } from 'xterm';
 import { FitAddon } from 'xterm-addon-fit';
-
 import 'xterm/css/xterm.css';
+import AceEditor from "react-ace";
+import "ace-builds/src-min-noconflict/ext-searchbox";
+import "ace-builds/src-min-noconflict/ext-language_tools";
+import "ace-builds/src-noconflict/theme-tomorrow_night_bright";
+import useEditorOptions from "../hooks/useEditorOptions";
 
 import {
     Box,
@@ -20,10 +32,9 @@ import {
 import {
     Cancel as CancelIcon,
     DeleteForever as DeleteForeverIcon,
-    Link as LinkIcon,
-    LinkOff as LinkOffIcon,
     Refresh as RefreshIcon,
     Usb as UsbIcon,
+    BorderColor as EditorIcon,
 } from '@mui/icons-material';
 
 import ToolbarEntry from "./ToolbarEntry";
@@ -32,14 +43,18 @@ import TooltipIconButton from "./TooltipIconButton";
 import IdeContext from "../contexts/IdeContext";
 
 export default function SerialConsole({ node }) {
-    const { configApi, dashboardApi, serialApi, paletteApi } = useContext(IdeContext);
-    const terminalBox = useRef(null);
+    const { configApi, serialApi, paletteApi } = useContext(IdeContext);
+    const editorOptions = useEditorOptions({ configApi, isNewFile: false });
 
-    const [linked, setLinked] = useState(true);
+    const terminalBox = useRef(null);
 
     const terminalRef = useRef(null);
     const terminal = useRef(null);
     const fitAddon = useRef(new FitAddon());
+    const terminalEditorBoxRef = useRef(null);
+    const terminalEditorRef = useRef(null);
+    const [terminalEditorValue, setTerminalEditorValue] = useState("");
+    const [showEditor, setShowEditor] = useState(false);
 
     if (!navigator.serial) {
         console.warn("Web Serial API not supported");
@@ -47,9 +62,6 @@ export default function SerialConsole({ node }) {
 
     const readerCallback = function (data) {
         terminal.current.write(data);
-        if (linked) {
-            dashboardApi.processLine(data);
-        }
     }.bind(this);
 
     useEffect(() => {
@@ -79,8 +91,8 @@ export default function SerialConsole({ node }) {
         }
     }, [serialApi, configApi.config.serial_console.font_size, paletteApi]);
 
-    const linkToggle = function () {
-        setLinked(!linked);
+    const editorToggle = function () {
+        setShowEditor(!showEditor);
     }
 
     const height = node.getRect().height;
@@ -90,15 +102,18 @@ export default function SerialConsole({ node }) {
         if (!serialApi.serial) {
             return;
         }
-        if (linked) {
-            serialApi.serial.setReaderCallback(readerCallback);
-        } else {
-            serialApi.serial.setReaderCallback(null);
-        }
+        serialApi.serial.registerReaderCallback('terminal', readerCallback);
         return () => {
-            serialApi.serial.setReaderCallback(null);
+            serialApi.serial.unregisterReaderCallback('terminal');
         }
-    }, [linked, readerCallback, serialApi.serial]);
+    }, [readerCallback, serialApi.serial]);
+
+    useEffect(() => {
+        if (!terminal.current) {
+            return;
+        }
+        fitAddon.current.fit();
+    }, [showEditor]);
 
     useEffect(() => {
         if (!terminal.current) {
@@ -115,6 +130,18 @@ export default function SerialConsole({ node }) {
         fitAddon.current.fit();
     }, [height, width]);
 
+    if (terminalEditorRef.current !== null) {
+        const commands = terminalEditorRef.current.editor.commands;
+        // add key bindings
+        commands.addCommand({
+            name: "execute",
+            bindKey: { win: "Ctrl-Enter", mac: "Command-Enter" },
+            exec: () => {
+                serialApi.sendText(terminalEditorValue);
+            },
+        });
+    }
+
     return (
         <>
             <Box sx={{ flexGrow: 0, maxHeight: "35px" }}>
@@ -127,12 +154,12 @@ export default function SerialConsole({ node }) {
                     <ToolbarEntry>Serial console: {serialApi.connectionState}</ToolbarEntry>
 
                     <TooltipIconButton
-                        id="link-dashboard"
-                        title={linked ? "Unlink dashboard from serial console"
-                            : "Link dashboard to serial console"}
-                        icon={linked ? LinkIcon : LinkOffIcon}
-                        disabled={!serialApi.serialStatus}
-                        onClick={() => linkToggle()}
+                        id="showEditor"
+                        title={showEditor ? "Hide editor for serial console"
+                            : "Show editor for serial console"}
+                        icon={EditorIcon}
+                        disabled={false}
+                        onClick={() => editorToggle()}
                     />
 
                     <TooltipIconButton
@@ -171,15 +198,79 @@ export default function SerialConsole({ node }) {
             <Box ref={terminalBox} sx={{
                 flexGrow: 1,
                 width: width + 'px',
-                height: "calc(" + height + "px - 36px)",
+                height: height - 36 - (showEditor ? 204 : 0) + "px",
                 background: 'black',
             }}>
                 <div ref={terminalRef} style={{
                     marginLeft: "10px",
                     width: (width - 10) + 'px',
-                    height: "calc(" + height + "px - 36px)"
+                    height: height - 36 - (showEditor ? 204 : 0) + "px"
                 }} />
             </Box>
+            {showEditor &&
+                <>
+                    <Divider
+                        sx={{
+                            borderTop: '2px solid #333',
+                        }}
+                    />
+                    <Box sx={{
+                        flexGrow: 1,
+                        flexDirection: 'row',
+                        display: 'flex',
+                        height: "200px",
+                    }}>
+
+                        <Box ref={terminalEditorBoxRef} sx={{
+                            flexGrow: 1,
+                            width: (width - 80) + 'px',
+                            height: "200px",
+                            background: 'black',
+                        }}>
+                            <AceEditor
+                                ref={terminalEditorRef}
+                                mode="python"
+                                useSoftTabs={configApi.config.editor.use_soft_tabs}
+                                wrapEnabled={true}
+                                tabSize={configApi.config.editor.tab_size}
+                                theme="tomorrow_night_bright"
+                                value={terminalEditorValue}
+                                height="100%"
+                                width="100%"
+                                onChange={(value) => setTerminalEditorValue(value)}
+                                fontSize={configApi.config.editor.font + "pt"}
+                                setOptions={editorOptions.editorOptions}
+                            />
+                        </Box>
+                        <Box sx={{
+                            flexGrow: 1,
+                            width: 50 + 'px',
+                            height: "200px",
+                            background: 'black',
+                        }}>
+                            <Tooltip
+                                key="send-to-terminal"
+                                id="send-to-terminal"
+                                title="Send text to terminal (Ctrl + Enter)"
+                            >
+                                <IconButton
+                                    edge="start"
+                                    size="small"
+                                    style={{ borderRadius: 0 }}
+                                    onClick={() => serialApi.sendText(terminalEditorValue)}
+                                    disabled={!serialApi.serialStatus}
+                                    sx={{
+                                        width: '100%',
+                                        height: '100%',
+                                    }}
+                                >
+                                    <SendToTerminalIcon />
+                                </IconButton>
+                            </Tooltip>
+                        </Box>
+                    </Box>
+                </>
+            }
         </>
     );
 }

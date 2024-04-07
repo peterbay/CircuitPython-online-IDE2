@@ -10,6 +10,8 @@ import {
     DeleteForever as DeleteForeverIcon,
     Lock as LockIcon,
     LockOpen as LockOpenIcon,
+    Link as LinkIcon,
+    LinkOff as LinkOffIcon,
 } from '@mui/icons-material';
 import widgetsContext from "../contexts/WidgetsContext";
 import ToolbarEntry from "./ToolbarEntry";
@@ -17,14 +19,21 @@ import TooltipIconButton from "./TooltipIconButton";
 import IdeContext from "../contexts/IdeContext";
 
 export default function Dashboard({ node }) {
-    const { dashboardApi, themeApi } = useContext(IdeContext);
+    const { dashboardApi, themeApi, serialApi } = useContext(IdeContext);
     const parentHeight = node.getRect().height;
     const parentWidth = node.getRect().width;
 
     const [layout, setLayout] = useState(dashboardApi.dashboardLayout);
     const [locked, setLocked] = useState(true);
+    const [linked, setLinked] = useState(true);
 
     const rowHeight = 40;
+
+    const readerCallback = function (data) {
+        if (linked) {
+            dashboardApi.processLine(data);
+        }
+    }.bind(this);
 
     useEffect(() => {
         if (!dashboardApi.dashboardLayout.length) {
@@ -34,6 +43,24 @@ export default function Dashboard({ node }) {
 
         setLayout(dashboardApi.dashboardLayout);
     }, [dashboardApi.dashboardLayout]);
+
+    useEffect(() => {
+        if (!serialApi.serial) {
+            return;
+        }
+        if (linked) {
+            serialApi.serial.registerReaderCallback('dashboard', readerCallback);
+        } else {
+            serialApi.serial.unregisterReaderCallback('dashboard');
+        }
+        return () => {
+            serialApi.serial.unregisterReaderCallback('dashboard');
+        }
+    }, [linked, readerCallback, serialApi.serial]);
+
+    const linkToggle = function () {
+        setLinked(!linked);
+    }
 
     const updateLayout = (layout) => {
         layout.forEach((item) => {
@@ -65,6 +92,15 @@ export default function Dashboard({ node }) {
                         sx={{ minHeight: "35px", maxHeight: "35px" }}
                     >
                         <ToolbarEntry>Dashboard</ToolbarEntry>
+
+                        <TooltipIconButton
+                            id="link-dashboard"
+                            title={linked ? "Unlink dashboard from serial console"
+                                : "Link dashboard to serial console"}
+                            icon={linked ? LinkIcon : LinkOffIcon}
+                            disabled={!serialApi.serialStatus}
+                            onClick={() => linkToggle()}
+                        />
 
                         <TooltipIconButton
                             id="clear-dashboard"

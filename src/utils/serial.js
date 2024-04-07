@@ -5,6 +5,7 @@ export default class SerialCommunication {
         this.writer = null;
         this.keepRunning = true;
         this.writeBuffer = [];
+        this.readerCallbacks = {};
     }
 
     async open(portOptions) {
@@ -53,8 +54,12 @@ export default class SerialCommunication {
         }
     }
 
-    setReaderCallback(callback) {
-        this.readerCallback = callback;
+    registerReaderCallback(id, callback) {
+        this.readerCallbacks[id] = callback;
+    }
+
+    unregisterReaderCallback(id) {
+        delete this.readerCallbacks[id];
     }
 
     write(data) {
@@ -70,8 +75,9 @@ export default class SerialCommunication {
                 if (done || !this.keepRunning) {
                     break;
                 }
-                if (this.readerCallback) {
-                    this.readerCallback(decoder.decode(value));
+                const decoded = decoder.decode(value);
+                for (const id in this.readerCallbacks) {
+                    this.readerCallbacks[id](decoded);
                 }
             } catch (error) {
                 console.error('Error reading from serial port:', error);

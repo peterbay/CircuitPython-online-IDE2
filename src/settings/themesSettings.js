@@ -10,12 +10,6 @@ const themes = {
             type: 'system',
         },
         {
-            name: 'ambiance',
-            label: 'Ambiance (dark)',
-            class: 'dark-lighter',
-            type: 'dark',
-        },
-        {
             name: 'chaos',
             label: 'Chaos (dark)',
             class: 'dark-darker',
