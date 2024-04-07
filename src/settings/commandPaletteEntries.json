@@ -1,5 +1,17 @@
 [
     {
+        "cmdId": "folder-show",
+        "label": "Show: Folder View",
+        "handler": ["tabsApi.tabShow", "folder_view"],
+        "dependency": []
+    },
+    {
+        "cmdId": "folder-hide",
+        "label": "Hide: Folder View",
+        "handler": ["tabsApi.tabHide", "folder_view"],
+        "dependency": []
+    },
+    {
         "cmdId": "folder-open",
         "label": "Folder View: Open Circuit Python Drive",
         "handler": ["fsApi.openRootDirectory"],
@@ -42,6 +54,18 @@
         "dependency": ["serial-connected"]
     },
     {
+        "cmdId": "serial-show",
+        "label": "Show: Serial Console",
+        "handler": ["tabsApi.tabShow", "serial_console"],
+        "dependency": []
+    },
+    {
+        "cmdId": "serial-hide",
+        "label": "Hide: Serial Console",
+        "handler": ["tabsApi.tabHide", "serial_console"],
+        "dependency": []
+    },
+    {
         "cmdId": "console-font-size-increase",
         "label": "Serial Console: Increase Font Size",
         "handler": ["serialApi.changeSettings", "font-size-increase"],
@@ -58,6 +82,54 @@
         "label": "Serial Console: Clear console",
         "handler": ["serialApi.clearTerminal"],
         "dependency": ["serial-initialized"]
+    },
+    {
+        "cmdId": "settings-show",
+        "label": "Show: Settings",
+        "handler": ["tabsApi.tabShow", "settings"],
+        "dependency": []
+    },
+    {
+        "cmdId": "settings-hide",
+        "label": "Hide: Settings",
+        "handler": ["tabsApi.tabHide", "settings"],
+        "dependency": []
+    },
+    {
+        "cmdId": "ascci-table-open",
+        "label": "Open: ASCII table",
+        "handler": ["tabsApi.tabOpen", "ASCII table", "ascii_table"],
+        "dependency": []
+    },
+    {
+        "cmdId": "converters-open",
+        "label": "Open: Converters",
+        "handler": ["tabsApi.tabOpen", "Converters", "converters"],
+        "dependency": []
+    },
+    {
+        "cmdId": "navigation-open",
+        "label": "Open: Navigation",
+        "handler": ["tabsApi.tabOpen", "Navigation", "navigation"],
+        "dependency": []
+    },
+    {
+        "cmdId": "dashboard-open",
+        "label": "Open: Dashboard",
+        "handler": ["tabsApi.tabOpen", "Dashboard", "dashboard"],
+        "dependency": []
+    },
+    {
+        "cmdId": "keyboard-shortcuts-open",
+        "label": "Open: Keyboard shortcuts",
+        "handler": ["tabsApi.tabOpen", "Keyboard shortcuts", "keyboard_shortcuts"],
+        "dependency": []
+    },
+    {
+        "cmdId": "about-open",
+        "label": "Open: About",
+        "handler": ["tabsApi.tabOpen", "About", "about"],
+        "dependency": []
     },
     {
         "cmdId": "transform-uppercase",

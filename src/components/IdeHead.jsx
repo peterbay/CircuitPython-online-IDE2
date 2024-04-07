@@ -31,19 +31,19 @@ export default function IdeHead() {
                     {
                         text: "Folder View",
                         handler: () => {
-                            tabsApi.tabActivate("folder_view");
+                            tabsApi.tabShow("folder_view");
                         },
                     },
                     {
                         text: "Serial Console",
                         handler: () => {
-                            tabsApi.tabActivate("serial_console");
+                            tabsApi.tabShow("serial_console");
                         },
                     },
                     {
                         text: "Settings",
                         handler: () => {
-                            tabsApi.tabActivate("settings");
+                            tabsApi.tabShow("settings");
                         },
                     },
                 ],

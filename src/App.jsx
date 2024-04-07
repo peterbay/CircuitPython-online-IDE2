@@ -178,8 +178,6 @@ function App() {
                     <div className="ide-body">
                         <IdeBody />
                     </div>
-                    <div className="ide-tail">
-                    </div>
                 </div>
             </ThemeProvider>
         </IdeContext.Provider>

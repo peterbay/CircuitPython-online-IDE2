@@ -40,6 +40,11 @@ export default function ApplyContextMenu({ children, items }) {
                     anchorPosition={
                         contextMenu !== null ? { top: contextMenu.mouseY, left: contextMenu.mouseX } : undefined
                     }
+                    MenuListProps={{
+                        style: {
+                            padding: '0px',
+                        },
+                    }}
                 >
                     {items.filter((item) => item.show)
                         .map((item) => {

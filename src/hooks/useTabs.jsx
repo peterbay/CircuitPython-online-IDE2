@@ -53,10 +53,20 @@ export default function useTabs({ flexModel, fsApi }) {
         return tabs;
     }
 
-    async function tabActivate(name) {
+    async function tabShow(name) {
         const nodes = await getTabNodes();
         for (let tabNode of nodes) {
             if (tabNode.getComponent() === name && !tabNode.isVisible()) {
+                flexModel.doAction(FlexLayoutActions.selectTab(tabNode.getId()));
+                return;
+            }
+        }
+    }
+
+    async function tabHide(name) {
+        const nodes = await getTabNodes();
+        for (let tabNode of nodes) {
+            if (tabNode.getComponent() === name && tabNode.isVisible()) {
                 flexModel.doAction(FlexLayoutActions.selectTab(tabNode.getId()));
                 return;
             }
@@ -182,7 +192,28 @@ export default function useTabs({ flexModel, fsApi }) {
         const fullPath = fileHandle.fullPath;
         const tabNodes = await tabsGetByFullPath(fullPath, 'equal');
         for (let node of tabNodes) {
-            if (node && node.getClassName() === "unsaved") {
+            if (node?.getClassName() === "unsaved") {
+                setTabsToClose((prev) => {
+                    return [...prev, node];
+                })
+                return;
+            }
+            fsApi.fileClosed(node);
+            flexModel.doAction(FlexLayoutActions.deleteTab(node.getId()));
+        }
+    }
+
+    async function tabCloseFiles(folderHandle) {
+        const nodes = await getTabNodes();
+        const path = `${folderHandle.fullPath}/`;
+
+        for (let node of nodes) {
+            const config = node.getConfig();
+            if (!config?.fullPath?.startsWith(path)) {
+                continue;
+            }
+
+            if (node?.getClassName() === "unsaved") {
                 setTabsToClose((prev) => {
                     return [...prev, node];
                 })
@@ -194,13 +225,15 @@ export default function useTabs({ flexModel, fsApi }) {
     }
 
     return {
-        tabActivate,
+        tabShow,
+        tabHide,
         tabOpen,
         tabSwitch,
         getActiveEditorTab,
         tabsGetByFullPath,
         tabOpenFile,
         tabCloseFile,
+        tabCloseFiles,
         tabsToClose,
         setTabsToClose,
         tabToClose,

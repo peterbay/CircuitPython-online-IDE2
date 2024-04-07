@@ -121,6 +121,11 @@ export default function TabContextMenu({ tabContextMenu }) {
                 onClose={handleClose}
                 anchorReference="anchorPosition"
                 anchorPosition={contextMenu !== null ? { top: contextMenu.mouseY, left: contextMenu.mouseX } : undefined}
+                MenuListProps={{
+                    style: {
+                        padding: '0px',
+                    },
+                }}
             >
                 {menuItems.map((item) => {
                     return (

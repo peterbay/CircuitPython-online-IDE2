@@ -50,8 +50,8 @@ export default function FsContentEntry({ entryHandle }) {
     const fileClassName = entryHandle.class || "";
 
     useEffect(() => {
-        setIsDraggable(!entryHandle.isParent && !isOpened);
-    }, [entryHandle.isParent, isOpened]);
+        setIsDraggable(!entryHandle.isParent && !isOpened && !hasOpenedFiles);
+    }, [entryHandle.isParent, isOpened, hasOpenedFiles]);
 
     useEffect(() => {
         if (entryHandle.isParent || entryHandle.isFolder) {
@@ -84,6 +84,15 @@ export default function FsContentEntry({ entryHandle }) {
             tooltip: "Close opened file",
         },
         {
+            name: "Close Files",
+            handler: async () => {
+                tabsApi.tabCloseFiles(entryHandle);
+            },
+            show: (entryHandle.isFolder && hasOpenedFiles),
+            disabled: false,
+            tooltip: "Close opened files",
+        },
+        {
             name: entryHandle.isFolder ? "Rename Folder" : "Rename File",
             handler: async () => {
                 fsApi.setFsAction({
@@ -92,7 +101,7 @@ export default function FsContentEntry({ entryHandle }) {
                 });
             },
             show: (!entryHandle.isParent),
-            disabled: isOpened,
+            disabled: (isOpened || hasOpenedFiles),
             tooltip: "Rename file or folder",
         },
         {
@@ -115,7 +124,7 @@ export default function FsContentEntry({ entryHandle }) {
                 });
             },
             show: (!entryHandle.isParent),
-            disabled: isOpened,
+            disabled: (isOpened || hasOpenedFiles),
         },
     ];
 
