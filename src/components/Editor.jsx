@@ -28,7 +28,6 @@ import "ace-builds/src-noconflict/theme-tomorrow";
 import "ace-builds/src-noconflict/theme-xcode";
 
 // dark themes
-import "ace-builds/src-noconflict/theme-ambiance";
 import "ace-builds/src-noconflict/theme-chaos";
 import "ace-builds/src-noconflict/theme-cloud9_night";
 import "ace-builds/src-noconflict/theme-cobalt";
