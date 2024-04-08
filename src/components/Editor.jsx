@@ -48,6 +48,7 @@ import "ace-builds/src-noconflict/theme-twilight";
 import {
     Save as SaveIcon,
     Preview as PreviewIcon,
+    Download as DownloadIcon,
 } from "@mui/icons-material";
 
 import {
@@ -59,7 +60,7 @@ import {
 import MarkdownExtended from "./MarkdownExtended";
 import ToolbarEntry from "./ToolbarEntry";
 import TooltipIconButton from "./TooltipIconButton";
-import { fileReadText, fileWriteText } from "../utils/fsUtils";
+import { fileReadText, fileWriteText, fileDownload } from "../utils/fsUtils";
 import IdeContext from "../contexts/IdeContext";
 import { Actions as FlexLayoutActions } from "flexlayout-react";
 import useEditorOptions from "../hooks/useEditorOptions";
@@ -359,6 +360,13 @@ export default function Editor({ fileHandle, node, isNewFile }) {
                         title="Preview"
                         icon={PreviewIcon}
                         onClick={() => setShowPreview(!showPreview)}
+                    />
+
+                    <TooltipIconButton
+                        id="file-download"
+                        title="Download"
+                        icon={DownloadIcon}
+                        onClick={() => fileDownload(fileHandle)}
                     />
 
                     <TooltipIconButton

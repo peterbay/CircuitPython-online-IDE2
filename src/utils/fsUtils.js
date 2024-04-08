@@ -1,3 +1,4 @@
+import FileSaver from "file-saver";
 import filesSettings from '../settings/filesSettings';
 
 /* file manipulation functions */
@@ -37,6 +38,11 @@ const fileWriteUploaded = async function (currentFolder, file) {
     const writable = await fileHandle.createWritable();
     await writable.write(file);
     await writable.close();
+};
+
+const fileDownload = async function (fileHandle) {
+    const file = await fileHandle.getFile();
+    FileSaver.saveAs(file, fileHandle.name);
 };
 
 /* folder manipulation functions */
@@ -245,6 +251,7 @@ export {
     fileReadText,
     fileWriteText,
     fileWriteUploaded,
+    fileDownload,
     folderCreate,
     folderExists,
     folderGetContent,

@@ -18,6 +18,7 @@ import IdeContext from "../contexts/IdeContext";
 import DragContext from "../contexts/DragContext";
 
 import find from "lodash/find";
+import { fileDownload } from "../utils/fsUtils";
 
 export default function FsContentEntry({ entryHandle }) {
 
@@ -74,6 +75,15 @@ export default function FsContentEntry({ entryHandle }) {
 
     // handler
     const items = [
+        {
+            name: "Download File",
+            handler: async () => {
+                fileDownload(entryHandle);
+            },
+            show: (!entryHandle.isParent && !entryHandle.isFolder),
+            disabled: false,
+            tooltip: "Download file",
+        },
         {
             name: "Close File",
             handler: async () => {
