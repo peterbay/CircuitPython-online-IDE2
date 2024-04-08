@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { isEntryHealthy, folderGetContent } from '../utils/fsUtils';
 
-export default function useFileSystem({ statesApi }) {
+export default function useFileSystem({ statesApi, infoApi }) {
     const [directoryReady, setDirectoryReady] = useState(false);
     const [directoryStatus, setDirectoryStatus] = useState('');
     const [rootDirHandle, setRootDirHandle] = useState(null);
@@ -70,11 +70,12 @@ export default function useFileSystem({ statesApi }) {
                 setCurrentFolderHandle(dirHandle);
                 setFolderContent(await folderGetContent(dirHandle, false));
                 setPath([dirHandle]);
+                infoApi.successMessage('Directory opened.');
             } else {
                 throw new Error('Failed to open directory handle. `dirHandle` created but empty'); // not sure wether this is reachiable
             }
         } catch (error) {
-            alert(error);
+            infoApi.errorMessage('Failed to open directory.');
             console.error(error);
         }
     }
@@ -84,6 +85,7 @@ export default function useFileSystem({ statesApi }) {
         setCurrentFolderHandle(null);
         setFolderContent([]);
         setPath([]);
+        infoApi.successMessage('Directory closed.');
     }
 
     async function folderOpen(folderHandle) {

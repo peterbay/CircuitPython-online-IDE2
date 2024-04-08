@@ -20,10 +20,12 @@ import {
     RefreshOutlined as RefreshIcon,
 } from "@mui/icons-material";
 
+import Dropzone from 'react-dropzone';
+import forEach from "lodash/forEach";
+
 import IdeContext from "../contexts/IdeContext";
 import TooltipIconButton from "./TooltipIconButton";
 import ToolbarEntry from "./ToolbarEntry";
-
 
 import FsContentEntry from "./FsContentEntry";
 import FsPathEntry from "./FsPathEntry";
@@ -32,11 +34,12 @@ import DragContext from "../contexts/DragContext";
 import {
     entryExists,
     entryMove,
+    fileWriteUploaded,
 } from "../utils/fsUtils";
 
 export default function FsFolderView() {
 
-    const { fsApi } = useContext(IdeContext);
+    const { fsApi, infoApi } = useContext(IdeContext);
     const [entryOnDrag, setEntryOnDrag] = useState();
     const [path, setPath] = useState([]);
 
@@ -88,6 +91,25 @@ export default function FsFolderView() {
         return entry.isFolder && !entry.isParent && !entry.name.startsWith(".");
     }).length;
     const filesCount = fsApi.folderContent.filter((entry) => !entry.isFolder).length;
+
+    const onDrop = (acceptedFiles) => {
+        forEach(acceptedFiles, async (file) => {
+            const fileExists = await entryExists(fsApi.currentFolderHandle, file.name);
+            if (fileExists) {
+                infoApi.errorMessage(`File "${file.name}" already exists in the target folder.`);
+                return;
+            }
+
+            try {
+                await fileWriteUploaded(fsApi.currentFolderHandle, file);
+                infoApi.successMessage(`File "${file.name}" written to the target folder.`);
+
+            } catch (error) {
+                infoApi.errorMessage(`Failed to write file "${file.name}" to the target folder.`);
+
+            }
+        });
+    };
 
     return (
         <div
@@ -151,6 +173,44 @@ export default function FsFolderView() {
                             ))}
                     </List>
                 </DragContext.Provider>
+            </div>
+            <div
+                style={{
+                    flexGrow: 0,
+                }}
+            >
+                <Divider />
+                <Dropzone onDrop={onDrop}>
+                    {({ getRootProps, getInputProps }) => (
+                        <section
+                            className="container"
+                            style={{
+                                width: "100%",
+                                height: "100%",
+                                padding: "0px",
+                            }}
+                        >
+                            <div
+                                {...getRootProps({ className: 'dropzone' })}
+                                style={{
+                                    padding: "5px",
+                                }}
+                            >
+                                <input {...getInputProps()} />
+                                <p style={{
+                                    textAlign: "center",
+                                    fontSize: "14px",
+                                    color: "#888",
+
+                                }}>
+                                    Drag and drop some external files here for upload,
+                                    or click to select files.
+                                </p>
+                            </div>
+                        </section>
+                    )}
+                </Dropzone>
+                <Divider />
             </div>
             <div
                 style={{

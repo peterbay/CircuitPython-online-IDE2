@@ -13,6 +13,8 @@ import useGlobalStates from "./hooks/useGlobalStates.jsx";
 import usePalette from "./hooks/usePalette.jsx";
 import useSerial from "./hooks/useSerial.jsx";
 import useTabs from "./hooks/useTabs.jsx";
+import useInfo from "./hooks/useInfo.jsx";
+
 // context
 import IdeContext from "./contexts/IdeContext";
 
@@ -24,6 +26,8 @@ import configSerialConsole from "./settings/configSerialConsole";
 import {
     Model as FlexLayoutModel,
 } from "flexlayout-react";
+
+import { SnackbarProvider } from 'notistack'
 
 import layout from "./settings/layout";
 
@@ -93,13 +97,14 @@ const flexModel = FlexLayoutModel.fromJson(layout);
 function App() {
 
     const statesApi = useGlobalStates();
-    const configApi = useConfig({ schemas, statesApi });
-    const editorApi = useEditor({ configApi, statesApi });
-    const fsApi = useFileSystem({ statesApi });
-    const serialApi = useSerial({ configApi, statesApi });
-    const tabsApi = useTabs({ flexModel, fsApi, statesApi });
-    const dashboardApi = useDasboard({ statesApi });
-    const paletteApi = usePalette({ statesApi });
+    const infoApi = useInfo();
+    const configApi = useConfig({ schemas, statesApi, infoApi });
+    const editorApi = useEditor({ configApi, statesApi, infoApi });
+    const fsApi = useFileSystem({ statesApi, infoApi });
+    const serialApi = useSerial({ configApi, statesApi, infoApi });
+    const tabsApi = useTabs({ flexModel, fsApi, statesApi, infoApi });
+    const dashboardApi = useDasboard({ statesApi, infoApi });
+    const paletteApi = usePalette({ statesApi, infoApi });
 
     const getCurrentTheme = () => window.matchMedia("(prefers-color-scheme: dark)").matches;
     const [isDarkTheme, setIsDarkTheme] = useState(getCurrentTheme());
@@ -164,11 +169,20 @@ function App() {
         statesApi,
         tabsApi,
         themeApi,
+        infoApi,
     };
 
     return (
         <IdeContext.Provider value={ideProviderValue}>
             <ShowWarning />
+            <SnackbarProvider
+                maxSnack={5}
+                dense={true}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                }}
+            />
             <ThemeProvider theme={muiTheme}>
                 <CssBaseline />
                 <div className={classes}>

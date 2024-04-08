@@ -32,6 +32,13 @@ const fileWriteText = async function (fileHandle, text) {
     await writable.close();
 };
 
+const fileWriteUploaded = async function (currentFolder, file) {
+    const fileHandle = await fileCreate(currentFolder, file.name);
+    const writable = await fileHandle.createWritable();
+    await writable.write(file);
+    await writable.close();
+};
+
 /* folder manipulation functions */
 
 const folderExists = async function (parentHandle, folderName) {
@@ -237,6 +244,7 @@ export {
     fileExists,
     fileReadText,
     fileWriteText,
+    fileWriteUploaded,
     folderCreate,
     folderExists,
     folderGetContent,

@@ -25,7 +25,7 @@ import {
 
 export default function FsActionDialog() {
 
-    const { flexModel, fsApi, tabsApi } = useContext(IdeContext);
+    const { flexModel, fsApi, tabsApi, infoApi } = useContext(IdeContext);
 
     const [dialogOpen, setDialogOpen] = useState(false);
     const [originalEntryName, setOriginalEntryName] = useState("");
@@ -81,6 +81,9 @@ export default function FsActionDialog() {
         const entryHandle = fsApi.fsAction?.entryHandle;
         const parentEntryHandle = fsApi.fsAction?.parentEntryHandle || entryHandle?.parent;
 
+        const entryType = entryHandle.isFolder ? "Folder" : "File";
+        const entryTypeLower = entryHandle.isFolder ? "folder" : "file";
+
         if (state === "confirm" && (entryHandle || parentEntryHandle)) {
 
             if (newEntryNameNeeded) {
@@ -97,25 +100,62 @@ export default function FsActionDialog() {
             }
 
             if (action === "rename") {
-                await entryRename(entryHandle, newEntryName);
+                try {
+                    await entryRename(entryHandle, newEntryName);
+                    infoApi.successMessage(`${entryType} renamed from '${entryHandle.name}' to '${newEntryName}'.`);
+
+                } catch (error) {
+                    infoApi.errorMessage(`Failed to rename ${entryTypeLower} to '${newEntryName}'.`);
+
+                }
+
 
             } else if (action === "duplicate") {
-                await entryCopy(entryHandle, parentEntryHandle, newEntryName);
+                try {
+                    await entryCopy(entryHandle, parentEntryHandle, newEntryName);
+                    infoApi.successMessage(`${entryType} '${entryHandle.name}' duplicated as '${newEntryName}'.`);
+
+                } catch (error) {
+                    infoApi.errorMessage(`Failed to duplicate ${entryTypeLower} '${entryHandle.name}'.`);
+
+                }
 
             } else if (action === "delete") {
-                await entryRemove(entryHandle);
+                try {
+                    await entryRemove(entryHandle);
+                    infoApi.successMessage(`${entryType} '${entryHandle.name}' deleted.`);
+
+                } catch (error) {
+                    infoApi.errorMessage(`Failed to delete ${entryTypeLower} '${entryHandle.name}'.`);
+
+                }
+
                 const tabs = tabsApi.tabsGetByFullPath(entryHandle.fullPath, "equal");
                 if (tabs.length > 0) {
                     flexModel.doAction(FlexLayoutActions.deleteTab(tabs[0].getId()));
                 }
 
             } else if (action === "new_file") {
-                const newFileHandle = await fileCreate(parentEntryHandle, newEntryName);
-                newFileHandle.fullPath = (parentEntryHandle.fullPath || "") + "/" + newFileHandle.name;
-                tabsApi.tabOpenFile(newFileHandle, false, true);
+                try {
+                    const newFileHandle = await fileCreate(parentEntryHandle, newEntryName);
+                    newFileHandle.fullPath = (parentEntryHandle.fullPath || "") + "/" + newFileHandle.name;
+                    tabsApi.tabOpenFile(newFileHandle, false, true);
+                    infoApi.successMessage(`New file '${newEntryName}' created.`);
+
+                } catch (error) {
+                    infoApi.errorMessage(`Failed to create new file '${newEntryName}'.`);
+
+                }
 
             } else if (action === "new_folder") {
-                await folderCreate(parentEntryHandle, newEntryName);
+                try {
+                    await folderCreate(parentEntryHandle, newEntryName);
+                    infoApi.successMessage(`New folder '${newEntryName}' created.`);
+
+                } catch (error) {
+                    infoApi.errorMessage(`Failed to create new folder '${newEntryName}'.`);
+
+                }
             }
 
             await fsApi.folderOpen(parentEntryHandle);

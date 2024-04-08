@@ -6,7 +6,7 @@ import SerialCommunication from "../utils/serial";
 
 const serial = new SerialCommunication();
 
-export default function useSerial({ statesApi, configApi }) {
+export default function useSerial({ statesApi, configApi, infoApi }) {
 
     const [serialStatus, setSerialStatus] = useState(false);
     const [connectionState, setConnectionState] = useState("Not connected");
@@ -18,11 +18,13 @@ export default function useSerial({ statesApi, configApi }) {
         setSerialStatus(status);
         if (!status) {
             serial.close();
+            infoApi.errorMessage('Failed to open serial port.');
             setConnectionState("Failed to open serial port");
             console.error("Failed to open serial port");
             statesApi.setState('serial-connected', false);
 
         } else {
+            infoApi.successMessage('Serial port opened');
             setConnectionState("Connected");
             statesApi.setState('serial-initialized', true);
             statesApi.setState('serial-connected', true);
@@ -37,6 +39,7 @@ export default function useSerial({ statesApi, configApi }) {
         serial.close();
         setSerialStatus(false);
         setConnectionState("Disconnected");
+        infoApi.successMessage('Serial port closed.');
     };
 
     const clearTerminal = function () {
