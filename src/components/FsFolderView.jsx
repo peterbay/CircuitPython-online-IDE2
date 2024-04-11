@@ -203,7 +203,7 @@ export default function FsFolderView() {
                                     color: "#888",
 
                                 }}>
-                                    Drag and drop some external files here for upload,
+                                    Drag and drop external files here for upload,
                                     or click to select files.
                                 </p>
                             </div>
@@ -224,7 +224,12 @@ export default function FsFolderView() {
                 </Toolbar>
                 <Divider />
             </div>
-            <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={fsApi.isLoading}>
+            <Backdrop sx={{
+                color: "#fff",
+                zIndex: (theme) => theme.zIndex.drawer + 1
+            }}
+                open={fsApi.isLoading}
+            >
                 <CircularProgress color="inherit" />
             </Backdrop>
         </div>

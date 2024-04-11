@@ -81,8 +81,8 @@ export default function FsActionDialog() {
         const entryHandle = fsApi.fsAction?.entryHandle;
         const parentEntryHandle = fsApi.fsAction?.parentEntryHandle || entryHandle?.parent;
 
-        const entryType = entryHandle.isFolder ? "Folder" : "File";
-        const entryTypeLower = entryHandle.isFolder ? "folder" : "file";
+        const entryType = entryHandle?.isFolder ? "Folder" : "File";
+        const entryTypeLower = entryHandle?.isFolder ? "folder" : "file";
 
         if (state === "confirm" && (entryHandle || parentEntryHandle)) {
 
@@ -108,7 +108,6 @@ export default function FsActionDialog() {
                     infoApi.errorMessage(`Failed to rename ${entryTypeLower} to '${newEntryName}'.`);
 
                 }
-
 
             } else if (action === "duplicate") {
                 try {
