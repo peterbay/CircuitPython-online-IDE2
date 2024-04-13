@@ -198,13 +198,13 @@ export default function SerialConsole({ node }) {
             <Box ref={terminalBox} sx={{
                 flexGrow: 1,
                 width: width + 'px',
-                height: height - 36 - (showEditor ? 204 : 0) + "px",
+                height: height - 36 - (showEditor ? 164 : 0) + "px",
                 background: 'black',
             }}>
                 <div ref={terminalRef} style={{
                     marginLeft: "10px",
                     width: (width - 10) + 'px',
-                    height: height - 36 - (showEditor ? 204 : 0) + "px"
+                    height: height - 36 - (showEditor ? 164 : 0) + "px"
                 }} />
             </Box>
             {showEditor &&
@@ -218,13 +218,13 @@ export default function SerialConsole({ node }) {
                         flexGrow: 1,
                         flexDirection: 'row',
                         display: 'flex',
-                        height: "200px",
+                        height: "160px",
                     }}>
 
                         <Box ref={terminalEditorBoxRef} sx={{
                             flexGrow: 1,
                             width: (width - 80) + 'px',
-                            height: "200px",
+                            height: "160px",
                             background: 'black',
                         }}>
                             <AceEditor
@@ -245,7 +245,7 @@ export default function SerialConsole({ node }) {
                         <Box sx={{
                             flexGrow: 1,
                             width: 50 + 'px',
-                            height: "200px",
+                            height: "160px",
                             background: 'black',
                         }}>
                             <Tooltip

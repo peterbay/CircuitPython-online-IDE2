@@ -18,8 +18,6 @@ const defaultOverrides = {
 const components = Object.keys(defaultOverrides).reduce((acc, tag) => {
     const Component = defaultOverrides[tag];
     acc[tag] = ({ node, ...props }) => {
-        console.log(node.position.start.line);
-
         const extendedProps = {
             'data-line': node.position.start.line,
         }

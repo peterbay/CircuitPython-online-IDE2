@@ -36,7 +36,7 @@ const layout = {
         {
             type: 'border',
             location: 'bottom',
-            size: 450,
+            size: 350,
             selected: 0,
             children: [
                 {

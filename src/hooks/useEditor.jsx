@@ -35,13 +35,20 @@ export default function useEditor({ configApi }) {
 
     const [activeEditorNode, setActiveEditorNode] = useState(null);
     const [editorAction, setEditorAction] = useState(null);
+    const [previewState, setPreviewState] = useState(null);
 
     const transformText = function (type) {
         if (!activeEditorNode) {
             return;
         }
-
         setEditorAction(type);
+    };
+
+    const changePreviewState = function (state) {
+        if (!activeEditorNode) {
+            return;
+        }
+        setPreviewState(state === 'show');
     };
 
     const applyTransform = function (editor, type) {
@@ -164,5 +171,8 @@ export default function useEditor({ configApi }) {
         setEditorAction,
         transformText,
         changeSettings,
+        changePreviewState,
+        previewState,
+        setPreviewState,
     };
 }

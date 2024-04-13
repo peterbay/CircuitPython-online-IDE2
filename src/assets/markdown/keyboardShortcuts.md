@@ -9,6 +9,7 @@
 |Ctrl-B|Command-B|Show/hide Folder View tab|
 |Ctrl-S|Command-S|Save file|
 |Alt-Z|Alt-Z|Toggle word wrap|
+|Ctrol-Q|Ctrl-Q|Toggle Code Explorer|
 
 #### Line Operations
 

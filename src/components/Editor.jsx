@@ -64,44 +64,68 @@ import { fileReadText, fileWriteText, fileDownload } from "../utils/fsUtils";
 import IdeContext from "../contexts/IdeContext";
 import { Actions as FlexLayoutActions } from "flexlayout-react";
 import useEditorOptions from "../hooks/useEditorOptions";
+import { useDebounce } from "use-debounce";
+
+import CodeExplorer from "./CodeExplorer";
 
 const editorModes = {
     py: {
         mode: "python",
         label: "Python",
-        enablePreview: false,
+        previewEnabled: true,
+        previewStateOnOpen: true,
+        previewWidth: "400px",
+        previewButtonLabel: "Code Explorer",
     },
     md: {
         mode: "markdown",
         label: "Markdown",
-        enablePreview: true,
+        previewEnabled: true,
+        previewStateOnOpen: true,
+        previewWidth: "50%",
+        previewButtonLabel: "Markdown Preview",
     },
     json: {
         mode: "json",
         label: "JSON",
-        enablePreview: false,
+        previewEnabled: false,
+        previewStateOnOpen: false,
+        previewWidth: "0px",
+        previewButtonLabel: null,
     },
     htm: {
         mode: "html",
         label: "HTML",
-        enablePreview: true,
+        previewEnabled: true,
+        previewStateOnOpen: true,
+        previewWidth: "50%",
+        previewButtonLabel: "HTML Preview",
     },
     html: {
         mode: "html",
         label: "HTML",
-        enablePreview: true,
+        previewEnabled: true,
+        previewStateOnOpen: true,
+        previewWidth: "50%",
+        previewButtonLabel: "HTML Preview",
     },
     toml: {
         mode: "toml",
         label: "TOML",
-        enablePreview: false,
+        previewEnabled: false,
+        previewStateOnOpen: false,
+        previewWidth: "0px",
+        previewButtonLabel: null,
     },
 };
 
 const defaultEditorMode = {
     mode: "text",
     label: "Text",
-    enablePreview: false,
+    previewEnabled: false,
+    previewStateOnOpen: false,
+    previewWidth: "0px",
+    previewButtonLabel: null,
 };
 
 export default function Editor({ fileHandle, node, isNewFile }) {
@@ -119,12 +143,15 @@ export default function Editor({ fileHandle, node, isNewFile }) {
     const [selectionInfo, setSelectionInfo] = useState(false);
     const [tabInfo, setTabInfo] = useState(false);
     const [text, setText] = useState("");
+    const [debouncedText] = useDebounce(text, 1000);
     const [fileIsLoaded, setFileIsLoaded] = useState(false);
     const [editorMode, setEditorMode] = useState("text");
     const [editorModeLabel, setEditorModeLabel] = useState("Text");
     const [stateInfo, setStateInfo] = useState("Saved");
     const [showPreview, setShowPreview] = useState(false);
-    const [enablePreview, setEnablePreview] = useState(false);
+    const [previewWidth, setPreviewWidth] = useState("0px");
+    const [previewEnabled, setPreviewEnabled] = useState(false);
+    const [previewButtonLabel, setPreviewButtonLabel] = useState("Preview");
     const height = node.getRect().height;
 
     useEffect(() => {
@@ -137,9 +164,11 @@ export default function Editor({ fileHandle, node, isNewFile }) {
         const editorMode = editorModes[extension] || defaultEditorMode;
         setEditorMode(editorMode.mode);
         setEditorModeLabel(editorMode.label);
-        if (editorMode.enablePreview) {
-            setEnablePreview(true);
-            setShowPreview(true);
+        if (editorMode.previewEnabled) {
+            setPreviewEnabled(true);
+            setShowPreview(editorMode.previewStateOnOpen);
+            setPreviewWidth(editorMode.previewWidth);
+            setPreviewButtonLabel(editorMode.previewButtonLabel);
         }
     }, [fileHandle]);
 
@@ -217,6 +246,13 @@ export default function Editor({ fileHandle, node, isNewFile }) {
 
     }, [editorApi.activeEditorNode, editorApi.editorAction, nodeId, aceEditorRef, editorApi]);
 
+    useEffect(() => {
+        if (editorApi.activeEditorNode === nodeId && editorApi.previewState !== null) {
+            setShowPreview(editorApi.previewState);
+            editorApi.setPreviewState(null);
+        }
+
+    }, [editorApi.activeEditorNode, editorApi.previewState, nodeId, editorApi]);
 
     function saveFile(text) {
         fileWriteText(fileHandle, text);
@@ -286,6 +322,13 @@ export default function Editor({ fileHandle, node, isNewFile }) {
                 paletteApi.setOpen(true);
             },
         });
+        commands.addCommand({
+            name: "code_explorer",
+            bindKey: { win: "Ctrl-q", mac: "Ctrl-q" },
+            exec: () => {
+                setShowPreview(!showPreview);
+            },
+        });
     }
 
     return (
@@ -298,9 +341,9 @@ export default function Editor({ fileHandle, node, isNewFile }) {
             }}>
                 <Box sx={{
                     height: "100%",
-                    width: showPreview ? "50% !important" : "100% !important",
-                    maxWidth: showPreview ? "50% !important" : "100% !important",
-                    minWidth: showPreview ? "50% !important" : "100% !important"
+                    width: showPreview ? `calc(100% - ${previewWidth}) !important` : "100% !important",
+                    maxWidth: showPreview ? `calc(100% - ${previewWidth}) !important` : "100% !important",
+                    minWidth: showPreview ? `calc(100% - ${previewWidth}) !important` : "100% !important"
                 }}>
                     {fileIsLoaded && (
                         <AceEditor
@@ -322,32 +365,51 @@ export default function Editor({ fileHandle, node, isNewFile }) {
                         />
                     )}
                 </Box>
-                {enablePreview && showPreview && (
+                {previewEnabled && (
                     <Box
                         sx={{
-                            height: "calc(" + height + "px - 38px)",
-                            maxHeight: "calc(" + height + "px - 38px)",
-                            width: showPreview ? "50% !important" : "100% !important",
-                            maxWidth: showPreview ? "50% !important" : "100% !important",
-                            minWidth: showPreview ? "50% !important" : "100% !important",
-                            overflow: "auto"
+                            height: "100%",
+                            maxHeight: "100% !important",
+                            width: previewWidth,
+                            maxWidth: previewWidth,
+                            minWidth: previewWidth,
+                            overflow: "auto",
+                            display: showPreview ? "block" : "none",
                         }}
                     >
-                        {editorMode === "markdown" && (
+                        {editorMode === "python" && (
+                            <CodeExplorer
+                                code={debouncedText}
+                                goToLine={(line) => {
+                                    const editor = aceEditorRef.current.editor;
+                                    editor.gotoLine(line, 0, true);
+                                    editor.focus();
+                                }}
+                                height={height - 38}
+                            />
+                        )}
+                        {editorMode === "markdown" && showPreview && (
                             <MarkdownExtended>{text}</MarkdownExtended>
                         )}
-                        {editorMode === "html" && (
+                        {editorMode === "html" && showPreview && (
                             <div dangerouslySetInnerHTML={{ __html: text }} />
                         )}
                     </Box>
                 )}
             </Box>
-            <Box sx={{ flexGrow: 0, maxHeight: "35px" }}>
+            <Box
+                sx={{
+                    flexGrow: 0,
+                    maxHeight: "35px",
+                }}>
                 <Divider />
                 <Toolbar
                     variant="dense"
                     disableGutters={true}
-                    sx={{ minHeight: "35px", maxHeight: "35px" }}
+                    sx={{
+                        minHeight: "35px",
+                        maxHeight: "35px",
+                    }}
                 >
                     <ToolbarEntry>Mode: {editorModeLabel}</ToolbarEntry>
                     <ToolbarEntry>State: {stateInfo}</ToolbarEntry>
@@ -356,10 +418,11 @@ export default function Editor({ fileHandle, node, isNewFile }) {
                     <ToolbarEntry fixedWidth={"200px"}>{selectionInfo}</ToolbarEntry>
 
                     <TooltipIconButton
-                        id="editor-save"
-                        title="Preview"
+                        id="editor-preview"
+                        title={previewButtonLabel}
                         icon={PreviewIcon}
                         onClick={() => setShowPreview(!showPreview)}
+                        disabled={!previewEnabled}
                     />
 
                     <TooltipIconButton

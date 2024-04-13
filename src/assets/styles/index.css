@@ -250,3 +250,7 @@ body {
 .converters {
     padding: 20px;
 }
+
+.code-highlight {
+    font-weight: bold;
+}

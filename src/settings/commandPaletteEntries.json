@@ -268,5 +268,29 @@
         "label": "Editor: Decrease Font Size",
         "handler": ["editorApi.changeSettings", "font-size-decrease"],
         "dependency": []
+    },
+    {
+        "cmdId": "code-explorer-show",
+        "label": "Code Explorer: Show",
+        "handler": ["editorApi.changePreviewState", "show"],
+        "dependency": []
+    },
+    {
+        "cmdId": "code-explorer-hide",
+        "label": "Code Explorer: Hide",
+        "handler": ["editorApi.changePreviewState", "hide"],
+        "dependency": []
+    },
+    {
+        "cmdId": "preview-show",
+        "label": "Preview: Show",
+        "handler": ["editorApi.changePreviewState", "show"],
+        "dependency": []
+    },
+    {
+        "cmdId": "preview-hide",
+        "label": "Preview: Hide",
+        "handler": ["editorApi.changePreviewState", "hide"],
+        "dependency": []
     }
 ]
