@@ -89,14 +89,20 @@ export default class SerialCommunication {
         const encoder = new TextEncoder();
         while (this.port.writable && this.keepRunning) {
             if (this.writeBuffer.length > 0) {
-                const data = this.writeBuffer.join();
-                this.writeBuffer = [];
-                try {
-                    await this.writer.write(encoder.encode(data));
-                } catch (error) {
-                    console.error('Error writing to serial port:', error);
-                    this.keepRunning = false;
+                // const data = this.writeBuffer.join('');
+
+                while (this.writeBuffer.length > 0) {
+                    const data = this.writeBuffer.shift();
+
+                    try {
+                        await this.writer.write(encoder.encode(data));
+                    } catch (error) {
+                        console.error('Error writing to serial port:', error);
+                        this.keepRunning = false;
+                    }
                 }
+
+                this.writeBuffer = [];
             }
             await new Promise((resolve) => setTimeout(resolve, 1)); // Small delay to prevent high CPU usage
         }

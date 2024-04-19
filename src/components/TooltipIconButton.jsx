@@ -13,6 +13,7 @@ export default function TooltipIconButton({ id, title, icon, iconSx = {}, disabl
             key={id}
             id={id}
             title={title}
+            disabled={disabled}
         >
             <span>
                 <IconButton

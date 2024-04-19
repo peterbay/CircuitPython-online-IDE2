@@ -114,6 +114,10 @@ const prepareLabel = (code, token) => {
     return `<small><code>${token.line || token.lineNumber}.</code></small> ${highlightCodePart(code, token)}`;
 };
 
+const excludeNames = [
+    'self',
+];
+
 export default function CodeExplorer({ code, goToLine, height }) {
 
     const [treeContent, setTreeContent] = useState([]);
@@ -175,6 +179,10 @@ export default function CodeExplorer({ code, goToLine, height }) {
 
                 // Python3Parser.NAME = 37;
             } else if (token.type === 37) {
+                if (excludeNames.includes(token.text)) {
+                    return acc;
+                }
+
                 if (!acc.names) {
                     acc.names = {
                         id: 'names',
@@ -220,38 +228,6 @@ export default function CodeExplorer({ code, goToLine, height }) {
         if (info.names) {
             info.names.children = info.names.children.sort((a, b) => a.label.localeCompare(b.label));
             tree.push(info.names);
-        }
-
-        const lexers = lexer(code);
-
-        const lexerInfo = reduce(lexers, (acc, token) => {
-
-            if (actualFilterValue && !token.value.match(filterRegex)) {
-                return acc;
-            }
-
-            if (token.type === 'Comment') {
-                if (!acc.comments) {
-                    acc.comments = {
-                        id: 'comments',
-                        label: 'Comments',
-                        children: [],
-                    };
-                }
-                const id = `comments-${token.lineNumber}`;
-                ids[id] = token.lineNumber;
-
-                acc.comments.children.push({
-                    id,
-                    label: prepareLabel(code, token),
-                    line: token.lineNumber,
-                });
-            }
-            return acc;
-        }, {});
-
-        if (lexerInfo.comments) {
-            tree.push(lexerInfo.comments);
         }
 
         setIdToLine(ids);

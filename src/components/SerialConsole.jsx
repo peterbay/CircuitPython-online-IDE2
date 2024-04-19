@@ -130,6 +130,17 @@ export default function SerialConsole({ node }) {
         fitAddon.current.fit();
     }, [height, width]);
 
+    const sendTextToConsole = function () {
+        const lines = terminalEditorValue.split(/\r\n|\r|\n]/);
+        serialApi.sendKey("Ctrl+C");
+
+        lines.forEach((line) => {
+            serialApi.write(` \r${line}\r\n`);
+        });
+
+        serialApi.write(`\r\n`);
+    }
+
     if (terminalEditorRef.current !== null) {
         const commands = terminalEditorRef.current.editor.commands;
         // add key bindings
@@ -137,7 +148,7 @@ export default function SerialConsole({ node }) {
             name: "execute",
             bindKey: { win: "Ctrl-Enter", mac: "Command-Enter" },
             exec: () => {
-                serialApi.sendText(terminalEditorValue);
+                sendTextToConsole();
             },
         });
     }
@@ -257,7 +268,7 @@ export default function SerialConsole({ node }) {
                                     edge="start"
                                     size="small"
                                     style={{ borderRadius: 0 }}
-                                    onClick={() => serialApi.sendText(terminalEditorValue)}
+                                    onClick={sendTextToConsole}
                                     disabled={!serialApi.serialStatus}
                                     sx={{
                                         width: '100%',

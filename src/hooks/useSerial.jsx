@@ -55,15 +55,32 @@ export default function useSerial({ statesApi, configApi, infoApi }) {
         }
 
         const keys = {
+            "Ctrl+A": "\x01",
+            "Ctrl+B": "\x02",
             "Ctrl+C": "\x03",
             "Ctrl+D": "\x04",
-            "Ctrl+Z": "\x1A",
+            "Ctrl+E": "\x05",
+            "Ctrl+F": "\x06",
+            "Ctrl+G": "\x07",
+            "Ctrl+H": "\x08",
+            "Ctrl+I": "\x09",
+            "Ctrl+J": "\x0A",
+            "Ctrl+K": "\x0B",
             "Ctrl+L": "\x0C",
+            "Ctrl+M": "\x0D",
+            "Ctrl+N": "\x0E",
+            "Ctrl+O": "\x0F",
+            "Ctrl+P": "\x10",
+            "Ctrl+Q": "\x11",
             "Ctrl+R": "\x12",
+            "Ctrl+S": "\x13",
             "Ctrl+T": "\x14",
             "Ctrl+U": "\x15",
+            "Ctrl+V": "\x16",
             "Ctrl+W": "\x17",
+            "Ctrl+X": "\x18",
             "Ctrl+Y": "\x19",
+            "Ctrl+Z": "\x1A",
         };
 
         if (keys[key]) {
@@ -80,24 +97,13 @@ export default function useSerial({ statesApi, configApi, infoApi }) {
         });
     };
 
-    const sendText = function (text) {
+    const write = function (data) {
         if (!serialStatus) {
             return;
         }
 
-        if (text.trim().length === 0) {
-            return;
-        }
-
-        let serialText = text.replace(/(\r\n|\n|\r)/g, "\r\n")
-            .trim();
-
-        if (!serialText.endsWith("\r\n")) {
-            serialText += "\r\n";
-        }
-
-        serial.write(serialText);
-    };
+        serial.write(data);
+    }
 
     const changeSettings = function (type) {
         if (type === 'font-size-increase') {
@@ -122,7 +128,7 @@ export default function useSerial({ statesApi, configApi, infoApi }) {
         disconnect,
         sendKey,
         sendKeys,
-        sendText,
+        write,
         serial,
         serialStatus,
         setOnConnect,
