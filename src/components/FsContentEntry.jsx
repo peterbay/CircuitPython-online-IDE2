@@ -73,7 +73,6 @@ export default function FsContentEntry({ entryHandle }) {
         }
     }, [entryHandle.unsaved, isOpened, hasOpenedFiles]);
 
-    // handler
     const items = [
         {
             name: "Download File",
@@ -82,7 +81,6 @@ export default function FsContentEntry({ entryHandle }) {
             },
             show: (!entryHandle.isParent && !entryHandle.isFolder),
             disabled: false,
-            tooltip: "Download file",
         },
         {
             name: "Close File",
@@ -91,16 +89,14 @@ export default function FsContentEntry({ entryHandle }) {
             },
             show: (!entryHandle.isParent && !entryHandle.isFolder),
             disabled: !isOpened,
-            tooltip: "Close opened file",
         },
         {
-            name: "Close Files",
+            name: "Close Opened Files",
             handler: async () => {
                 tabsApi.tabCloseFiles(entryHandle);
             },
             show: (entryHandle.isFolder && hasOpenedFiles),
             disabled: false,
-            tooltip: "Close opened files",
         },
         {
             name: entryHandle.isFolder ? "Rename Folder" : "Rename File",
@@ -112,7 +108,6 @@ export default function FsContentEntry({ entryHandle }) {
             },
             show: (!entryHandle.isParent),
             disabled: (isOpened || hasOpenedFiles),
-            tooltip: "Rename file or folder",
         },
         {
             name: entryHandle.isFolder ? "Duplicate Folder" : "Duplicate File",
@@ -139,7 +134,7 @@ export default function FsContentEntry({ entryHandle }) {
     ];
 
     useEffect(() => {
-        if (entryHandle.isFolder || entryHandle.isParent) {
+        if (entryHandle.isFolder || entryHandle.isParent && fsApi.fileLookUp) {
             const path = `${entryHandle.fullPath}/`;
             const status = find(fsApi.fileLookUp, (value, key) => key.startsWith(path));
             setHasOpenedFiles(!!status);
@@ -197,14 +192,36 @@ export default function FsContentEntry({ entryHandle }) {
                     draggable={isDraggable}
                     onDragStart={onDragHandler}
                     primary={entryName}
+                    primaryTypographyProps={{
+                        style: {
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            height: "20px",
+                            fontWeight: "400",
+                        },
+                    }}
                 />
             </ListItemButton>
         </ListItem>
     );
 
-    const entryContextMenu = (!entryHandle.isParent) ? <ApplyContextMenu items={items}>{entry}</ApplyContextMenu> : entry;
+    let entryContextMenu = null;
 
-    return entryHandle.isFolder || entryHandle.isParent ? <ApplyDrop onDropHandler={onDropHandler}>{entryContextMenu}</ApplyDrop> : entryContextMenu;
+    if (entryHandle.isParent) {
+        entryContextMenu = entry;
+
+    } else {
+        entryContextMenu = <ApplyContextMenu items={items}>{entry}</ApplyContextMenu>
+
+    }
+
+    if (entryHandle.isFolder || entryHandle.isParent) {
+        return <ApplyDrop onDropHandler={onDropHandler}>{entryContextMenu}</ApplyDrop>;
+    }
+
+    return entryContextMenu;
+
 }
 
 FsContentEntry.propTypes = {

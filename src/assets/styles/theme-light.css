@@ -20,7 +20,7 @@
     --font-family: Roboto, Arial, sans-serif;
     --color-overflow: gray;
     --color-icon: rgb(50, 50, 50);
-    --color-tabset-background: var(--color-background);
+    --color-tabset-background: var(--color-1);
     --color-tabset-background-selected: var(--color-1);
     --color-tabset-background-maximized: var(--color-6);
     --color-tabset-divider-line: var(--color-4);
@@ -29,7 +29,7 @@
     --color-border-background: var(--color-1);
     --color-border-divider-line: var(--color-4);
     --color-tab-selected: var(--color-tab-text);
-    --color-tab-selected-background: var(--color-4);
+    --color-tab-selected-background: var(--color-background);
     --color-tab-unselected: var(--color-tab-text);
     --color-tab-unselected-background: transparent;
     --color-tab-textbox: var(--color-tab-text);
@@ -107,9 +107,6 @@
 .light .flexlayout__tabset_tabbar_outer {
     background-color: var(--color-tabset-background);
 }
-.light .flexlayout__tabset_tabbar_outer_top {
-    border-bottom: 1px solid var(--color-tabset-divider-line);
-}
 .light .flexlayout__tabset_tabbar_outer_bottom {
     border-top: 1px solid var(--color-tabset-divider-line);
 }
@@ -127,9 +124,9 @@
     color: var(--color-text);
 }
 .light .flexlayout__tab_button {
-    border-right: 1px solid var(--color-4);
-    border-left: 1px solid var(--color-4);
-    border-top: 2px solid var(--color-4);
+    border-right: 1px solid var(--color-3);
+    border-top: 2px solid var(--color-tab-unselected-background);
+    border-bottom: 1px solid var(--color-3);
 }
 .light .flexlayout__tab_button--selected {
     background-color: var(--color-tab-selected-background);
@@ -147,9 +144,9 @@
 }
 
 .light .flexlayout__tab_button_top.flexlayout__tab_button--selected {
-    border-left: 1px solid var(--color-3);
-    border-right: 1px solid var(--color-3);
+    border-right: 1px solid var(--color-3); 
     border-top: 2px solid var(--color-7);
+    border-bottom: 1px solid transparent;
 }
 
 .light .flexlayout__tab_button_textbox {
@@ -306,7 +303,7 @@
 
 .light .file-opened {
     border-left: 3px solid var(--color-7);
-    color: rgb(203, 151, 6);
+    color: rgb(192, 156, 14);
 }
 
 .light .file-unsaved {
@@ -317,4 +314,75 @@
 .light .folder-has-opened-files {
     border-left: 3px solid var(--color-7);
     color: rgb(203, 151, 6);
+}
+
+.light .ide-header {
+    background-color: rgb(221, 221, 221);
+    border-bottom: 1px solid rgb(204, 204, 204);
+}
+
+.light .markdown-body {
+    background-color: rgb(243, 243, 244);
+}
+
+.light .markdown-body pre {
+    background-color: rgb(221, 221, 221);
+    color: rgb(28, 28, 28);
+}
+
+.light .ace_search {
+    background-color: var(--color-background);
+    color: var(--color-text);
+    border-color: var(--color-2);
+}
+
+.light .ace_search_field {
+    background-color: var(--color-1);
+    color: var(--color-text);
+    border: 1px solid transparent;
+}
+
+.light .ace_search_options {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.light .ace_searchbtn {
+    background-color: var(--color-3);
+    color: var(--color-text);
+    border: 1px solid transparent;
+}
+
+.light .ace_searchbtn:hover {
+    background-color: var(--color-4);
+    color: var(--color-text);
+    border: 1px solid transparent;
+}
+
+.light .ace_searchbtn:last-child {
+    border: 1px solid transparent;
+}
+
+.light .ace_button {
+    background-color: var(--color-3);
+    color: var(--color-text);
+    margin-left: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 4px;
+}
+
+.light .ace_button.checked {
+    color: var(--color-1);
+    border-color: var(--color-2);
+    background-color: var(--color-6);
+}
+
+.light .ace_button:hover {
+    background-color: var(--color-4);
+    color: var(--color-5);
+    margin-left: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-color: var(--color-2);
 }

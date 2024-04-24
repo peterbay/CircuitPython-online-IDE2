@@ -59,165 +59,6 @@ body {
     color: rgb(157, 157, 157);
 }
 
-/* THEME light */
-.light .ide-header {
-    background-color: rgb(221, 221, 221);
-    border-bottom: 1px solid rgb(204, 204, 204);
-}
-
-.light .markdown-body {
-    background-color: rgb(243, 243, 244);
-}
-
-.light .markdown-body pre {
-    background-color: rgb(221, 221, 221);
-    color: rgb(28, 28, 28);
-}
-
-/* THEME dark-lighter */
-.dark-lighter .ide-header {
-    background-color: rgb(48, 50, 60);
-    border-bottom: 1px solid rgb(27, 27, 27);
-}
-
-.dark-lighter .markdown-body,
-.dark-lighter .markdown-body table tr {
-    color: rgb(164, 164, 164);
-    background-color: rgb(34, 37, 43);
-}
-
-.dark-lighter .markdown-body table tr:nth-child(even) {
-    background-color: rgb(27, 27, 27);
-}
-
-.dark-lighter .markdown-body table th,
-.dark-lighter .markdown-body table td {
-    border: 1px solid rgb(88, 88, 88);
-}
-
-.dark-lighter .markdown-body a {
-    color: rgb(113, 143, 219);
-}
-
-.dark-lighter .markdown-body pre {
-    background-color: rgb(27, 27, 27);
-    color: rgb(156, 156, 156);
-}
-
-/* THEME dark-darker */
-.dark-darker .ide-header {
-    /* color: red !important; */
-    background-color: rgb(47, 47, 47);
-    border-bottom: 1px solid rgb(27, 27, 27);
-}
-
-.dark-darker .markdown-body,
-.dark-darker .markdown-body table tr {
-    background-color: rgb(13, 16, 21);
-    color: rgb(159, 165, 169);
-}
-
-.dark-darker .markdown-body table tr:nth-child(even) {
-    background-color: rgb(27, 27, 27);
-}
-
-.dark-darker .markdown-body table th,
-.dark-darker .markdown-body table td {
-    border: 1px solid rgb(88, 88, 88);
-}
-
-.dark-darker .markdown-body a {
-    color: rgb(113, 143, 219);
-}
-
-.dark-darker .markdown-body pre {
-    background-color: rgb(27, 27, 27);
-    color: rgb(168, 168, 168);
-}
-
-/* THEME dark-black */
-.dark-black .ide-header {
-    background-color: rgb(36, 36, 36);
-}
-
-.dark-black .markdown-body,
-.dark-black .markdown-body table tr {
-    background-color: rgb(0, 0, 0);
-    color: rgb(159, 165, 169);
-}
-
-.dark-black .markdown-body table tr:nth-child(even) {
-    background-color: rgb(27, 27, 27);
-}
-
-.dark-black .markdown-body table th,
-.dark-black .markdown-body table td {
-    border: 1px solid rgb(88, 88, 88);
-}
-
-.dark-black .markdown-body a {
-    color: rgb(113, 143, 219);
-}
-
-.dark-black .markdown-body pre {
-    background-color: rgb(27, 27, 27);
-    color: rgb(168, 168, 168);
-}
-
-/* THEME solarized-light */
-.solarized-light .ide-header {
-    background-color: rgb(218, 214, 193);
-    border-bottom: 1px solid rgb(249, 246, 227);
-}
-
-.solarized-light .markdown-body,
-.solarized-light .markdown-body table tr {
-    background-color: rgb(251, 246, 227);
-}
-
-.solarized-light .markdown-body table tr:nth-child(even) {
-    background-color: rgb(233, 230, 215);
-}
-
-.solarized-light .markdown-body pre {
-    background-color: rgb(233, 230, 215);
-    color: rgb(122, 109, 47);
-}
-
-/* THEME solarized-dark */
-.solarized-dark .ide-header {
-    background-color: rgb(32, 54, 71);
-    border-bottom: 1px solid rgb(27, 27, 27);
-}
-
-.solarized-dark .ace_gutter-cell {
-    color: rgb(133, 133, 133) !important;
-}
-
-.solarized-dark .markdown-body,
-.solarized-dark .markdown-body tr {
-    color: rgb(164, 164, 164);
-    background-color: rgb(10, 32, 43);
-}
-
-.solarized-dark .markdown-body table tr:nth-child(even) {
-    background-color: rgb(12, 40, 55);
-}
-
-.solarized-dark .markdown-body table th,
-.solarized-dark .markdown-body table td {
-    border: 1px solid rgb(88, 88, 88);
-}
-
-.solarized-dark .markdown-body a {
-    color: rgb(74, 185, 143);
-}
-
-.solarized-dark .markdown-body pre {
-    background-color: rgb(12, 40, 55);
-    color: rgb(33, 132, 186);
-}
-
 /* Dashboard */
 
 .dashboard-layout {
@@ -253,4 +94,30 @@ body {
 
 .code-highlight {
     font-weight: bold;
+}
+
+.keyboard-shortcuts table {
+    width: 100% !important;
+}
+
+.keyboard-shortcuts td:nth-child(1) {
+    min-width: 200px;
+}
+
+.keyboard-shortcuts td:nth-child(2) {
+    min-width: 200px;
+    white-space: break-space;
+}
+
+.keyboard-shortcuts td:nth-child(3) {
+    width: 100%;
+    white-space: break-space;
+}
+
+.config-form-tab #root__title {
+    display: none;
+}
+
+.config-form-tab .MuiBox-root {
+    padding: 15px;
 }

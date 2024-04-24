@@ -1,6 +1,5 @@
 const configSerialConsole = {
     title: 'Serial Console',
-    description: 'Serial console settings.',
     type: 'object',
     properties: {
         font_size: {

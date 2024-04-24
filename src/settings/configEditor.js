@@ -1,6 +1,5 @@
 const configEditor = {
     title: 'Editor',
-    description: 'Code editor settings.',
     type: 'object',
     properties: {
         font: {
@@ -35,7 +34,7 @@ const configEditor = {
         },
         highlight_selected_word: {
             description: 'Highlight selected word',
-            title: 'Highlight all occurrences of the selected word.',
+            title: 'Highlight all occurrences of the selected word',
             type: 'boolean',
             default: true,
         },
@@ -47,7 +46,7 @@ const configEditor = {
         },
         live_autocompletion: {
             description: 'Live autocompletion',
-            title: 'Enable live autocompletion. When disabled, use [Ctrl-Space] for autocompletion.',
+            title: 'Enable live autocompletion. When disabled, use [Ctrl-Space] for autocompletion',
             type: 'boolean',
             default: false,
         },
@@ -59,7 +58,7 @@ const configEditor = {
         },
         wrap: {
             description: 'Word wrap',
-            title: 'Enable wrap behaviours',
+            title: 'Enable word wrap behaviours',
             type: 'boolean',
             default: true,
         },

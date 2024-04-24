@@ -1,13 +1,13 @@
 [
     {
         "cmdId": "folder-show",
-        "label": "Show: Folder View",
+        "label": "Folder View: Show",
         "handler": ["tabsApi.tabShow", "folder_view"],
         "dependency": []
     },
     {
         "cmdId": "folder-hide",
-        "label": "Hide: Folder View",
+        "label": "Folder View: Hide",
         "handler": ["tabsApi.tabHide", "folder_view"],
         "dependency": []
     },
@@ -55,13 +55,13 @@
     },
     {
         "cmdId": "serial-show",
-        "label": "Show: Serial Console",
+        "label": "Serial Console: Show",
         "handler": ["tabsApi.tabShow", "serial_console"],
         "dependency": []
     },
     {
         "cmdId": "serial-hide",
-        "label": "Hide: Serial Console",
+        "label": "Serial Console: Hide",
         "handler": ["tabsApi.tabHide", "serial_console"],
         "dependency": []
     },
@@ -267,6 +267,18 @@
         "cmdId": "editor-font-size-decrease",
         "label": "Editor: Decrease Font Size",
         "handler": ["editorApi.changeSettings", "font-size-decrease"],
+        "dependency": []
+    },
+    {
+        "cmdId": "editor-invisible-characters-show",
+        "label": "Editor: Show Invisible Characters",
+        "handler": ["editorApi.changeSettings", "invisible-characters-show"],
+        "dependency": []
+    },
+    {
+        "cmdId": "editor-invisible-characters-hide",
+        "label": "Editor: Hide Invisible Characters",
+        "handler": ["editorApi.changeSettings", "invisible-characters-hide"],
         "dependency": []
     },
     {

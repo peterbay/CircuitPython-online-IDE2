@@ -13,7 +13,14 @@ export default function IdeFolderView() {
         </div>
     ) : (
         <>
-            <Button onClick={fsApi.openRootDirectory}>Open CircuitPy Drive</Button>
+            <Button
+                onClick={fsApi.openRootDirectory}
+                sx={{
+                    width: "100%",
+                }}
+            >
+                Open CircuitPy Drive
+            </Button>
         </>
     );
 }

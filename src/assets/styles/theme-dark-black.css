@@ -19,8 +19,8 @@
     --font-size: medium;
     --font-family: Roboto, Arial, sans-serif;
     --color-overflow: gray;
-    --color-icon: rgb(50, 50, 50);
-    --color-tabset-background: var(--color-background);
+    --color-icon: rgb(128, 128, 128);
+    --color-tabset-background: var(--color-1);
     --color-tabset-background-selected: var(--color-1);
     --color-tabset-background-maximized: var(--color-6);
     --color-tabset-divider-line: var(--color-4);
@@ -29,7 +29,7 @@
     --color-border-background: var(--color-1);
     --color-border-divider-line: var(--color-4);
     --color-tab-selected: var(--color-tab-text);
-    --color-tab-selected-background: var(--color-4);
+    --color-tab-selected-background: var(--color-background);
     --color-tab-unselected: var(--color-tab-text);
     --color-tab-unselected-background: transparent;
     --color-tab-textbox: var(--color-tab-text);
@@ -107,9 +107,6 @@
 .dark-black .flexlayout__tabset_tabbar_outer {
     background-color: var(--color-tabset-background);
 }
-.dark-black .flexlayout__tabset_tabbar_outer_top {
-    border-bottom: 1px solid var(--color-tabset-divider-line);
-}
 .dark-black .flexlayout__tabset_tabbar_outer_bottom {
     border-top: 1px solid var(--color-tabset-divider-line);
 }
@@ -127,9 +124,9 @@
     color: var(--color-text);
 }
 .dark-black .flexlayout__tab_button {
-    border-right: 1px solid var(--color-4);
-    border-left: 1px solid var(--color-4);
-    border-top: 2px solid var(--color-4);
+    border-right: 1px solid var(--color-3);
+    border-top: 2px solid var(--color-tab-unselected-background);
+    border-bottom: 1px solid var(--color-3);
 }
 .dark-black .flexlayout__tab_button--selected {
     background-color: var(--color-tab-selected-background);
@@ -147,9 +144,9 @@
 }
 
 .dark-black .flexlayout__tab_button_top.flexlayout__tab_button--selected {
-    border-left: 1px solid var(--color-3);
-    border-right: 1px solid var(--color-3);
+    border-right: 1px solid var(--color-3); 
     border-top: 2px solid var(--color-7);
+    border-bottom: 1px solid transparent;
 }
 
 .dark-black .flexlayout__tab_button_textbox {
@@ -321,4 +318,90 @@
 .dark-black .folder-has-opened-files {
     border-left: 3px solid var(--color-7);
     color: rgb(203, 151, 6);
+}
+
+.dark-black .ide-header {
+    background-color: rgb(45, 45, 45);
+    border-bottom: 1px solid rgb(20, 20, 20);
+}
+
+.dark-black .markdown-body,
+.dark-black .markdown-body table tr {
+    background-color: rgb(0, 0, 0);
+    color: rgb(159, 165, 169);
+}
+
+.dark-black .markdown-body table tr:nth-child(even) {
+    background-color: rgb(27, 27, 27);
+}
+
+.dark-black .markdown-body table th,
+.dark-black .markdown-body table td {
+    border: 1px solid rgb(88, 88, 88);
+}
+
+.dark-black .markdown-body a {
+    color: rgb(113, 143, 219);
+}
+
+.dark-black .markdown-body pre {
+    background-color: rgb(27, 27, 27);
+    color: rgb(168, 168, 168);
+}
+
+.dark-black .ace_search {
+    background-color: var(--color-background);
+    color: var(--color-text);
+    border-color: var(--color-2);
+}
+
+.dark-black .ace_search_field {
+    background-color: var(--color-1);
+    color: var(--color-text);
+    border: 1px solid transparent;
+}
+
+.dark-black .ace_search_options {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.dark-black .ace_searchbtn {
+    background-color: var(--color-3);
+    color: var(--color-text);
+    border: 1px solid transparent;
+}
+
+.dark-black .ace_searchbtn:hover {
+    background-color: var(--color-4);
+    color: var(--color-text);
+    border: 1px solid transparent;
+}
+
+.dark-black .ace_searchbtn:last-child {
+    border: 1px solid transparent;
+}
+
+.dark-black .ace_button {
+    background-color: var(--color-3);
+    color: var(--color-text);
+    margin-left: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 4px;
+}
+
+.dark-black .ace_button.checked {
+    color: var(--color-1);
+    border-color: var(--color-2);
+    background-color: var(--color-6);
+}
+
+.dark-black .ace_button:hover {
+    background-color: var(--color-4);
+    color: var(--color-5);
+    margin-left: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-color: var(--color-2);
 }

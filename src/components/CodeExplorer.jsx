@@ -30,8 +30,9 @@ import {
 } from '@mui/x-tree-view/TreeItem2';
 import { TreeItem2Icon } from '@mui/x-tree-view/TreeItem2Icon';
 import { TreeItem2Provider } from '@mui/x-tree-view/TreeItem2Provider';
+import { useHotkeys } from 'react-hotkeys-hook';
 
-import { Python3Parser, lexer } from 'dt-python-parser';
+import { Python3Parser } from 'dt-python-parser';
 import reduce from 'lodash/reduce';
 import { useDebounce } from "use-debounce";
 
@@ -118,12 +119,18 @@ const excludeNames = [
     'self',
 ];
 
-export default function CodeExplorer({ code, goToLine, height }) {
+export default function CodeExplorer({ code, goToLine, height, togglePreview }) {
 
     const [treeContent, setTreeContent] = useState([]);
     const [idToLine, setIdToLine] = useState({});
     const [filterValue, setFilterValue] = useState('');
     const [debouncedFilterValue] = useDebounce(filterValue, 300);
+
+    useHotkeys('ctrl+q', () => {
+        togglePreview();
+    }, {
+        preventDefault: true,
+    });
 
     useEffect(() => {
         onCodeChange(code, debouncedFilterValue);
@@ -334,6 +341,7 @@ CodeExplorer.propTypes = {
     code: PropTypes.string,
     goToLine: PropTypes.func,
     height: PropTypes.number,
+    togglePreview: PropTypes.func,
 };
 
 CustomTreeItem.propTypes = {

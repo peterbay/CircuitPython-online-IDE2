@@ -13,7 +13,15 @@ import { ContentCopy as ContentCopyIcon } from '@mui/icons-material';
 export default function TextFieldWithCopy({ id, value, onChange, label, error = null, errorLabel = null, disabled = false }) {
     return (
         <FormControl sx={{ m: 1, width: '40ch' }} variant="outlined">
-            <InputLabel htmlFor={id} error={error}>{label}</InputLabel>
+            <InputLabel
+                htmlFor={id}
+                error={error}
+                sx={{
+                    transform: "translate(14px, -9px) scale(.75)",
+                }}
+            >
+                {label}
+            </InputLabel>
             <OutlinedInput
                 id={id}
                 value={value}
@@ -21,6 +29,7 @@ export default function TextFieldWithCopy({ id, value, onChange, label, error = 
                 label={label}
                 size="small"
                 disabled={disabled}
+                notched={true}
                 endAdornment={
                     <InputAdornment position="end">
                         <CopyToClipboard text={value}>

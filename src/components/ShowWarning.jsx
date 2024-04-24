@@ -9,29 +9,38 @@ export default function ShowWarning() {
     return (
         <>
             {(isMobile && (
-                <WarningModal title="Mobile devices are not supported!" closeEnabled={false}>
+                <WarningModal
+                    title="Mobile devices are not supported!"
+                    closeEnabled={false}
+                >
                     CP Online IDE is not supported on mobile devices. Please use Chrome, MS Edge, or other
                     Chromium-based browsers on a Windows PC, Mac or Chromebook. Check out
                     <HyperLink
                         text="this link"
                         link="https://developer.mozilla.org/en-US/docs/Web/API/Web_Serial_API#browser_compatibility"
                     />
-                    for more information
+                    for more information.
                 </WarningModal>
             )) ||
                 (isNotChrome && (
-                    <WarningModal title="Your Browser Is Not Supported!" closeEnabled={false}>
+                    <WarningModal
+                        title="Your Browser Is Not Supported!"
+                        closeEnabled={false}
+                    >
                         CP Online IDE only supports Chrome, MS Edge, or other Chromium-based browsers on a Windows PC,
                         Mac or Chromebook. Check out
                         <HyperLink
                             text="this link"
                             link="https://developer.mozilla.org/en-US/docs/Web/API/Web_Serial_API#browser_compatibility"
                         />
-                        for more information
+                        for more information.
                     </WarningModal>
                 )) ||
                 (isMacOs && (
-                    <WarningModal title="Warning for MacOS users!" closeEnabled={true}>
+                    <WarningModal
+                        title="Warning for MacOS users!"
+                        closeEnabled={true}
+                    >
                         If you have issues writing files to microcontrollers, it is not a bug of the IDE or CircuitPython, but a
                         known issue of MacOS 14 (Sonoma). Please check
                         <HyperLink

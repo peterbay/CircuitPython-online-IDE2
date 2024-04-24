@@ -1,6 +1,5 @@
 const configGlobal = {
     title: 'Global',
-    description: 'Settings that affect everything.',
     type: 'object',
     properties: {
         theme: {

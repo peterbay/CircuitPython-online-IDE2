@@ -33,6 +33,7 @@ export default function FsActionDialog() {
     const [newEntryNameNeeded, setNewEntryNameNeeded] = useState(false);
     const [action, setAction] = useState("");
     const [warningLabel, setWarningLabel] = useState("");
+    const [buttonsActive, setButtonsActive] = useState(true);
 
     useEffect(() => {
         async function prepare() {
@@ -63,6 +64,7 @@ export default function FsActionDialog() {
 
             setAction(action);
             setDialogOpen(true);
+            setButtonsActive(true);
 
             setWarningLabel("");
         }
@@ -74,6 +76,8 @@ export default function FsActionDialog() {
     }, [dialogOpen, fsApi]);
 
     const handleConfirm = async (state) => {
+        setButtonsActive(false);
+
         if (!dialogOpen || !action) {
             return;
         }
@@ -105,6 +109,7 @@ export default function FsActionDialog() {
                     infoApi.successMessage(`${entryType} renamed from '${entryHandle.name}' to '${newEntryName}'.`);
 
                 } catch (error) {
+                    console.error(error);
                     infoApi.errorMessage(`Failed to rename ${entryTypeLower} to '${newEntryName}'.`);
 
                 }
@@ -115,6 +120,7 @@ export default function FsActionDialog() {
                     infoApi.successMessage(`${entryType} '${entryHandle.name}' duplicated as '${newEntryName}'.`);
 
                 } catch (error) {
+                    console.error(error);
                     infoApi.errorMessage(`Failed to duplicate ${entryTypeLower} '${entryHandle.name}'.`);
 
                 }
@@ -125,6 +131,7 @@ export default function FsActionDialog() {
                     infoApi.successMessage(`${entryType} '${entryHandle.name}' deleted.`);
 
                 } catch (error) {
+                    console.error(error);
                     infoApi.errorMessage(`Failed to delete ${entryTypeLower} '${entryHandle.name}'.`);
 
                 }
@@ -142,6 +149,7 @@ export default function FsActionDialog() {
                     infoApi.successMessage(`New file '${newEntryName}' created.`);
 
                 } catch (error) {
+                    console.error(error);
                     infoApi.errorMessage(`Failed to create new file '${newEntryName}'.`);
 
                 }
@@ -225,8 +233,18 @@ export default function FsActionDialog() {
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
-                <Button onClick={() => handleConfirm("confirm")}>Confirm</Button>
-                <Button onClick={() => handleConfirm("cancel")}>Cancel</Button>
+                <Button
+                    onClick={() => handleConfirm("confirm")}
+                    disabled={!buttonsActive}
+                >
+                    Confirm
+                </Button>
+                <Button
+                    onClick={() => handleConfirm("cancel")}
+                    disabled={!buttonsActive}
+                >
+                    Cancel
+                </Button>
             </DialogActions>
         </Dialog>
     );

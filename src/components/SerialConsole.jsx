@@ -191,7 +191,7 @@ export default function SerialConsole({ node }) {
 
                     <TooltipIconButton
                         id="clear-terminal"
-                        title="Clear terminal"
+                        title="Clear console output"
                         icon={DeleteForeverIcon}
                         disabled={!terminal.current}
                         onClick={() => serialApi.clearTerminal()}

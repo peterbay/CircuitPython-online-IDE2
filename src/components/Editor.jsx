@@ -65,68 +65,8 @@ import IdeContext from "../contexts/IdeContext";
 import { Actions as FlexLayoutActions } from "flexlayout-react";
 import useEditorOptions from "../hooks/useEditorOptions";
 import { useDebounce } from "use-debounce";
-
+import { editorModes, defaultEditorMode } from '../settings/editorSettings';
 import CodeExplorer from "./CodeExplorer";
-
-const editorModes = {
-    py: {
-        mode: "python",
-        label: "Python",
-        previewEnabled: true,
-        previewStateOnOpen: true,
-        previewWidth: "400px",
-        previewButtonLabel: "Code Explorer",
-    },
-    md: {
-        mode: "markdown",
-        label: "Markdown",
-        previewEnabled: true,
-        previewStateOnOpen: true,
-        previewWidth: "50%",
-        previewButtonLabel: "Markdown Preview",
-    },
-    json: {
-        mode: "json",
-        label: "JSON",
-        previewEnabled: false,
-        previewStateOnOpen: false,
-        previewWidth: "0px",
-        previewButtonLabel: null,
-    },
-    htm: {
-        mode: "html",
-        label: "HTML",
-        previewEnabled: true,
-        previewStateOnOpen: true,
-        previewWidth: "50%",
-        previewButtonLabel: "HTML Preview",
-    },
-    html: {
-        mode: "html",
-        label: "HTML",
-        previewEnabled: true,
-        previewStateOnOpen: true,
-        previewWidth: "50%",
-        previewButtonLabel: "HTML Preview",
-    },
-    toml: {
-        mode: "toml",
-        label: "TOML",
-        previewEnabled: false,
-        previewStateOnOpen: false,
-        previewWidth: "0px",
-        previewButtonLabel: null,
-    },
-};
-
-const defaultEditorMode = {
-    mode: "text",
-    label: "Text",
-    previewEnabled: false,
-    previewStateOnOpen: false,
-    previewWidth: "0px",
-    previewButtonLabel: null,
-};
 
 export default function Editor({ fileHandle, node, isNewFile }) {
     const { fsApi, configApi, themeApi, tabsApi, editorApi, paletteApi } = useContext(IdeContext);
@@ -152,10 +92,12 @@ export default function Editor({ fileHandle, node, isNewFile }) {
     const [previewWidth, setPreviewWidth] = useState("0px");
     const [previewEnabled, setPreviewEnabled] = useState(false);
     const [previewButtonLabel, setPreviewButtonLabel] = useState("Preview");
+    const [isInitialized, setIsInitialized] = useState(false);
     const height = node.getRect().height;
+    const width = node.getRect().width;
 
     useEffect(() => {
-        if (!fileHandle) {
+        if (!fileHandle || isInitialized) {
             return;
         }
         const fileNameLower = fileHandle.name.toLowerCase();
@@ -166,11 +108,12 @@ export default function Editor({ fileHandle, node, isNewFile }) {
         setEditorModeLabel(editorMode.label);
         if (editorMode.previewEnabled) {
             setPreviewEnabled(true);
-            setShowPreview(editorMode.previewStateOnOpen);
+            setShowPreview(width > 800 && editorMode.previewStateOnOpen);
             setPreviewWidth(editorMode.previewWidth);
             setPreviewButtonLabel(editorMode.previewButtonLabel);
         }
-    }, [fileHandle]);
+        setIsInitialized(true);
+    }, [fileHandle, width, isInitialized]);
 
     useEffect(() => {
         if (!fileHandle) {
@@ -283,6 +226,10 @@ export default function Editor({ fileHandle, node, isNewFile }) {
         setEditorNewLineCharacter(newLineCharacter === "\n" ? "LF" : "CRLF");
     }
 
+    function togglePreview() {
+        setShowPreview(!showPreview);
+    }
+
     if (aceEditorRef.current !== null) {
         const commands = aceEditorRef.current.editor.commands;
         // add key bindings
@@ -326,7 +273,7 @@ export default function Editor({ fileHandle, node, isNewFile }) {
             name: "code_explorer",
             bindKey: { win: "Ctrl-q", mac: "Ctrl-q" },
             exec: () => {
-                setShowPreview(!showPreview);
+                togglePreview();
             },
         });
     }
@@ -362,6 +309,7 @@ export default function Editor({ fileHandle, node, isNewFile }) {
                             setOptions={editorOptions.editorOptions}
                             readOnly={fileHandle.isReadOnly || false}
                             onCursorChange={onEditorCursorChange}
+                            onCopy={(a) => { editorApi.addClipboardValue(a) }}
                         />
                     )}
                 </Box>
@@ -386,6 +334,8 @@ export default function Editor({ fileHandle, node, isNewFile }) {
                                     editor.focus();
                                 }}
                                 height={height - 38}
+                                isActive={editorApi.activeEditorNode === nodeId}
+                                togglePreview={togglePreview}
                             />
                         )}
                         {editorMode === "markdown" && showPreview && (
@@ -411,11 +361,18 @@ export default function Editor({ fileHandle, node, isNewFile }) {
                         maxHeight: "35px",
                     }}
                 >
-                    <ToolbarEntry>Mode: {editorModeLabel}</ToolbarEntry>
-                    <ToolbarEntry>State: {stateInfo}</ToolbarEntry>
-                    <ToolbarEntry>{editorNewLineCharacter}</ToolbarEntry>
-                    <ToolbarEntry>{tabInfo}</ToolbarEntry>
-                    <ToolbarEntry fixedWidth={"200px"}>{selectionInfo}</ToolbarEntry>
+                    <TooltipIconButton
+                        id="editor-save"
+                        title="Save and Run (Ctrl + S)"
+                        icon={SaveIcon}
+                        onClick={() => saveFile(text)}
+                    />
+                    <TooltipIconButton
+                        id="file-download"
+                        title="Download"
+                        icon={DownloadIcon}
+                        onClick={() => fileDownload(fileHandle)}
+                    />
 
                     <TooltipIconButton
                         id="editor-preview"
@@ -425,19 +382,11 @@ export default function Editor({ fileHandle, node, isNewFile }) {
                         disabled={!previewEnabled}
                     />
 
-                    <TooltipIconButton
-                        id="file-download"
-                        title="Download"
-                        icon={DownloadIcon}
-                        onClick={() => fileDownload(fileHandle)}
-                    />
-
-                    <TooltipIconButton
-                        id="editor-save"
-                        title="Save and Run"
-                        icon={SaveIcon}
-                        onClick={() => saveFile(text)}
-                    />
+                    <ToolbarEntry>Mode: {editorModeLabel}</ToolbarEntry>
+                    <ToolbarEntry>State: {stateInfo}</ToolbarEntry>
+                    <ToolbarEntry>{editorNewLineCharacter}</ToolbarEntry>
+                    <ToolbarEntry>{tabInfo}</ToolbarEntry>
+                    <ToolbarEntry fixedWidth={"200px"}>{selectionInfo}</ToolbarEntry>
                 </Toolbar>
             </Box>
         </>

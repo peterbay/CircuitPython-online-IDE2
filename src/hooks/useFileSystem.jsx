@@ -26,12 +26,12 @@ export default function useFileSystem({ statesApi, infoApi }) {
     useEffect(() => {
         setDirectoryStatus(() => {
             if (!rootDirHandle) {
-                return 'No Directory Connected';
+                return 'No Directory Opened';
             }
             if (!directoryReady) {
                 return 'Connecting';
             } else {
-                const info = 'Connected to ' + rootDirHandle.name;
+                const info = 'Opened folder ' + rootDirHandle.name;
                 return info;
             }
         });
@@ -142,7 +142,8 @@ export default function useFileSystem({ statesApi, infoApi }) {
                 fileLookUp[fullPath].fileHandle.unsaved = false;
             }
             await setFileLookUp((cur) => {
-                return { ...cur, [fullPath]: null };
+                delete cur[fullPath];
+                return { ...cur };
             });
         }
     }

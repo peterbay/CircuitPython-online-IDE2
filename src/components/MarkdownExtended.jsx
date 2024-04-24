@@ -35,10 +35,10 @@ const components = Object.keys(defaultOverrides).reduce((acc, tag) => {
     return acc;
 }, {});
 
-export default function MarkdownExtended({ children }) {
+export default function MarkdownExtended({ children, ...props }) {
     return (
         <Markdown
-            className="markdown-body"
+            className={`markdown-body ${props.className || ''}`}
             remarkPlugins={[remarkGfm]}
             components={components}
         >{children}</Markdown>
@@ -47,4 +47,5 @@ export default function MarkdownExtended({ children }) {
 
 MarkdownExtended.propTypes = {
     children: PropTypes.elementType,
+    className: PropTypes.string,
 };

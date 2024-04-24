@@ -5,7 +5,7 @@ import {
 
 import {
     Box,
-    Modal,
+    Dialog,
     Typography,
 } from "@mui/material";
 
@@ -14,18 +14,13 @@ export default function WarningModal({ title, children, closeEnabled }) {
     const handleClose = closeEnabled ? () => setOpen(false) : () => { };
 
     const style = {
-        position: "absolute",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
-        width: "calc(min(100% - 100px, 500px))",
         bgcolor: "background.paper",
         border: "2px solid #000",
-        boxShadow: 24,
-        p: 4,
+        p: 2,
     };
+
     return (
-        <Modal
+        <Dialog
             open={open}
             onClose={handleClose}
             aria-labelledby="modal-modal-title"
@@ -39,7 +34,7 @@ export default function WarningModal({ title, children, closeEnabled }) {
                     {children}
                 </Typography>
             </Box>
-        </Modal>
+        </Dialog>
     );
 }
 

@@ -39,7 +39,12 @@ export default function ConfigForms() {
             </Box>
             {configApi.schemas.map((schema, index) => {
                 return (
-                    <TabPanel value={tabValue} index={index} key={"schema_key_" + snakeCase(schema.title)}>
+                    <TabPanel
+                        value={tabValue}
+                        index={index}
+                        key={"schema_key_" + snakeCase(schema.title)}
+                        className="config-form-tab"
+                    >
                         <SchemaForm
                             initFormData={configApi.config[snakeCase(schema.title)]}
                             schema={schema}

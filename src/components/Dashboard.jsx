@@ -85,7 +85,6 @@ export default function Dashboard({ node }) {
                 }}
             >
                 <Box sx={{ flexGrow: 0, maxHeight: "35px" }}>
-                    <Divider />
                     <Toolbar
                         variant="dense"
                         disableGutters={true}

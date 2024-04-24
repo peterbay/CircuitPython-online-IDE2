@@ -4,7 +4,7 @@
 
 #### Extra
 |Windows/Linux|Mac|Action|
-|---|---|---|
+|:---|:---|:---|
 |Ctrl-`|Command-`|Show/hide Serial Console tab|
 |Ctrl-B|Command-B|Show/hide Folder View tab|
 |Ctrl-S|Command-S|Save file|
@@ -14,7 +14,7 @@
 #### Line Operations
 
 |Windows/Linux|Mac|Action|
-|---|---|---|
+|:---|:---|:---|
 |Ctrl-D|Command-D|Remove line|
 |Alt-Shift-Down|Command-Option-Down|Copy lines down|
 |Alt-Shift-Up|Command-Option-Up|Copy lines up|
@@ -22,13 +22,13 @@
 |Alt-Up|Option-Up|Move lines up|
 |Alt-Delete|Ctrl-K|Remove to line end|
 |Alt-Backspace|Command-Backspace|Remove to line start|
-|Ctrl-Backspace|Option-Backspace, Ctrl-Option-Backspace|Remove word left|
+|Ctrl-Backspace|Option-Backspace Ctrl-Option-Backspace|Remove word left|
 |Ctrl-Delete|Option-Delete|Remove word right|
-|---|Ctrl-O|Split line|
+|:---|Ctrl-O|Split line|
 
 #### Selection
 |Windows/Linux|Mac|Action|
-|---|---|---|
+|:---|:---|:---|
 |Ctrl-A|Command-A|Select all|
 |Shift-Left|Shift-Left|Select left|
 |Shift-Right|Shift-Right|Select right|
@@ -45,7 +45,7 @@
 |Ctrl-Shift-Home|Command-Shift-Up|Select to start|
 |Ctrl-Shift-End|Command-Shift-Down|Select to end|
 |Ctrl-Shift-D|Command-Shift-D|Duplicate selection|
-|Ctrl-Shift-P|---|Select to matching bracket|
+|Ctrl-Shift-P|:---|Select to matching bracket|
 |Ctrl-Shift-M|Ctrl-Shift-M|Expand to matching|
 |Ctrl-, Ctrl-P|Command-\ |Jump to matching|
 |Ctrl-Shift-, Ctrl-Shift-P|Command-Shift-\ |Select to matching|
@@ -53,7 +53,7 @@
 
 #### Multicursor
 |Windows/Linux|Mac|Action|
-|---|---|---|
+|:---|:---|:---|
 |Ctrl-Alt-Up|Ctrl-Option-Up|Add cursor above|
 |Ctrl-Alt-Down|Ctrl-Option-Down|Add cursor below|
 |Ctrl-Alt-Right|Ctrl-Option-Right|Add next occurrence to multi-selection|
@@ -67,7 +67,7 @@
 
 #### Go to
 |Windows/Linux|Mac|Action|
-|---|---|---|
+|:---|:---|:---|
 |Left|Left, Ctrl-B|Go to left|
 |Right|Right, Ctrl-F|Go to right|
 |Ctrl-Left|Option-Left|Go to word left|
@@ -82,16 +82,16 @@
 |Ctrl-End|Command-End, Command-Down|Go to end|
 |Ctrl-L|Command-L|Go to line...|
 |Ctrl-Down|Command-Down|Scroll line down|
-|Ctrl-Up|---|Scroll line up|
-|Ctrl-P|---|Go to matching bracket|
-|---|Option-PageDown|Scroll page down|
-|---|Option-PageUp|Scroll page up|
+|Ctrl-Up|:---|Scroll line up|
+|Ctrl-P|:---|Go to matching bracket|
+|:---|Option-PageDown|Scroll page down|
+|:---|Option-PageUp|Scroll page up|
 |Alt-E|F4|Go to next error|
 |Alt-Shift-E|Shift-F4|Go to previous error|
 
 #### Find/Replace
 |Windows/Linux|Mac|Action|
-|---|---|---|
+|:---|:---|:---|
 |Ctrl-F|Command-F|Find|
 |Ctrl-H|Command-Option-F|Replace|
 |Ctrl-K|Command-G|Find next|
@@ -102,18 +102,18 @@
 
 #### Folding
 |Windows/Linux|Mac|Action|
-|---|---|---|
+|:---|:---|:---|
 |F2|F2|Toggle fold widget|
 |Alt-F2|Alt-F2|Toggle parent fold widget|
 |Alt-L, Ctrl-F1|Command-Option-L, Command-F1|Fold selection|
 |Alt-Shift-L, Ctrl-Shift-F1|Command-Option-Shift-L, Command-Shift-F1|Unfold|
 |Alt-0|Command-Option-0|Fold all|
 |Alt-Shift-0|Command-Option-Shift-0|Unfold all|
-|---|Ctrl-Command-Option-0|Fold all comments|
+|:---|Ctrl-Command-Option-0|Fold all comments|
 
 #### Other
 |Windows/Linux|Mac|Action|
-|---|---|---|
+|:---|:---|:---|
 |F1|F1|Open command palette|
 |Tab|Tab|Indent|
 |Ctrl-]|Ctrl-]|Block indent|
@@ -130,9 +130,9 @@
 |Ctrl-U|Ctrl-U|Change to upper case|
 |Insert|Insert|Overwrite|
 |Ctrl-Shift-E|Command-Shift-E|Macros replay|
-|Ctrl-Alt-E|---|Macros recording|
-|Delete|---|Delete|
-|---|Ctrl-L|Center selection|
+|Ctrl-Alt-E|:---|Macros recording|
+|Delete|:---|Delete|
+|:---|Ctrl-L|Center selection|
 |Ctrl-U|Ctrl-U|To uppercase|
 |Ctrl-Shift-U|Ctrl-Shift-U|To lowercase|
 |Ctrl-Alt-S|Command-Alt-S|Sort lines|
@@ -143,6 +143,6 @@
 ### Serial Console
 
 |Windows/Linux|Mac|Action|
-|---|---|---|
+|:---|:---|:---|
 |Ctrl-C|Ctrl-C|Stop running program|
 |Ctrl-D|Ctrl-D|Reload|

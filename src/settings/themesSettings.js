@@ -72,7 +72,7 @@ const themes = {
         {
             name: 'idle_fingers',
             label: 'Idle fingers (dark)',
-            class: 'dark-lighter',
+            class: 'dark-darker',
             type: 'dark',
         },
         {
@@ -101,13 +101,13 @@ const themes = {
         {
             name: 'mono_industrial',
             label: 'Mono industrial (dark)',
-            class: 'dark-lighter',
+            class: 'dark-darker',
             type: 'dark',
         },
         {
             name: 'monokai',
             label: 'Monokai (dark)',
-            class: 'dark-lighter',
+            class: 'dark-darker',
             type: 'dark',
         },
         {

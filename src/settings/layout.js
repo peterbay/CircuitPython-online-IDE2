@@ -23,7 +23,7 @@ const layout = {
         {
             type: 'border',
             location: 'right',
-            size: 300,
+            size: 400,
             children: [
                 {
                     type: 'tab',

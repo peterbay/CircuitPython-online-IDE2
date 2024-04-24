@@ -17,14 +17,21 @@ export default function FileCloseDialog() {
 
     const [dialogOpen, setDialogOpen] = useState(false);
     const [fileName, setFileName] = useState("");
+    const [buttonsActive, setButtonsActive] = useState(true);
 
     useEffect(() => {
         setDialogOpen(!!tabsApi.tabToClose);
-        const name = tabsApi.tabToClose && tabsApi.tabToClose?.getConfig()?.fileName;
-        setFileName(name);
+        if (tabsApi.tabToClose) {
+            const name = tabsApi.tabToClose && tabsApi.tabToClose?.getConfig()?.fileName;
+            setFileName(name);
+            setButtonsActive(true);
+        } else {
+            setFileName(null);
+        }
     }, [tabsApi.tabToClose]);
 
     const handleDialogClose = () => {
+        setButtonsActive(false);
         setDialogOpen(false);
         tabsApi.setCancelClosing(true);
     }
@@ -63,11 +70,36 @@ export default function FileCloseDialog() {
                     <DialogContentText id="alert-dialog-description">
                         Do you want to save the changes you made to {fileName}?
                     </DialogContentText>
+                    <DialogContentText
+                        sx={{
+                            color: "text.disabled",
+                            fontSize: "0.8rem",
+                            marginTop: "20px",
+                        }}
+                    >
+                        Your changes will be lost if you don&apos;t save them.
+                    </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => handleConfirm("save")} autoFocus>Save</Button>
-                    <Button onClick={() => handleConfirm("dont-save")}>Don&apos;t Save</Button>
-                    <Button onClick={() => handleConfirm("cancel")}>Cancel</Button>
+                    <Button
+                        onClick={() => handleConfirm("save")}
+                        autoFocus
+                        disabled={!buttonsActive}
+                    >
+                        Save
+                    </Button>
+                    <Button
+                        onClick={() => handleConfirm("dont-save")}
+                        disabled={!buttonsActive}
+                    >
+                        Don&apos;t Save
+                    </Button>
+                    <Button
+                        onClick={() => handleConfirm("cancel")}
+                        disabled={!buttonsActive}
+                    >
+                        Cancel
+                    </Button>
                 </DialogActions>
             </Dialog>
         </>

@@ -16,7 +16,7 @@ import {
 
 import ToolbarEntry from "./ToolbarEntry";
 
-import { useHotkeys } from 'react-hotkeys-hook'
+import { useHotkeys } from 'react-hotkeys-hook';
 import { matchSorter } from 'match-sorter';
 
 import IdeContext from "../contexts/IdeContext";
@@ -116,6 +116,7 @@ export default function CommandPaletteDialog() {
                 onClose={handleDialogClose}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
+                className="command-palette-dialog"
             >
                 <DialogContent
                     sx={{
@@ -134,7 +135,10 @@ export default function CommandPaletteDialog() {
                         <Toolbar
                             variant="dense"
                             disableGutters={true}
-                            sx={{ minHeight: "35px", maxHeight: "35px" }}
+                            sx={{
+                                minHeight: "35px",
+                                maxHeight: "35px",
+                            }}
                         >
                             <ToolbarEntry>Command Palette</ToolbarEntry>
                             <Chip
@@ -194,10 +198,11 @@ export default function CommandPaletteDialog() {
                                 display: 'flex',
                                 justifyContent: 'space-between',
                                 alignItems: 'center',
-                                fontSize: '15px',
-                                paddingTop: '3px',
-                                paddingBottom: '3px',
-                                fontWeight: 400,
+                                fontSize: '14px',
+                                paddingTop: '4px',
+                                paddingBottom: '4px',
+                                fontWeight: 300,
+                                color: context.themeApi.isDarkMode ? '#ccc' : '#000',
                             };
                             props.key = `${option.used ? 'used' : 'not-used'}-${option.cmdId}`;
                             return (
@@ -221,7 +226,7 @@ export default function CommandPaletteDialog() {
                                 inputRef={autocompleteRef}
                                 autoFocus={true}
                                 onKeyDown={onKeyDown}
-                                placeholder=">"
+                                placeholder="Type to search..."
                             />
                         }}
                         isOptionEqualToValue={(option, value) => {
@@ -234,6 +239,7 @@ export default function CommandPaletteDialog() {
                         fullWidth={true}
                         onChange={onAutoCompleteChange}
                         value={autocompleteValue.current}
+                        noOptionsText={'No commands found.'}
                     />
                 </DialogContent>
             </Dialog>

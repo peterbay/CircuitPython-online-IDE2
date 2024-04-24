@@ -1,5 +1,6 @@
 // React
 import { useState, useEffect } from "react";
+import merge from "lodash/merge";
 // Ide parts
 import IdeBody from "./components/IdeBody.jsx";
 import IdeHead from "./components/IdeHead.jsx";
@@ -48,41 +49,61 @@ import CssBaseline from '@mui/material/CssBaseline';
 
 const schemas = [configGlobal, configEditor, configSerialConsole];
 
+const themeComponentsOverride = {
+    MuiInputBase: {
+        styleOverrides: {
+            input: {
+                paddingTop: "8px !important",
+                paddingBottom: "8px !important",
+            }
+        },
+    },
+    MuiGrid: {
+        styleOverrides: {
+            item: {
+                paddingTop: "5px !important",
+                paddingBottom: "5px !important",
+                marginBottom: "8px !important",
+            }
+        },
+    },
+    MuiMenuItem: {
+        styleOverrides: {
+            root: {
+                height: "35px",
+                fontSize: "15px",
+                fontWeight: "400",
+            },
+        },
+    },
+    MuiBreadcrumbs: {
+        styleOverrides: {
+            separator: {
+                marginRight: "2px",
+                marginLeft: "2px",
+            },
+        },
+    },
+ };
+
 const darkTheme = createTheme({
     palette: {
         mode: 'dark',
     },
-    components: {
+    components: merge(themeComponentsOverride, {
         MuiIconButton: {
             defaultProps: {
                 sx: { color: "rgb(157, 157, 157)" },
             },
         },
-        MuiInputBase: {
-            styleOverrides: {
-                input: {
-                    paddingTop: "10px !important",
-                    paddingBottom: "10px !important",
-                }
-            },
-        },
-    },
+    }),
 });
 
 const lightTheme = createTheme({
     palette: {
         mode: 'light',
     },
-    components: {
-        MuiInputBase: {
-            styleOverrides: {
-                input: {
-                    paddingTop: "10px !important",
-                    paddingBottom: "10px !important",
-                }
-            },
-        },
-    },
+    components: merge(themeComponentsOverride, {}),
 });
 
 // update theme list in schemas
@@ -145,7 +166,7 @@ function App() {
     const themeClass = getThemeClassByLabel(themeLabel);
     const themeName = getThemeNameByLabel(themeLabel);
     const themeModeClass = (themeType === "dark") ? "is-dark-theme" : "is-light-theme";
-    const classes = `ide ${themeClass} ${themeModeClass}`;
+    const classes = `ide ${themeClass} ${themeModeClass} ${themeName}`;
     const muiTheme = (getThemeTypeByLabel(themeLabel) === "dark") ? darkTheme : lightTheme;
 
     const themeApi = {

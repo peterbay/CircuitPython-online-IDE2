@@ -10,7 +10,7 @@ import capitalize from "lodash/capitalize";
 import startCase from "lodash/startCase";
 import S from "string";
 
-function sortComparer(a,b){
+function sortComparer(a, b) {
     return a?.localeCompare(b) || 0;
 }
 
@@ -159,6 +159,12 @@ export default function useEditor({ configApi }) {
             if (actualValue > 6) {
                 configApi.setConfigField('editor', 'font', actualValue - 1);
             }
+
+        } else if (type === 'invisible-characters-show') {
+            configApi.setConfigField('editor', 'show_invisibles', true);
+
+        } else if (type === 'invisible-characters-hide') {
+            configApi.setConfigField('editor', 'show_invisibles', false);
 
         }
     }

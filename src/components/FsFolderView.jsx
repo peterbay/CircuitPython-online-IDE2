@@ -7,6 +7,7 @@ import {
 import {
     Backdrop,
     Breadcrumbs,
+    Button,
     CircularProgress,
     Divider,
     List,
@@ -18,6 +19,7 @@ import {
     CreateNewFolderOutlined as NewFolderIcon,
     NoteAddOutlined as NewFileIcon,
     RefreshOutlined as RefreshIcon,
+    UploadFileOutlined as UploadFileIcon,
 } from "@mui/icons-material";
 
 import Dropzone from 'react-dropzone';
@@ -197,15 +199,26 @@ export default function FsFolderView() {
                                 }}
                             >
                                 <input {...getInputProps()} />
-                                <p style={{
-                                    textAlign: "center",
-                                    fontSize: "14px",
-                                    color: "#888",
-
-                                }}>
+                                <Button
+                                    component="label"
+                                    tabIndex={-1}
+                                    startIcon={<UploadFileIcon
+                                        sx={{
+                                            fontSize: "40px !important",
+                                            color: "#777",
+                                        }}
+                                    />}
+                                    sx={{
+                                        backgroundColor: "transparent",
+                                        fontSize: "14px",
+                                        color: "#777",
+                                        padding: "5px",
+                                        textTransform: "none",
+                                    }}
+                                >
                                     Drag and drop external files here for upload,
                                     or click to select files.
-                                </p>
+                                </Button>
                             </div>
                         </section>
                     )}

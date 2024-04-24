@@ -2,7 +2,7 @@
     scrollbar-color: rgb(58, 73, 81) rgba(73, 80, 83, 0.1);
     --color-text: rgb(164, 164, 164);
     --color-tab-text: rgb(74, 185, 143);
-    --color-background: rgb(10, 32, 43);
+    --color-background: rgb(16, 42, 54);
     --color-base: rgb(16, 42, 54);
     --color-1: rgb(22, 55, 71);
     --color-2: rgba(11, 195, 84, 0.791);
@@ -20,7 +20,7 @@
     --color-overflow: gray;
     --color-icon: gray;
 
-    --color-tabset-background: var(--color-background);
+    --color-tabset-background: var(--color-1);
     --color-tabset-background-selected: var(--color-1);
     --color-tabset-background-maximized: var(--color-6);
     --color-tabset-divider-line: var(--color-4);
@@ -107,9 +107,6 @@
 .solarized-dark .flexlayout__tabset_tabbar_outer {
     background-color: var(--color-tabset-background);
 }
-.solarized-dark .flexlayout__tabset_tabbar_outer_top {
-    border-bottom: 1px solid var(--color-tabset-divider-line);
-}
 .solarized-dark .flexlayout__tabset_tabbar_outer_bottom {
     border-top: 1px solid var(--color-tabset-divider-line);
 }
@@ -127,9 +124,9 @@
     color: var(--color-text);
 }
 .solarized-dark .flexlayout__tab_button {
-    border-right: 1px solid var(--color-4);
-    border-left: 1px solid var(--color-4);
-    border-top: 2px solid var(--color-4);
+    border-right: 1px solid var(--color-3);
+    border-top: 2px solid var(--color-tab-unselected-background);
+    border-bottom: 1px solid var(--color-3);
 }
 .solarized-dark .flexlayout__tab_button--selected {
     background-color: var(--color-tab-selected-background);
@@ -147,9 +144,9 @@
 }
 
 .solarized-dark .flexlayout__tab_button_top.flexlayout__tab_button--selected {
-    border-left: 1px solid var(--color-3);
-    border-right: 1px solid var(--color-3);
+    border-right: 1px solid var(--color-3); 
     border-top: 2px solid var(--color-7);
+    border-bottom: 1px solid transparent;
 }
 
 .solarized-dark .flexlayout__tab_button_textbox {
@@ -163,7 +160,8 @@
     width: 10em;
 }
 .solarized-dark .flexlayout__tab_button_trailing:hover {
-    background-color: var(--color-5);
+    background-color: var(--color-3);
+    color: var(--color-);
 }
 .solarized-dark .flexlayout__tab_button_overflow {
     color: var(--color-overflow);
@@ -317,4 +315,107 @@
 .solarized-dark .folder-has-opened-files {
     border-left: 3px solid var(--color-7);
     color: rgb(203, 151, 6);
+}
+
+.solarized-dark .flexlayout__tabset_header,
+.solarized-dark .flexlayout__tabset,
+.solarized-dark .panel,
+.solarized-dark .flexlayout__layout,
+.solarized-dark .flexlayout__tab,
+.solarized-dark .flexlayout__tab,
+.solarized-dark .flexlayout__floating_window_tab,
+.solarized-dark .flexlayout__tab_button--selected,
+.solarized-dark .markdown-body,
+.solarized-dark .markdown-body table tr {
+    background-color: rgb(10, 32, 43);
+}
+
+.solarized-dark .ide-header {
+    background-color: rgb(32, 54, 71);
+    border-bottom: 1px solid rgb(27, 27, 27);
+}
+
+.solarized-dark .ace_gutter-cell {
+    color: rgb(133, 133, 133) !important;
+}
+
+.solarized-dark .markdown-body,
+.solarized-dark .markdown-body tr {
+    color: rgb(164, 164, 164);
+    background-color: rgb(10, 32, 43);
+}
+
+.solarized-dark .markdown-body table tr:nth-child(even) {
+    background-color: rgb(12, 40, 55);
+}
+
+.solarized-dark .markdown-body table th,
+.solarized-dark .markdown-body table td {
+    border: 1px solid rgb(88, 88, 88);
+}
+
+.solarized-dark .markdown-body a {
+    color: rgb(74, 185, 143);
+}
+
+.solarized-dark .markdown-body pre {
+    background-color: rgb(12, 40, 55);
+    color: rgb(33, 132, 186);
+}
+
+.solarized-dark .ace_search {
+    background-color: var(--color-background);
+    color: var(--color-text);
+    border-color: var(--color-2);
+}
+
+.solarized-dark .ace_search_field {
+    background-color: var(--color-1);
+    color: var(--color-text);
+    border: 1px solid transparent;
+}
+
+.solarized-dark .ace_search_options {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.solarized-dark .ace_searchbtn {
+    background-color: var(--color-3);
+    color: var(--color-text);
+    border: 1px solid transparent;
+}
+
+.solarized-dark .ace_searchbtn:hover {
+    background-color: var(--color-4);
+    color: var(--color-text);
+    border: 1px solid transparent;
+}
+
+.solarized-dark .ace_searchbtn:last-child {
+    border: 1px solid transparent;
+}
+
+.solarized-dark .ace_button {
+    background-color: var(--color-3);
+    color: var(--color-text);
+    margin-left: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 4px;
+}
+
+.solarized-dark .ace_button.checked {
+    color: var(--color-1);
+    border-color: var(--color-2);
+    background-color: var(--color-6);
+}
+
+.solarized-dark .ace_button:hover {
+    background-color: var(--color-4);
+    color: var(--color-5);
+    margin-left: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-color: var(--color-2);
 }
