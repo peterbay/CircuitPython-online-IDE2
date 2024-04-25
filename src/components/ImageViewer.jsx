@@ -8,54 +8,9 @@ import {
 } from "@mui/material";
 
 import ToolbarEntry from "./ToolbarEntry";
+import ButtonSvg from "./ButtonSvg";
 
 import { PanViewer } from "react-image-pan-zoom-rotate";
-
-function ButtonSvg({ path, polygon, onClick, isLast = false }) {
-    return (
-        <div
-            onClick={onClick}
-            style={{
-                textAlign: 'center',
-                cursor: 'pointer',
-                height: 40,
-                width: 40,
-                border: '2px solid #ccc',
-                borderBottom: isLast ? '2px solid #ccc' : 'none',
-            }}
-        >
-            <svg
-                style={{
-                    height: '100%',
-                    width: '100%',
-                    padding: 10,
-                    boxSizing: 'border-box',
-                }}
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-            >
-                <path
-                    d={path}
-                    stroke="#4C68C1"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                />
-                {polygon && (
-                    <polygon
-                        stroke="#4C68C1"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        points={polygon}
-                    />
-                )}
-            </svg>
-        </div>
-    );
-}
 
 export default function ImageViewer({ fileHandle, node }) {
 
@@ -153,24 +108,29 @@ export default function ImageViewer({ fileHandle, node }) {
                         <ButtonSvg
                             path="M4 12H20 M12 4L12 20"
                             onClick={zoomIn}
+                            tooltip="Zoom In"
                         />
                         <ButtonSvg
                             path="M4 12H20"
                             onClick={zoomOut}
+                            tooltip="Zoom Out"
                         />
                         <ButtonSvg
                             path="M14 15L9 20L4 15 M20 4H13C10.7909 4 9 5.79086 9 8V20"
                             onClick={rotateLeft}
+                            tooltip="Rotate Left"
                         />
                         <ButtonSvg
                             path="M9.178,18.799V1.763L0,18.799H9.178z M8.517,18.136h-7.41l7.41-13.752V18.136z"
                             polygon="11.385,1.763 11.385,18.799 20.562,18.799"
                             onClick={flipImage}
+                            tooltip="Flip Image"
                         />
                         <ButtonSvg
                             path="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"
                             onClick={resetAll}
                             isLast={true}
+                            tooltip="Reset"
                         />
                     </div>
 
@@ -222,11 +182,4 @@ ImageViewer.propTypes = {
     fileHandle: PropTypes.object.isRequired,
     node: PropTypes.object.isRequired,
     isNewFile: PropTypes.bool,
-};
-
-ButtonSvg.propTypes = {
-    path: PropTypes.string.isRequired,
-    polygon: PropTypes.string,
-    onClick: PropTypes.func.isRequired,
-    isLast: PropTypes.bool,
 };
