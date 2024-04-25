@@ -23,14 +23,7 @@ import configGlobal from "./settings/configGlobal";
 import configEditor from "./settings/configEditor";
 import configSerialConsole from "./settings/configSerialConsole";
 
-// layout
-import {
-    Model as FlexLayoutModel,
-} from "flexlayout-react";
-
 import { SnackbarProvider } from 'notistack'
-
-import layout from "./settings/layout";
 
 import {
     getDefaultTheme,
@@ -113,8 +106,6 @@ if (globalSchema) {
     globalSchema.properties.theme.default = getDefaultTheme();
 }
 
-const flexModel = FlexLayoutModel.fromJson(layout);
-
 function App() {
 
     const statesApi = useGlobalStates();
@@ -123,7 +114,7 @@ function App() {
     const editorApi = useEditor({ configApi, statesApi, infoApi });
     const fsApi = useFileSystem({ statesApi, infoApi });
     const serialApi = useSerial({ configApi, statesApi, infoApi });
-    const tabsApi = useTabs({ flexModel, fsApi, statesApi, infoApi });
+    const tabsApi = useTabs({ fsApi, statesApi, infoApi, configApi });
     const dashboardApi = useDasboard({ statesApi, infoApi });
     const paletteApi = usePalette({ statesApi, infoApi });
 
@@ -132,6 +123,21 @@ function App() {
     const mqListener = (e => {
         setIsDarkTheme(e.matches);
     });
+
+    useEffect(() => {
+        if (configApi.ready && !tabsApi.flexModel) {
+            tabsApi.initLayout();
+        }
+    }, [configApi.ready, tabsApi.flexModel, tabsApi.initLayout, tabsApi]);
+
+    useEffect(() => {
+        function initTabs() {
+            if (configApi.ready && tabsApi.flexModel) {
+                tabsApi.initDefaultTabs();
+            }
+        }
+        initTabs();
+    }, [configApi.ready, tabsApi.flexModel]);
 
     useEffect(() => {
         const darkThemeMq = window.matchMedia("(prefers-color-scheme: dark)");
@@ -153,6 +159,10 @@ function App() {
 
     // If config initialization not done, don't continue.
     if (!configApi.ready) {
+        return;
+    }
+
+    if (!tabsApi.flexModel) {
         return;
     }
 
@@ -180,7 +190,7 @@ function App() {
     };
 
     const ideProviderValue = {
-        flexModel,
+        flexModel: tabsApi.flexModel,
         configApi,
         dashboardApi,
         editorApi,

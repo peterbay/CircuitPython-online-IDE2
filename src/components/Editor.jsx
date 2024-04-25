@@ -382,10 +382,10 @@ export default function Editor({ fileHandle, node, isNewFile }) {
                         disabled={!previewEnabled}
                     />
 
-                    <ToolbarEntry>Mode: {editorModeLabel}</ToolbarEntry>
-                    <ToolbarEntry>State: {stateInfo}</ToolbarEntry>
-                    <ToolbarEntry>{editorNewLineCharacter}</ToolbarEntry>
-                    <ToolbarEntry>{tabInfo}</ToolbarEntry>
+                    <ToolbarEntry maxWidth={'120px'}>Mode: {editorModeLabel}</ToolbarEntry>
+                    <ToolbarEntry maxWidth={'120px'}>State: {stateInfo}</ToolbarEntry>
+                    <ToolbarEntry maxWidth={'80px'}>{editorNewLineCharacter}</ToolbarEntry>
+                    <ToolbarEntry maxWidth={'80px'}>{tabInfo}</ToolbarEntry>
                     <ToolbarEntry fixedWidth={"200px"}>{selectionInfo}</ToolbarEntry>
                 </Toolbar>
             </Box>

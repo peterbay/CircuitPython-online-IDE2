@@ -79,6 +79,7 @@ export default function useConfig({ schemas }) {
 
     return {
         config: localStorageState,
+        getConfig,
         setConfig,
         setConfigField,
         getConfigField,

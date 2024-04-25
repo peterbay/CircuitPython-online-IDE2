@@ -109,7 +109,6 @@ export default function IdeBody() {
         if (config?.fullPath && fsApi.activeFileFullPath !== config?.fullPath) {
             await fsApi.setActiveFileFullPath(config?.fullPath);
             editorApi.setActiveEditorNode(node.getId());
-
         }
     }
 
@@ -143,6 +142,11 @@ export default function IdeBody() {
         setTabContextMenu({ node, event });
     }
 
+    async function onModelChange(model) {
+        await updateActiveEditorInfo();
+        tabsApi.saveLayout(model.toJson());
+    }
+
     return (
         <>
             <TabContextMenu
@@ -155,7 +159,7 @@ export default function IdeBody() {
                 model={flexModel}
                 factory={factory}
                 onAction={onAction}
-                onModelChange={updateActiveEditorInfo}
+                onModelChange={onModelChange}
                 onRenderTab={updateActiveEditorInfo}
                 onContextMenu={onContextMenu}
             />

@@ -16,7 +16,7 @@ const layout = {
                     name: 'Folder View',
                     component: 'folder_view',
                     enableClose: false,
-                    enableDrag: false,
+                    enableDrag: true,
                 },
             ],
         },
@@ -24,7 +24,14 @@ const layout = {
             type: 'border',
             location: 'right',
             size: 400,
+            selected: 0,
             children: [
+                {
+                    type: 'tab',
+                    name: 'Serial Console',
+                    component: 'serial_console',
+                    enableClose: false,
+                },
                 {
                     type: 'tab',
                     name: 'Settings',
@@ -37,14 +44,7 @@ const layout = {
             type: 'border',
             location: 'bottom',
             size: 350,
-            selected: 0,
             children: [
-                {
-                    type: 'tab',
-                    name: 'Serial Console',
-                    component: 'serial_console',
-                    enableClose: false,
-                },
             ],
         },
     ],
@@ -58,6 +58,7 @@ const layout = {
                 id: 'left_tabset',
                 weight: 50,
                 selected: 0,
+                enableDrag: false,
                 children: [
                     {
                         type: 'tab',

@@ -6,8 +6,16 @@ import {
     TabNode as FlexLayoutTabNode,
 } from 'flexlayout-react';
 
-export default function useTabs({ flexModel, fsApi }) {
+import {
+    Model as FlexLayoutModel,
+} from "flexlayout-react";
 
+import forEach from 'lodash/forEach';
+import layout from "../settings/layout";
+
+export default function useTabs({ fsApi, configApi }) {
+
+    const [flexModel, setFlexModel] = useState(null);
     const [tabsToClose, setTabsToClose] = useState([]);
     const [tabToClose, setTabToClose] = useState(null);
     const [cancelClosing, setCancelClosing] = useState(null);
@@ -29,6 +37,66 @@ export default function useTabs({ flexModel, fsApi }) {
         }
     }, [cancelClosing]);
 
+    async function initLayout() {
+        if (flexModel) {
+            return;
+        }
+
+        const storedLayout = configApi.getConfig('layout');
+
+        if (!storedLayout) {
+            const model = FlexLayoutModel.fromJson(layout);
+            setFlexModel(model);
+
+        } else {
+            const model = FlexLayoutModel.fromJson(storedLayout);
+            setFlexModel(model);
+
+        }
+    }
+
+    async function initDefaultTabs() {
+        const nav = await getTabsByName('Navigation', 'equal');
+        if (nav.length === 0) {
+            tabOpen('Navigation', 'navigation');
+        }
+    }
+
+    async function saveLayout(layout) {
+        if (layout.borders) {
+            forEach(layout.borders, (border) => {
+                if (border.children) {
+                    border.children = border.children
+                        .filter((child) => child.component !== 'editor');
+
+                    forEach(border.children, (entry) => {
+                        entry.selected = 0;
+                    });
+                }
+            });
+        }
+        if (layout?.layout?.children) {
+            layout.layout.children = layout.layout.children
+                .filter((child) => child.component !== 'editor');
+
+            forEach(layout.layout.children, (entry) => {
+                entry.selected = 0;
+            });
+
+            forEach(layout.layout.children, (child) => {
+                if (child.children) {
+                    child.children = child.children
+                        .filter((child) => child.component !== 'editor');
+
+                    forEach(child.children, (entry) => {
+                        entry.selected = 0;
+                    });
+                }
+            });
+        }
+        configApi.setConfig('layout', layout);
+    }
+
     async function getTabNodes() {
         const nodes = [];
         await flexModel.visitNodes((node) => {
@@ -39,7 +107,7 @@ export default function useTabs({ flexModel, fsApi }) {
         return nodes;
     }
 
-    async function getTabsByName (name, compareMethod) {
+    async function getTabsByName(name, compareMethod) {
         const nodes = await getTabNodes();
         const tabs = nodes.filter((node) => {
             const tabName = node.getName();
@@ -73,7 +141,7 @@ export default function useTabs({ flexModel, fsApi }) {
         }
     }
 
-    async function tabSwitch (name) {
+    async function tabSwitch(name) {
         const nodes = await getTabNodes();
         for (let tabNode of nodes) {
             if (tabNode.getComponent() === name) {
@@ -83,7 +151,7 @@ export default function useTabs({ flexModel, fsApi }) {
         }
     }
 
-    async function getActiveEditorTab () {
+    async function getActiveEditorTab() {
         const tabset = await flexModel.getActiveTabset();
         if (!tabset || !tabset.getChildren) {
             return null;
@@ -104,7 +172,7 @@ export default function useTabs({ flexModel, fsApi }) {
         return null;
     }
 
-    async function tabsGetByFullPath (name, compareMethod) {
+    async function tabsGetByFullPath(name, compareMethod) {
         const nodes = await getTabNodes();
         const tabs = nodes.filter((node) => {
             if (!node.getConfig) {
@@ -123,9 +191,14 @@ export default function useTabs({ flexModel, fsApi }) {
         return tabs;
     }
 
-    async function tabOpen(name, component) {
+    async function tabOpen(name, component, tabset = null) {
         const tabNodes = await getTabsByName(name, 'equal');
         const tabNode = tabNodes && tabNodes.length > 0 ? tabNodes[0] : null;
+
+        let targetTabset = tabset;
+        if (!targetTabset) {
+            targetTabset = flexModel.getActiveTabset() ? flexModel.getActiveTabset().getId() : 'left_tabset';
+        }
 
         if (tabNode instanceof FlexLayoutTabNode) {
             // Activate the found tab
@@ -139,7 +212,7 @@ export default function useTabs({ flexModel, fsApi }) {
                         name: name,
                         component: component,
                     },
-                    flexModel.getActiveTabset() ? flexModel.getActiveTabset().getId() : 'left_tabset',
+                    targetTabset,
                     FlexLayoutDockLocation.CENTER,
                     -1
                 )
@@ -225,6 +298,10 @@ export default function useTabs({ flexModel, fsApi }) {
     }
 
     return {
+        flexModel,
+        initLayout,
+        saveLayout,
+        initDefaultTabs,
         tabShow,
         tabHide,
         tabOpen,
