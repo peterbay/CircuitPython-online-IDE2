@@ -6,7 +6,6 @@ import { Form } from "@rjsf/mui";
 import validator from "@rjsf/validator-ajv8";
 // user data
 import uiSchema from "../settings/configUiSchema.json";
-
 export default function SchemaForm({ initFormData, schema, onSubmit }) {
     const [formData, setFormData] = useState();
     useEffect(() => {

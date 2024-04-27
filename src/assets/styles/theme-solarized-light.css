@@ -1,3 +1,7 @@
+.solarized-light .MuiAutocomplete-popper {
+    scrollbar-color: rgb(195, 192, 181) rgba(235, 229, 193, 0.33);
+}
+
 .solarized-light .flexlayout__layout {
     scrollbar-color: rgb(195, 192, 181) rgba(235, 229, 193, 0.33);
     --color-text: rgb(54, 54, 54);

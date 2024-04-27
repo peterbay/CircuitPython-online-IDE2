@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
 import {
     Button,
     ClickAwayListener,
@@ -10,7 +10,10 @@ import {
     Popper,
 } from "@mui/material";
 
+import IdeContext from "../contexts/IdeContext";
 export default function Menu({ label, options }) {
+
+    const { themeApi } = useContext(IdeContext);
     const [open, setOpen] = useState(false);
     const anchorRef = useRef(null);
     const prevOpen = useRef(open);
@@ -53,6 +56,10 @@ export default function Menu({ label, options }) {
                 aria-expanded={open ? "true" : undefined}
                 aria-haspopup="true"
                 onClick={handleToggle}
+                sx={{
+                    color: themeApi.isDarkMode ? "#bbb" : "#333",
+                    fontWeight: "400",
+                }}
             >
                 {label}
             </Button>
@@ -63,7 +70,9 @@ export default function Menu({ label, options }) {
                 placement="bottom-start"
                 transition
                 disablePortal
-                style={{ zIndex: 200 }}
+                sx={{
+                    zIndex: 200,
+                }}
             >
                 {({ TransitionProps, placement }) => (
                     <Grow
@@ -72,13 +81,29 @@ export default function Menu({ label, options }) {
                             transformOrigin: placement === "bottom-start" ? "left top" : "left bottom",
                         }}
                     >
-                        <Paper>
+                        <Paper
+                            sx={{
+                                borderRadius: "0px",
+                                padding: "2px",
+                                backgroundColor: themeApi.isDarkMode ? "#131313" : "#fff",
+                                '& li': {
+                                    color: themeApi.isDarkMode ? '#ccc' : '#888',
+                                },
+                                '& li:hover': {
+                                    backgroundColor: themeApi.isDarkMode ? 'rgb(26, 56, 95)' : 'rgb(65, 117, 212)',
+                                    color: 'white !important',
+                                }
+                            }}
+                        >
                             <ClickAwayListener onClickAway={handleClose}>
                                 <MenuList
                                     autoFocusItem={open}
                                     id="composition-menu"
                                     aria-labelledby="composition-button"
                                     onKeyDown={handleListKeyDown}
+                                    sx={{
+                                        padding: "0px",
+                                    }}
                                 >
                                     {options.map((opt) => (
                                         <MenuItem

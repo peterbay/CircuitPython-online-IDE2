@@ -43,16 +43,24 @@ export default function useTabs({ fsApi, configApi }) {
         }
 
         const storedLayout = configApi.getConfig('layout');
+        let layoytFailed = false;
 
-        if (!storedLayout) {
+        if (storedLayout) {
+            try {
+                const model = FlexLayoutModel.fromJson(storedLayout);
+                setFlexModel(model);
+
+            } catch (e) {
+                layoytFailed = true;
+                console.error(e);
+            }
+        }
+
+        if (!storedLayout || layoytFailed) {
             const model = FlexLayoutModel.fromJson(layout);
             setFlexModel(model);
 
-        } else {
-            const model = FlexLayoutModel.fromJson(storedLayout);
-            setFlexModel(model);
-
-        }
+        } 
     }
 
     async function initDefaultTabs() {
@@ -62,35 +70,30 @@ export default function useTabs({ fsApi, configApi }) {
         }
     }
 
+    function prepareChildren(children) {
+        const filteredChildren = children.filter((child) => child.component !== 'editor');
+
+        forEach(filteredChildren, (entry) => {
+            entry.selected = 0;
+        });
+
+        return filteredChildren;
+    }
+
     async function saveLayout(layout) {
         if (layout.borders) {
             forEach(layout.borders, (border) => {
                 if (border.children) {
-                    border.children = border.children
-                        .filter((child) => child.component !== 'editor');
-
-                    forEach(border.children, (entry) => {
-                        entry.selected = 0;
-                    });
+                    border.children = prepareChildren(border.children);
                 }
             });
         }
         if (layout?.layout?.children) {
-            layout.layout.children = layout.layout.children
-                .filter((child) => child.component !== 'editor');
-
-            forEach(layout.layout.children, (entry) => {
-                entry.selected = 0;
-            });
+            layout.layout.children = prepareChildren(layout.layout.children);
 
             forEach(layout.layout.children, (child) => {
                 if (child.children) {
-                    child.children = child.children
-                        .filter((child) => child.component !== 'editor');
-
-                    forEach(child.children, (entry) => {
-                        entry.selected = 0;
-                    });
+                    child.children = prepareChildren(child.children);
                 }
             });
         }

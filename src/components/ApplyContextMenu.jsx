@@ -1,13 +1,15 @@
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import {
     Menu,
     MenuItem,
     Tooltip,
 } from "@mui/material";
 
+import IdeContext from "../contexts/IdeContext";
 export default function ApplyContextMenu({ children, items }) {
 
+    const { themeApi } = useContext(IdeContext);
     const [contextMenu, setContextMenu] = useState(null);
 
     const handleContextMenu = (event) => {
@@ -42,7 +44,21 @@ export default function ApplyContextMenu({ children, items }) {
                     }
                     MenuListProps={{
                         style: {
-                            padding: '0px',
+                            padding: '4px',
+                        },
+                        sx: {
+                            '& li': {
+                                color: themeApi.isDarkMode ? '#ccc' : '#888',
+                            },
+                            '& li:hover': {
+                                backgroundColor: themeApi.isDarkMode ? 'rgb(26, 56, 95)' : 'rgb(65, 117, 212)',
+                                color: 'white !important',
+                            }
+                        },
+                    }}
+                    slotProps={{
+                        style: {
+                            padding: '5px',
                         },
                     }}
                 >

@@ -13,7 +13,7 @@ import findIndex from "lodash/findIndex";
 
 export default function TabContextMenu({ tabContextMenu }) {
 
-    const { flexModel, fsApi, tabsApi } = useContext(IdeContext);
+    const { flexModel, fsApi, tabsApi, themeApi } = useContext(IdeContext);
 
     const [contextMenu, setContextMenu] = useState(null);
     const [selectedNode, setSelectedNode] = useState(null);
@@ -123,7 +123,21 @@ export default function TabContextMenu({ tabContextMenu }) {
                 anchorPosition={contextMenu !== null ? { top: contextMenu.mouseY, left: contextMenu.mouseX } : undefined}
                 MenuListProps={{
                     style: {
-                        padding: '0px',
+                        padding: '4px',
+                    },
+                    sx: {
+                        '& li': {
+                            color: themeApi.isDarkMode ? '#ccc' : '#888',
+                        },
+                        '& li:hover': {
+                            backgroundColor: themeApi.isDarkMode ? 'rgb(26, 56, 95)' : 'rgb(65, 117, 212)',
+                            color: 'white !important',
+                        }
+                    },
+                }}
+                slotProps={{
+                    style: {
+                        padding: '5px',
                     },
                 }}
             >

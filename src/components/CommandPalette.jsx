@@ -116,15 +116,15 @@ export default function CommandPaletteDialog() {
                 onClose={handleDialogClose}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
-                className="command-palette-dialog"
+                className={`command-palette-dialog ${context.themeApi.themeClass}`}
             >
                 <DialogContent
                     sx={{
                         width: "500px",
-                        height: '485px',
-                        maxHeight: '485px !important',
+                        height: '500px',
+                        maxHeight: '500px !important',
                         overflow: 'hidden',
-                        padding: '0px',
+                        padding: '4px',
                     }}
                 >
                     <Box sx={{
@@ -185,7 +185,8 @@ export default function CommandPaletteDialog() {
                                 },
                                 sx: {
                                     '& li.Mui-focused': {
-                                        backgroundColor: 'rgb(21, 101, 192) !important',
+                                        backgroundColor: context.themeApi.isDarkMode ? 'rgb(26, 56, 95) !important' :
+                                            'rgb(65, 117, 212) !important',
                                         color: 'white !important',
                                     }
                                 },

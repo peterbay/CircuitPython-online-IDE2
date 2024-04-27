@@ -1,3 +1,7 @@
+.light .MuiAutocomplete-popper {
+    scrollbar-color: rgb(222, 222, 222) rgba(239, 239, 239, 0.33);
+}
+
 .light .flexlayout__layout {
     scrollbar-color: rgb(222, 222, 222) rgba(239, 239, 239, 0.33);
     --color-text: rgb(54, 54, 54);

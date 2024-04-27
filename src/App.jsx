@@ -77,7 +77,15 @@ const themeComponentsOverride = {
             },
         },
     },
- };
+    MuiPaper: {
+        styleOverrides: {
+            root: {
+                padding: "0px",
+                borderRadius: "0px",
+            },
+        },
+    },
+};
 
 const darkTheme = createTheme({
     palette: {
@@ -89,6 +97,14 @@ const darkTheme = createTheme({
                 sx: { color: "rgb(157, 157, 157)" },
             },
         },
+        MuiPaper: {
+            styleOverrides: {
+                root: {
+                    backgroundColor: "#000000",
+                    border: "1px solid #555",
+                },
+            },
+        },
     }),
 });
 
@@ -96,7 +112,16 @@ const lightTheme = createTheme({
     palette: {
         mode: 'light',
     },
-    components: merge(themeComponentsOverride, {}),
+    components: merge(themeComponentsOverride, {
+        MuiPaper: {
+            styleOverrides: {
+                root: {
+                    backgroundColor: "#ffffff",
+                    border: "1px solid #aaa",
+                },
+            },
+        },
+    }),
 });
 
 // update theme list in schemas
@@ -180,6 +205,7 @@ function App() {
     const muiTheme = (getThemeTypeByLabel(themeLabel) === "dark") ? darkTheme : lightTheme;
 
     const themeApi = {
+        classes,
         themeLabel,
         themeName,
         themeType,
