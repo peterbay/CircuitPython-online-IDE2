@@ -104,6 +104,7 @@ export default function FsFolderView() {
 
             try {
                 await fileWriteUploaded(fsApi.currentFolderHandle, file);
+                await fsApi.folderReload();
                 infoApi.successMessage(`File "${file.name}" written to the target folder.`);
 
             } catch (error) {
