@@ -2,17 +2,15 @@ import PropTypes from "prop-types";
 import { useState, useContext, useEffect } from "react";
 import { dataSubscriber } from "../utils/dataService";
 
-import widgetsContext from "../contexts/WidgetsContext";
 import IdeContext from "../contexts/IdeContext";
 
 import Chart from "react-apexcharts";
 import ApexCharts from 'apexcharts';
-
-export function Widget({ widgetOptions, height, chartOptions, type }) {
-    const { locked } = useContext(widgetsContext);
-    const { themeApi } = useContext(IdeContext);
-    const [lastData, setLastData] = useState([]);
+export function Widget({ widgetOptions, height, chartOptions, type, widgetType }) {
+    const { themeApi, dashboardApi } = useContext(IdeContext);
     const [extendedOptions, setExtendedOptions] = useState(chartOptions.options);
+
+    console.log('widgetOptions', widgetOptions);
 
     useEffect(() => {
         setExtendedOptions((prev) => {
@@ -21,53 +19,70 @@ export function Widget({ widgetOptions, height, chartOptions, type }) {
                 theme: {
                     mode: themeApi.isDarkMode ? 'dark' : 'light'
                 },
+            };
+        });
+    }, [themeApi.isDarkMode]);
+
+    useEffect(() => {
+        setExtendedOptions((prev) => {
+            return {
+                ...prev,
                 chart: {
                     ...prev.chart,
                     toolbar: {
-                        show: !locked,
+                        show: !dashboardApi.locked,
                     }
                 }
             };
         });
-    }, [themeApi.isDarkMode, locked]);
+    }, [dashboardApi.locked]);
+
+    const nextData = (data) => {
+        if (!data || data?.id !== widgetOptions?.id) {
+            return;
+        }
+
+        const widgetData = data?.data;
+        const chartId = `chart-${widgetOptions?.id}`;
+
+        if (widgetType === 'chart') {
+            ApexCharts.exec(chartId, 'updateSeries', [{
+                data: widgetData,
+            }]);
+        }
+    };
 
     useEffect(() => {
         const sub = dataSubscriber.subscribe({
-            next: (data) => {
-                if (!data || data.id !== widgetOptions.id) {
-                    return;
-                }
-                const widgetData = data.data;
-                const chartId = `chart-${widgetOptions.id}`;
-                setLastData(widgetData);
-        
-                ApexCharts.exec(chartId, 'updateSeries', [{
-                    data: locked ? widgetData : lastData
-                }]);
-            }
+            next: nextData,
         });
 
-        const cleanup = () => {
+        const cleanup = function () {
             sub.unsubscribe();
         };
-
         return cleanup;
-    }, [lastData, widgetOptions.id, locked]);
+    }, []);
 
     return <div
         id="widget"
-        className={locked ? 'widget-locked' : ''}
+        className={dashboardApi.locked ? 'widget-locked' : ''}
     // style={{ height, background: 'white' }}
     >
-        <div className="widget-header">{widgetOptions.label}</div>
-        <div id="widget-content" style={{ padding: "10px" }}>
-            <Chart
-                options={extendedOptions}
-                series={chartOptions.series}
-                // data={chartOptions}
-                type={type}
-                height={height - 40}
-            />
+        <div className="widget-header">
+            {widgetOptions.label}
+        </div>
+        <div
+            id="widget-content"
+            style={{ padding: "10px" }}
+        >
+            {widgetType === 'chart' &&
+                <Chart
+                    options={extendedOptions}
+                    series={chartOptions.series}
+                    type={type}
+                    height={height - 40}
+                />
+            }
         </div>
     </div>;
 }

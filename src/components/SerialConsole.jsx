@@ -165,6 +165,16 @@ export default function SerialConsole({ node }) {
                     <ToolbarEntry>Serial console: {serialApi.connectionState}</ToolbarEntry>
 
                     <TooltipIconButton
+                        id="clear-terminal"
+                        title="Clear console output"
+                        icon={DeleteForeverIcon}
+                        disabled={!terminal.current}
+                        onClick={() => serialApi.clearTerminal()}
+                    />
+
+                    <div style={{ width: '30px' }}></div>
+
+                    <TooltipIconButton
                         id="showEditor"
                         title={showEditor ? "Hide editor for serial console"
                             : "Show editor for serial console"}
@@ -187,14 +197,6 @@ export default function SerialConsole({ node }) {
                         icon={RefreshIcon}
                         disabled={!serialApi.serialStatus}
                         onClick={() => serialApi.sendKey("Ctrl+D")}
-                    />
-
-                    <TooltipIconButton
-                        id="clear-terminal"
-                        title="Clear console output"
-                        icon={DeleteForeverIcon}
-                        disabled={!terminal.current}
-                        onClick={() => serialApi.clearTerminal()}
                     />
 
                     <TooltipIconButton

@@ -2,11 +2,12 @@ const widgetsSettings = {
     line: {
         widget: {
             w: 2,
-            h: 4,
+            h: 6,
             minW: 2,
-            minH: 4,
+            minH: 6,
         },
         type: 'line',
+        widgetType: 'chart',
         chart: {
             options: {
                 chart: {
@@ -30,11 +31,12 @@ const widgetsSettings = {
     bar: {
         widget: {
             w: 2,
-            h: 4,
+            h: 6,
             minW: 2,
-            minH: 4,
+            minH: 6,
         },
         type: 'bar',
+        widgetType: 'chart',
         chart: {
             options: {
                 chart: {
@@ -57,6 +59,7 @@ const widgetsSettings = {
     },
     label: {
         type: 'label',
+        widgetType: 'label',
     },
 };
 

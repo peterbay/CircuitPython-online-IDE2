@@ -2,10 +2,12 @@ import { useState, useRef } from "react";
 import { dataService } from "../utils/dataService";
 import { Widget } from "../components/Widget";
 import widgetsSettings from "../settings/widgetsSettings";
+import isEqual from "lodash/isEqual"; 
 
 export default function useDasboard() {
     const [dashboardLayout, setDashboardLayout] = useState([]);
     const [widgets, setWidgets] = useState({});
+    const [locked, setLocked] = useState(true);
     const lineBuffer = useRef("");
     const index = useRef(0);
     const dashboardData = useRef({});
@@ -51,19 +53,21 @@ export default function useDasboard() {
                     widgetOptions: options,
                     chartOptions: chart,
                     chartType: widgetSettings.type,
+                    widgetType: widgetSettings.widgetType,
                     widget: (
                         <Widget
                             widgetOptions={options}
                             chartOptions={chart}
                             height={widgetHeight}
                             type={widgetSettings.type}
+                            widgetType={widgetSettings.widgetType}
                         />
                     )
                 }
             };
         });
 
-        dashboardData.current[options.id] = [];
+        dashboardData.current[options.id] = {};
     };
 
     const processConfigData = function (data) {
@@ -78,13 +82,33 @@ export default function useDasboard() {
         }
     };
 
-    const processData = function (data) {
+    const processData = (data) => {
         const id = data[0];
         const rest = data.slice(1);
-        dashboardData.current[id] = rest;
+
+        if (!dashboardData.current[id]) {
+            return;
+        }
+
+        dashboardData.current[id].updated = new Date();
+        dashboardData.current[id].data = rest;
+
+        if (locked || !dashboardData.current[id].lastData) {
+            dashboardData.current[id].lastData = rest;
+
+        } else if (isEqual(dashboardData.current[id].data, dashboardData.current[id].lastData)) {
+            return;
+
+        }
+
+        dashboardData.current[id].changed = new Date();
+
         dataService.send({
             id,
-            data: rest
+            locked,
+            data: locked ? rest : dashboardData.current[id].lastData,
+            updated: dashboardData.current[id].updated,
+            changed: dashboardData.current[id].changed,
         });
     };
 
@@ -147,12 +171,14 @@ export default function useDasboard() {
                     widgetOptions: storedWidget.widgetOptions,
                     chartOptions: storedWidget.chartOptions,
                     chartType: storedWidget.chartType,
+                    widgetType: storedWidget.widgetType,
                     widget: (
                         <Widget
                             widgetOptions={storedWidget.widgetOptions}
                             chartOptions={storedWidget.chartOptions}
                             height={widgetHeight}
                             type={storedWidget.chartType}
+                            widgetType={storedWidget.widgetType}
                         />
                     )
                 }
@@ -166,5 +192,7 @@ export default function useDasboard() {
         clearDashboard,
         widgets,
         updateWidget,
+        locked,
+        setLocked,
     };
 }
